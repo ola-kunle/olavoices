@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://olavoices.com/sitemap.xml
+
+# Disallow admin and temporary files
+Disallow: /admin/
+Disallow: /tmp/
+Disallow: /.git/
+Disallow: /.idea/
+Disallow: /index_inactive.html
+
+# Allow important directories
+Allow: /assets/
+Allow: /audio/
+Allow: /blog/
+
+# Crawl delay (optional)
+Crawl-delay: 1

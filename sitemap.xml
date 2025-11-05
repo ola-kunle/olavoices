@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://olavoices.com/</loc>
+    <lastmod>2025-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Blog Index -->
+  <url>
+    <loc>https://olavoices.com/blog</loc>
+    <lastmod>2025-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Blog Posts -->
+  <url>
+    <loc>https://olavoices.com/my-voice-my-story</loc>
+    <lastmod>2025-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://olavoices.com/beyond-the-accent</loc>
+    <lastmod>2025-06-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://olavoices.com/elearning-voiceover-guide</loc>
+    <lastmod>2025-09-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://olavoices.com/client-case-studies</loc>
+    <lastmod>2025-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://olavoices.com/voice-acting-tips-guide</loc>
+    <lastmod>2025-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://olavoices.com/commercial-voiceover-trends</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+</urlset>

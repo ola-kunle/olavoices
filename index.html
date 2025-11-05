@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="Authentic Nigerian and West African voice actor for commercials, audiobooks, and narrations. Trusted by clients in Europe and the US.">
+    <meta name="keywords"
+          content="Nigerian voice actor, West African voiceover, Ghanaian voiceover, authentic African voice, Nigerian voiceover for Europe, West African voice for US brands, Yoruba voiceover, Sub-Saharan voice actor">
+    <meta name="author" content="Olakunle Abimbola">
+    <title>Ola - Authentic Nigerian & West African Voice Actor</title>
+    <link rel="canonical" href="https://olavoices.com/">
+    <link rel="icon" href="assets/logo/favicon2.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Ubuntu:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400&family=Poppins:wght@400;600&family=Rye&family=Ubuntu:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400&family=Lora:wght@400&family=Poppins:wght@400;600&family=Rye&family=Ubuntu:wght@400;700&display=swap"
+          rel="stylesheet">
+    <style>
+        /* Tribal, vibrant styles */
+        .bg-west-african-hero {
+            background-color: #064e3b; /* Deep green color */
+            background-size: cover;
+            background-blend-mode: overlay;
+            background-attachment: fixed;
+            filter: saturate(1.2);
+        }
+
+        .bg-kente-testimonials {
+            background-image: url('https://images.pexels.com/photos/10239876/pexels-photo-10239876.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size: cover;
+            background-blend-mode: overlay;
+            filter: saturate(1.3);
+        }
+
+        .bg-celtic-contact {
+            background-image: url('https://pixabay.com/get/gf9b7e8c2d3a4b5c6d7e8f9.jpg');
+            background-size: cover;
+            background-blend-mode: overlay;
+            filter: saturate(1.2);
+        }
+
+        .logo-container img {
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container img:hover {
+            transform: scale(1.1);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .kente-border {
+            border: 4px solid transparent;
+            background-image: linear-gradient(white, white), url('https://images.pexels.com/photos/10239876/pexels-photo-10239876.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-clip: padding-box, border-box;
+            background-origin: border-box;
+        }
+
+        .tribal-icon {
+            background: linear-gradient(to right, #DC2626, #D97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        .celtic-icon {
+            background: linear-gradient(to right, #059669, #10B981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.3));
+        }
+    </style>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Olakunle Abimbola",
+            "jobTitle": "Voice Actor",
+            "description": "Specializing in authentic Nigerian, Ghanaian, and West African voiceovers for commercials, audiobooks, and narrations. Trusted by clients in Europe and the US.",
+            "url": "https://olavoices.com",
+            "sameAs": [
+                "https://linkedin.com/in/okabimbola"
+            ]
+        }
+    </script>
+</head>
+<body class="font-poppins bg-gray-100 text-gray-800">
+<!-- Navigation -->
+<nav class="fixed top-0 w-full bg-white shadow-md z-10">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="logo-container">
+            <img src="assets/logo/favicon.png" alt="OlaVoices - Authentic Nigerian West African Voice Actor Logo" class="h-12">
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <ul class="hidden md:flex space-x-6">
+            <li><a href="#home" class="hover:text-red-600">Home</a></li>
+            <li><a href="#services" class="hover:text-red-600">Services</a></li>
+            <li><a href="#rates" class="hover:text-red-600">Rates</a></li>
+            <li><a href="#portfolio" class="hover:text-red-600">Portfolio</a></li>
+            <li><a href="#testimonials" class="hover:text-red-600">Testimonials</a></li>
+            <li><a href="blog.html" class="hover:text-red-600">Blog</a></li>
+            <li><a href="#contact" class="hover:text-red-600">Contact</a></li>
+        </ul>
+        
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-toggle" class="md:hidden flex flex-col space-y-1 p-2">
+            <span class="w-6 h-0.5 bg-gray-600 transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-gray-600 transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-gray-600 transition-all duration-300"></span>
+        </button>
+    </div>
+    
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <ul class="flex flex-col space-y-0">
+            <li><a href="#home" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Home</a></li>
+            <li><a href="#services" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Services</a></li>
+            <li><a href="#rates" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Rates</a></li>
+            <li><a href="#portfolio" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Portfolio</a></li>
+            <li><a href="#testimonials" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Testimonials</a></li>
+            <li><a href="blog.html" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Blog</a></li>
+            <li><a href="#contact" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="min-h-screen flex items-center bg-green-700 text-white bg-west-african-hero py-12">
+    <div class="container mx-auto px-4 flex flex-col items-center animate-fade-in">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 font-rye gradient-text drop-shadow-lg text-center">
+            Professional Nigerian Voice Actor
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-center mb-8">
+            Clear, Natural English • Fast Turnaround • Trusted by International Clients
+        </p>
+        
+        <div class="mt-6 flex justify-center">
+            <img src="assets/images/ola_resize.jpeg" alt="Olakunle Abimbola - Professional Nigerian Voice Actor Portrait"
+                 class="w-32 h-32 rounded-full object-cover kente-border">
+        </div>
+        <a href="#contact"
+           class="text-lg md:text-xl font-bold bg-yellow-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-yellow-600 hover:scale-105 transition-transform duration-300 mt-12">
+            Let's Talk
+        </a>
+    </div>
+</section>
+
+
+<!-- Services Section -->
+<section id="services" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-8 font-ubuntu">
+            Clear, Professional Voiceovers
+        </h2>
+        <p class="text-center max-w-2xl mx-auto mb-10 text-lg">
+            Born in Nigeria with deep cultural connections through family and community, I deliver authentic English voiceovers with both 
+            Nigerian and neutral accents. Perfect for brands reaching global audiences.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in">
+            <div class="text-center">
+                <i class="fas fa-microphone-alt text-4xl tribal-icon mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Commercials</h3>
+                <p>
+                    Professional commercial voiceovers that connect with diverse audiences across the UK, US, and Europe.
+                </p>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-book-open text-4xl tribal-icon mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Audiobooks</h3>
+                <p>
+                    Engaging audiobook narration that brings stories to life with authentic African-English delivery.
+                </p>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-video text-4xl tribal-icon mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Narrations</h3>
+                <p>
+                    Clear, professional narration for documentaries, explainer videos, and corporate content.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- NEW: Social Proof Section -->
+<section id="achievements" class="py-16 bg-green-50">
+    <div class="container mx-auto px-4 animate-fade-in">
+        <h2 class="text-3xl font-bold text-center mb-4 font-ubuntu text-green-700">Recognized Excellence</h2>
+        <p class="text-center max-w-2xl mx-auto mb-12 text-lg text-gray-700">
+            Trusted by clients globally and recognized on leading voice acting platforms for quality and professionalism.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div class="text-center bg-white p-6 rounded-lg shadow-md kente-border">
+                <i class="fas fa-star text-4xl tribal-icon mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2 text-green-700">Top 20% Voice Actor</h3>
+                <p class="text-gray-600">Ranked in the top 20% of voice actors on Voice123 platform for quality and performance</p>
+            </div>
+            
+            <div class="text-center bg-white p-6 rounded-lg shadow-md kente-border">
+                <i class="fas fa-clock text-4xl tribal-icon mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2 text-green-700">21-Minute Response Time</h3>
+                <p class="text-gray-600">Lightning-fast professional response guaranteed within 21 minutes during business hours</p>
+            </div>
+            
+            <div class="text-center bg-white p-6 rounded-lg shadow-md kente-border">
+                <i class="fas fa-microphone text-4xl tribal-icon mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2 text-green-700">50+ Voice Samples</h3>
+                <p class="text-gray-600">Extensive portfolio showcasing diverse vocal range across multiple accents and styles</p>
+            </div>
+        </div>
+        
+        <div class="text-center mt-12">
+            <p class="text-lg mb-6 font-ubuntu text-gray-700">
+                Find me on leading voice acting platforms:
+            </p>
+            <div class="flex justify-center space-x-6">
+                <a href="https://voice123.com/voice-actor/olakunleabimbola/" target="_blank" 
+                   class="bg-red-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-700 transition-colors duration-300">
+                    <i class="fas fa-external-link-alt mr-2"></i> Voice123 Profile
+                </a>
+                <a href="https://www.voices.com/profile/olaabimbola" target="_blank" 
+                   class="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-300">
+                    <i class="fas fa-external-link-alt mr-2"></i> Voices.com Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- NEW: Rates Section -->
+<section id="rates" class="py-16 bg-gray-100">
+    <div class="container mx-auto px-4 animate-fade-in">
+        <h2 class="text-3xl font-bold text-center mb-4 font-ubuntu">Transparent Pricing & Service Fees</h2>
+        <p class="text-center max-w-2xl mx-auto mb-12 text-lg">
+            My rates are designed to be competitive and transparent, ensuring you get high-quality voiceover services
+            that fit your budget. Below are general guidelines; please contact me for a custom quote on your specific
+            project.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Commercials & Promos -->
+            <div class="bg-white p-6 rounded-lg shadow-md kente-border text-center">
+                <h3 class="text-2xl font-semibold mb-4 text-red-600">Commercials & Promos</h3>
+                <ul class="text-left space-y-2 mb-4">
+                    <li><strong class="font-bold">Local Web Use:</strong> Starting from $250</li>
+                    <li><strong class="font-bold">Regional Broadcast:</strong> Starting from $400</li>
+                    <li><strong class="font-bold">National Broadcast:</strong> Starting from $750+</li>
+                </ul>
+                <p class="text-sm text-gray-600 italic">
+                    (Rates include standard usage for 1 year. Extended usage or specific media will be quoted
+                    separately. Pricing varies by market size and media type.)
+                </p>
+            </div>
+
+            <!-- Narration & E-learning -->
+            <div class="bg-white p-6 rounded-lg shadow-md kente-border text-center">
+                <h3 class="text-2xl font-semibold mb-4 text-red-600">Narration & E-learning</h3>
+                <ul class="text-left space-y-2 mb-4">
+                    <li><strong class="font-bold">Up to 5 minutes:</strong> Starting from $200</li>
+                    <li><strong class="font-bold">Per Finished Minute (PFM):</strong> $5 - $10 (depending on complexity
+                        and usage)
+                    </li>
+                    <li><strong class="font-bold">Audiobooks:</strong> Per Finished Hour (PFH) - please inquire for
+                        custom quote.
+                    </li>
+                </ul>
+                <p class="text-sm text-gray-600 italic">
+                    (Rates based on non-broadcast, internal, or e-learning usage. Commercial e-learning usage may incur
+                    additional fees. Final rate depends on script word count and complexity.)
+                </p>
+            </div>
+
+            <!-- IVR & On-Hold -->
+            <div class="bg-white p-6 rounded-lg shadow-md kente-border text-center">
+                <h3 class="text-2xl font-semibold mb-4 text-red-600">IVR & On-Hold Messaging</h3>
+                <ul class="text-left space-y-2 mb-4">
+                    <li><strong class="font-bold">Up to 10 prompts:</strong> Starting from $150</li>
+                    <li><strong class="font-bold">Each additional prompt:</strong> $10 - $15</li>
+                </ul>
+                <p class="text-sm text-gray-600 italic">
+                    (Flat rates for standard business use with perpetual licensing. Complex IVR systems with many
+                    prompts may require a custom quote.)
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mt-12 p-6 bg-white rounded-lg shadow-md kente-border">
+            <h3 class="text-2xl font-semibold mb-4 text-center text-green-700">Important Considerations</h3>
+            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                <li><strong class="font-bold">Minimum Project Fee:</strong> All projects have a minimum fee of $150 to
+                    cover studio time and administrative costs.
+                </li>
+                <li><strong class="font-bold">Revisions:</strong> One round of minor script revisions (up to 10% of
+                    script, not a script rewrite) is included. Additional revisions or significant script changes after
+                    recording may incur extra fees.
+                </li>
+                <li><strong class="font-bold">Directed Sessions:</strong> Live directed sessions (via Source-Connect,
+                    Zoom, etc.) are available and may have an additional hourly fee (e.g., $50/hour after the first 30
+                    minutes).
+                </li>
+                <li><strong class="font-bold">Rush Delivery:</strong> Projects requiring delivery within 24 hours may
+                    incur a rush fee (+50% of the total project cost), subject to availability.
+                </li>
+                <li><strong class="font-bold">Payment Terms:</strong> 50% upfront deposit required for new clients or
+                    projects over $500, with the balance due upon delivery. Payment accepted via Stripe, PayPal, or Bank
+                    Transfer.
+                </li>
+            </ul>
+        </div>
+
+        <div class="text-center mt-12">
+            <p class="text-xl mb-4 font-ubuntu">
+                Need a custom quote for your project?
+            </p>
+            <a href="#contact"
+               class="inline-block bg-yellow-500 text-white px-8 py-4 rounded-full font-bold shadow-md hover:bg-yellow-600 hover:scale-105 transition-transform duration-300">
+                Contact Me
+            </a>
+        </div>
+
+    </div>
+</section>
+<!-- END NEW: Rates Section -->
+
+
+<!-- NEW: Portfolio/Voice Samples Section -->
+<section id="portfolio" class="py-16 bg-white">
+    <div class="container mx-auto px-4 animate-fade-in">
+        <h2 class="text-3xl font-bold text-center mb-8 font-ubuntu">My Voice Samples</h2>
+        <p class="text-center max-w-2xl mx-auto mb-10 text-lg">
+            Listen to a selection of my voiceover work, showcasing versatility across various styles and accents.
+            These samples reflect my range in commercials, narration, e-learning, and more.
+        </p>
+
+        <div class="max-w-3xl mx-auto bg-gray-50 p-6 rounded-lg shadow-lg kente-border">
+            <div class="flex flex-col items-center justify-center mb-4 text-center">
+                <i class="fas fa-play-circle text-5xl tribal-icon mb-2"></i>
+                <h3 id="current-track-title" class="text-2xl font-semibold text-gray-800">Select a Sample to Play</h3>
+            </div>
+
+            <audio id="audio-player" controls class="w-full mb-4">
+                Your browser does not support the audio element.
+            </audio>
+
+            <div class="flex justify-between items-center mb-6">
+                <button id="prev-track"
+                        class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-300 disabled:opacity-50 transition-colors duration-200"
+                        disabled>
+                    <i class="fas fa-backward mr-2"></i> Previous
+                </button>
+                <button id="next-track"
+                        class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 disabled:opacity-50 transition-colors duration-200">
+                    Next <i class="fas fa-forward ml-2"></i>
+                </button>
+            </div>
+
+            <h4 class="text-xl font-semibold mb-3">Playlist:</h4>
+            <ul id="playlist" class="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                <!-- Audio list items will be generated here by JavaScript -->
+            </ul>
+        </div>
+    </div>
+</section>
+<!-- END NEW: Portfolio/Voice Samples Section -->
+
+
+<!-- Resume Section -->
+<section id="resume" class="py-16 bg-gray-100 relative"
+         style="background-image: url('assets/images/my_voice_results.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <div class="container mx-auto px-4 text-center animate-fade-in bg-white bg-opacity-80 rounded-lg py-12">
+        <h2 class="text-3xl font-bold mb-8 font-ubuntu">How My Voice Drives Results</h2>
+        <button onclick="toggleResume()"
+                class="bg-red-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-700">View My Impact
+        </button>
+        <div id="resumeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white p-8 rounded-lg max-w-2xl kente-border shadow-lg">
+                <h3 class="text-2xl font-bold mb-4 font-ubuntu">Client Results & Feedback</h3>
+                <ul class="list-disc text-left mb-6">
+                    <li>Delivered authentic Sub-Saharan English accents for non-profit campaigns, commercials, and
+                        explainer videos across the US, UK, and Europe.
+                    </li>
+                    <li>Provided engaging narration for global organizations such as Africa University and Westfall
+                        Gold, helping them connect with diverse audiences.
+                    </li>
+                    <li>Trusted by creative professionals for social media projects, dramatic short films, and video
+                        dubbing requiring genuine African flavor.
+                    </li>
+                    <li>Consistently praised for professionalism, versatility, and the ability to deliver both neutral
+                        and African-influenced English voiceovers.
+                    </li>
+                </ul>
+                <div class="text-left text-gray-700 text-sm mb-4">
+                    <p><strong>Recent Client Feedback:</strong></p>
+                    <blockquote class="border-l-4 border-red-600 pl-4 mb-2 italic">
+                        "Thank you Ola ~ I don't see a link for the second read? For payment, can you please send me an
+                        invoice... If you can please send in these attached completed forms with your invoice, it will
+                        help to expedite the process." <br>
+                        <span class="font-semibold">– Angela, Westfall Gold</span>
+                    </blockquote>
+                    <blockquote class="border-l-4 border-red-600 pl-4 mb-2 italic">
+                        "Hello Ola! Thanks for your interest in the project. You have a great voice and I’m excited to
+                        work with you on this little project." <br>
+                        <span class="font-semibold">– Gabriel Caste, Filmmaker</span>
+                    </blockquote>
+                    <blockquote class="border-l-4 border-red-600 pl-4 italic">
+                        "The timing of the subtitles is a bit off so please match the timing of the video as best as you
+                        can. Thank you." <br>
+                        <span class="font-semibold">– Client, Video Narration Project</span>
+                    </blockquote>
+                </div>
+                <div class="text-left text-gray-700 text-sm">
+                    <p><strong>Strengths:</strong> Versatile character portrayals, emotive depth, native Sub-Saharan and
+                        neutral English accents, and a client-focused approach.</p>
+                    <p><strong>Technical:</strong> Professional home studio, Adobe Audition, Logic Pro, noise reduction,
+                        and audio mastering.</p>
+                </div>
+                <button onclick="toggleResume()" class="mt-6 bg-red-600 text-white px-4 py-2 rounded-full">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-16 bg-gray-100 bg-kente-testimonials">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl text-center font-bold mb-8 font-ubuntu">What My Clients Say</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
+            <div class="bg-white p-6 rounded-lg shadow-md kente-border">
+                <p class="italic">"Ola delivered exactly what we needed for our animation project. Professional, prompt, and easy to work with."</p>
+                <p class="mt-4 font-semibold">- Sarah M., Project Manager</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md kente-border">
+                <p class="italic">"The narration brought our campaign to life. Great voice quality and quick turnaround."</p>
+                <p class="mt-4 font-semibold">- Marcus T., Creative Director</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md kente-border">
+                <p class="italic">"Excellent work on our event video. The voiceover was exactly what we were looking for."</p>
+                <p class="mt-4 font-semibold">- Jennifer L., Video Producer</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md kente-border">
+                <p class="italic">"Reliable quality and fast delivery. We've used Ola for multiple projects now."</p>
+                <p class="mt-4 font-semibold">- David R., Agency Director</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Blog Section -->
+<section id="blog" class="py-16 bg-white">
+    <div class="container mx-auto px-4 text-center animate-fade-in">
+        <h2 class="text-3xl font-bold mb-8 font-ubuntu">Voice Acting Blog</h2>
+        <p class="mb-6">Tips and insights on professional voiceover work and the industry.</p>
+        <div class="space-x-4">
+            <a href="blog.html"
+               class="inline-block bg-red-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-700">Visit
+                Blog</a>
+            <a href="my-voice-my-story"
+               class="inline-block bg-gray-200 text-red-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-300">My
+                Story</a>
+        </div>
+    </div>
+</section>
+
+<!-- Include reCAPTCHA v3 script -->
+<script src="https://www.google.com/recaptcha/api.js?render=6LeYIS4rAAAAAE-xHuUFZlwAl8Bhs65CtMQhHNZK"></script>
+
+<!-- Contact Form -->
+<section id="contact" class="py-16 bg-gray-100 bg-celtic-contact">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl text-center font-bold mb-8 font-ubuntu">Get Your Quote</h2>
+        <form method="POST" action="https://formspree.io/f/mkndkzdg" class="max-w-lg mx-auto animate-fade-in">
+            <input type="text" name="name" placeholder="Your Name" class="w-full p-3 mb-4 rounded-lg" required>
+            <input type="email" name="email" placeholder="Your Email" class="w-full p-3 mb-4 rounded-lg" required>
+            <textarea name="message" placeholder="Tell me about your project" class="w-full p-3 mb-4 rounded-lg"
+                      rows="5" required></textarea>
+            <!-- Hidden input to store the reCAPTCHA token -->
+            <input type="hidden" name="recaptcha-token" id="recaptcha-token">
+            <input type="hidden" name="_subject" value="New message from OlaVoices contact form">
+            <button type="submit"
+                    class="bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700">Send Message
+            </button>
+        </form>
+    </div>
+</section>
+
+<script>
+    // Execute reCAPTCHA v3 and attach the token to the form
+    grecaptcha.ready(function () {
+        grecaptcha.execute('6LeYIS4rAAAAAE-xHuUFZlwAl8Bhs65CtMQhHNZK', {action: 'submit'}).then(function (token) {
+            document.getElementById('recaptcha-token').value = token;
+        });
+    });
+</script>
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <!-- Company Info -->
+            <div>
+                <h3 class="text-xl font-bold mb-4 text-yellow-500">OlaVoices</h3>
+                <p class="text-gray-300 mb-4">Authentic West African voiceovers delivered with international quality and cultural depth.</p>
+                <p class="text-sm text-gray-400">© 2025 OlaVoices. All rights reserved.</p>
+            </div>
+            
+            <!-- Professional Platforms -->
+            <div>
+                <h4 class="text-lg font-semibold mb-4 text-yellow-500">Find Me On</h4>
+                <div class="space-y-2">
+                    <a href="https://voice123.com/voice-actor/olakunleabimbola/" target="_blank" 
+                       class="block text-gray-300 hover:text-yellow-500 transition-colors duration-200">
+                        <i class="fas fa-microphone mr-2"></i> Voice123 Profile
+                    </a>
+                    <a href="https://www.voices.com/profile/olaabimbola" target="_blank" 
+                       class="block text-gray-300 hover:text-yellow-500 transition-colors duration-200">
+                        <i class="fas fa-headphones mr-2"></i> Voices.com Profile
+                    </a>
+                    <a href="https://linkedin.com/in/okabimbola" target="_blank" 
+                       class="block text-gray-300 hover:text-yellow-500 transition-colors duration-200">
+                        <i class="fab fa-linkedin mr-2"></i> LinkedIn Profile
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div>
+                <h4 class="text-lg font-semibold mb-4 text-yellow-500">Quick Links</h4>
+                <div class="space-y-2">
+                    <a href="#services" class="block text-gray-300 hover:text-yellow-500 transition-colors duration-200">Services</a>
+                    <a href="#rates" class="block text-gray-300 hover:text-yellow-500 transition-colors duration-200">Rates</a>
+                    <a href="#portfolio" class="block text-gray-300 hover:text-yellow-500 transition-colors duration-200">Voice Samples</a>
+                    <a href="blog.html" class="block text-gray-300 hover:text-yellow-500 transition-colors duration-200">Blog</a>
+                    <a href="#contact" class="block text-gray-300 hover:text-yellow-500 transition-colors duration-200">Contact</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function toggleResume() {
+        const modal = document.getElementById('resumeModal');
+        modal.classList.toggle('hidden');
+    }
+
+    // NEW: Audio Player Logic
+    const audioPlayer = document.getElementById('audio-player');
+    const currentTrackTitle = document.getElementById('current-track-title');
+    const playlist = document.getElementById('playlist');
+    const prevTrackBtn = document.getElementById('prev-track');
+    const nextTrackBtn = document.getElementById('next-track');
+
+    // IMPORTANT: REPLACE THESE WITH YOUR ACTUAL FILE NAMES AND DESCRIPTIVE TITLES
+    // Ensure the paths are correct relative to your HTML file.
+    // If a sample only has one format (e.g., only MP3), you can omit the other property.
+    // Example: { title: "My MP3 Only Sample", mp3: "audio/african-male-voiceovers-promos/mp3_only.mp3" }
+    // Example: { title: "My WAV Only Sample", wav: "audio/african-male-voiceovers-promos/wav_only.wav" }
+    const audioSamples = [
+        { title: "Upbeat Commercial: 'What a Lucky Guy!'", mp3: "audio/african-male-voiceovers-promos/0-Voice123-What-A-Lucky-Guy-Nigerian-Ola-Kunle-Abimbola.mp3" },
+        { title: "Heartfelt Narration: 'Sending Money to Family'", mp3: "audio/african-male-voiceovers-promos/1-Voice123-Sending-Money-to-Family-OLAKUNLE-ABIMBOLA-Ola-Kunle-Abimbola.mp3" },
+        { title: "Empowering PSA: 'Support a Family'", mp3: "audio/african-male-voiceovers-promos/2-Voice123-Support-and-Sponsor-a-Family-Ola-Kunle-Abimbola.mp3" },
+        { title: "Educational Explainer: 'Madagascar Teacher Video'", mp3: "audio/african-male-voiceovers-promos/3-Voice123-Madagascar-Teacher-Video-OLAKUNLE-ABIMBOLA-Ola-Kunle-Abimbola.mp3" },
+        { title: "Inspiring Message: 'Fighting Malaria - A Message of Hope'", mp3: "audio/african-male-voiceovers-promos/Fighting Malaria - A Message of Hope by Olakunle Abimbola.mp3" },
+        // Add more samples here following the same structure if needed
+    ];
+    let currentTrackIndex = 0;
+
+    function loadTrack(index) {
+        if (index < 0 || index >= audioSamples.length) {
+            return; // Index out of bounds
+        }
+
+        currentTrackIndex = index;
+        const track = audioSamples[currentTrackIndex];
+
+        // Clear previous sources
+        audioPlayer.innerHTML = '';
+
+        // Add MP3 source if available
+        if (track.mp3) {
+            const mp3Source = document.createElement('source');
+            mp3Source.src = track.mp3;
+            mp3Source.type = 'audio/mpeg';
+            audioPlayer.appendChild(mp3Source);
+        }
+
+        // Add WAV source if available
+        if (track.wav) {
+            const wavSource = document.createElement('source');
+            wavSource.src = track.wav;
+            wavSource.type = 'audio/wav';
+            audioPlayer.appendChild(wavSource);
+        }
+
+        currentTrackTitle.textContent = track.title;
+        audioPlayer.load(); // Load the new track
+
+        updatePlaylistHighlight();
+        updateButtons();
+    }
+
+    function playNextTrack() {
+        if (currentTrackIndex < audioSamples.length - 1) {
+            loadTrack(currentTrackIndex + 1);
+            audioPlayer.play();
+        } else {
+            // Optional: loop back to the start or stop playback
+            // loadTrack(0); // Loops back to the first track
+            // audioPlayer.play();
+            audioPlayer.pause(); // Stops at the end of the playlist
+        }
+    }
+
+    function playPrevTrack() {
+        if (currentTrackIndex > 0) {
+            loadTrack(currentTrackIndex - 1);
+            audioPlayer.play();
+        }
+    }
+
+    function generatePlaylist() {
+        playlist.innerHTML = ''; // Clear existing list
+        if (audioSamples.length === 0) {
+            playlist.innerHTML = '<li class="p-3 text-center text-gray-500">No voice samples available.</li>';
+            return;
+        }
+
+        audioSamples.forEach((sample, index) => {
+            const listItem = document.createElement('li');
+            listItem.className = 'p-3 bg-white rounded-md shadow-sm cursor-pointer hover:bg-gray-100 flex justify-between items-center transition-colors duration-200';
+            listItem.dataset.index = index;
+            listItem.innerHTML = `<span>${sample.title}</span> <i class="fas fa-play text-gray-500"></i>`;
+            listItem.addEventListener('click', () => {
+                loadTrack(index);
+                audioPlayer.play();
+            });
+            playlist.appendChild(listItem);
+        });
+        updatePlaylistHighlight(); // Highlight the initially loaded track
+    }
+
+    function updatePlaylistHighlight() {
+        const listItems = playlist.querySelectorAll('li');
+        listItems.forEach((item, index) => {
+            if (index === currentTrackIndex) {
+                item.classList.add('bg-red-100', 'border-l-4', 'border-red-600', 'font-semibold'); // Highlight active track
+                item.querySelector('i').classList.remove('fa-play');
+                item.querySelector('i').classList.add('fa-pause');
+            } else {
+                item.classList.remove('bg-red-100', 'border-l-4', 'border-red-600', 'font-semibold');
+                item.querySelector('i').classList.remove('fa-pause');
+                item.querySelector('i').classList.add('fa-play');
+            }
+        });
+    }
+
+    function updateButtons() {
+        prevTrackBtn.disabled = currentTrackIndex === 0;
+        nextTrackBtn.disabled = currentTrackIndex === audioSamples.length - 1;
+    }
+
+    // Event Listeners
+    nextTrackBtn.addEventListener('click', playNextTrack);
+    prevTrackBtn.addEventListener('click', playPrevTrack);
+
+    audioPlayer.addEventListener('ended', playNextTrack); // Auto-play next when current ends
+
+    audioPlayer.addEventListener('play', () => {
+        updatePlaylistHighlight(); // Ensure icon reflects playing state
+        const currentItem = playlist.querySelector(`[data-index="${currentTrackIndex}"]`);
+        if (currentItem) {
+            currentItem.querySelector('i').classList.remove('fa-play');
+            currentItem.querySelector('i').classList.add('fa-pause');
+        }
+    });
+
+    audioPlayer.addEventListener('pause', () => {
+        const currentItem = playlist.querySelector(`[data-index="${currentTrackIndex}"]`);
+        if (currentItem) {
+            currentItem.querySelector('i').classList.remove('fa-pause');
+            currentItem.querySelector('i').classList.add('fa-play');
+        }
+    });
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+        generatePlaylist();
+        if (audioSamples.length > 0) {
+            loadTrack(0); // Load the first track by default
+        } else {
+            currentTrackTitle.textContent = "No samples available.";
+            prevTrackBtn.disabled = true;
+            nextTrackBtn.disabled = true;
+            audioPlayer.controls = false; // Hide controls if no samples
+        }
+    });
+
+    // Mobile Menu Toggle
+    document.addEventListener('DOMContentLoaded', () => {
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuSpans = mobileMenuToggle.querySelectorAll('span');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            
+            // Animate hamburger to X
+            if (mobileMenu.classList.contains('hidden')) {
+                // Reset to hamburger
+                menuSpans[0].style.transform = 'rotate(0deg) translateY(0px)';
+                menuSpans[1].style.opacity = '1';
+                menuSpans[2].style.transform = 'rotate(0deg) translateY(0px)';
+            } else {
+                // Transform to X
+                menuSpans[0].style.transform = 'rotate(45deg) translateY(6px)';
+                menuSpans[1].style.opacity = '0';
+                menuSpans[2].style.transform = 'rotate(-45deg) translateY(-6px)';
+            }
+        });
+
+        // Close menu when clicking on a link
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                // Reset hamburger icon
+                menuSpans[0].style.transform = 'rotate(0deg) translateY(0px)';
+                menuSpans[1].style.opacity = '1';
+                menuSpans[2].style.transform = 'rotate(0deg) translateY(0px)';
+            });
+        });
+    });
+</script>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/68dee0d91b0fb11953a30ee1/1j6j9skm6';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>
