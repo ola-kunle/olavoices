@@ -1,0 +1,52 @@
+name: Daily FREE Blog Automation
+
+on:
+  schedule:
+    # Run daily at 9:00 AM UTC (10:00 AM Lagos time)
+    - cron: '0 9 * * *'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  generate-blog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: automation/package.json
+
+      - name: Install dependencies
+        run: |
+          cd automation
+          npm install
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "Blog Bot"
+          git config --global user.email "bot@olavoices.com"
+
+      - name: Generate blog post
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          AUTO_COMMIT: true
+        run: |
+          cd automation
+          npm start
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "✅ Blog post generated and published!" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Netlify will deploy automatically" >> $GITHUB_STEP_SUMMARY
+          echo "💰 Cost: \$0.00" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,25 @@
+{
+  "topics": [
+    "Voice acting techniques and tips",
+    "Nigerian and West African voice-over industry",
+    "Cultural authenticity in voiceover work",
+    "E-learning and educational narration",
+    "Commercial voiceover trends",
+    "Audiobook narration best practices",
+    "Corporate video voiceover",
+    "Building a voice acting career",
+    "Home studio setup for voice actors",
+    "Working with global clients as an African voice actor",
+    "Accent coaching and voice modulation",
+    "IVR and telephone voice systems",
+    "Documentary narration techniques",
+    "Voice-over pricing and rates"
+  ],
+  "contentCategories": [
+    {"name": "Personal Story", "color": "red"},
+    {"name": "Cultural Insights", "color": "blue"},
+    {"name": "Industry Guide", "color": "green"},
+    {"name": "Tips & Techniques", "color": "yellow"},
+    {"name": "Industry Trends", "color": "indigo"}
+  ]
+}
