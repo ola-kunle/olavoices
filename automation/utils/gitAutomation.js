@@ -36,6 +36,14 @@ Published: ${new Date().toISOString()}`;
       await execAsync(`git commit -m "${message.replace(/"/g, '\\"')}"`, gitOptions);
       console.log('✅ Committed changes');
 
+      // Pull latest changes and rebase
+      try {
+        await execAsync('git pull --rebase origin main', gitOptions);
+        console.log('✅ Pulled latest changes');
+      } catch (pullError) {
+        console.log('ℹ️  No remote changes to pull');
+      }
+
       // Push to GitHub
       await execAsync('git push origin main', gitOptions);
       console.log('✅ Pushed to GitHub');
