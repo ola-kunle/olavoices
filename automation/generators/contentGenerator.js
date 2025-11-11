@@ -175,21 +175,25 @@ export class ContentGenerator {
    * Build prompt for AI generation
    */
   buildPrompt(topic, category) {
+    // Detect if this is an SEO keyword (contains "hire", "cost", "rates", etc.)
+    const isSearchIntent = /hire|cost|rates|pricing|how to|best|guide|find/i.test(topic);
+
     return `Write a comprehensive, engaging blog post for OlaVoices, a professional Nigerian voice-over artist's website.
 
 Topic: ${topic}
 Category: ${category.name}
-Target Audience: Voice-over clients, aspiring voice actors, and businesses seeking authentic African voices
+Target Audience: ${isSearchIntent ? 'Businesses and clients actively searching to hire voice actors' : 'Voice-over clients, aspiring voice actors, and businesses seeking authentic African voices'}
 
 Requirements:
 - Write 1000-1500 words
 - Use a professional yet conversational tone
-- Include personal insights from a Nigerian voice actor's perspective
-- Add practical tips and actionable advice
-- Include cultural nuance and authenticity
+${isSearchIntent ? '- DIRECTLY answer the search query in the first paragraph' : '- Include personal insights from a Nigerian voice actor\'s perspective'}
+${isSearchIntent ? '- Include specific pricing ranges, process details, or hiring steps' : '- Add practical tips and actionable advice'}
+- Include cultural nuance and authenticity about Nigerian/West African voice work
 - Make it SEO-friendly with natural keyword integration
 - Structure with clear sections and subheadings
-- End with a call-to-action encouraging readers to explore OlaVoices services
+${isSearchIntent ? '- End with a clear call-to-action: "Contact OlaVoices for professional Nigerian voice-over services"' : '- End with a call-to-action encouraging readers to explore OlaVoices services'}
+${isSearchIntent ? '- Include trust signals: years of experience, international clients, professional quality' : ''}
 
 Return ONLY a JSON object with this exact structure:
 {
@@ -272,8 +276,14 @@ You understand the voice-over industry, cultural nuance in voice acting, and the
 
   /**
    * Select random topic from config
+   * Prioritizes SEO keywords (70% of the time) for better organic traffic
    */
   selectTopic() {
+    // 70% chance to use SEO keyword if available
+    if (config.seoKeywords && Math.random() > 0.3) {
+      return config.seoKeywords[Math.floor(Math.random() * config.seoKeywords.length)];
+    }
+    // Otherwise use regular topics
     const topics = config.topics;
     return topics[Math.floor(Math.random() * topics.length)];
   }
