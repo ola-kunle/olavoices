@@ -6,6 +6,7 @@ import { ImageGenerator } from './generators/imageGenerator.js';
 import { HTMLGenerator } from './generators/htmlGenerator.js';
 import { GitAutomation } from './utils/gitAutomation.js';
 import { BlogListUpdater } from './utils/blogListUpdater.js';
+import { SitemapUpdater } from './utils/sitemapUpdater.js';
 
 // Load environment variables
 dotenv.config();
@@ -49,6 +50,12 @@ async function main() {
     await blogUpdater.addBlogPost(content, image, blogPost);
     console.log('');
 
+    // Step 3.6: Update sitemap
+    console.log('🗺️  Step 3.6: Updating sitemap...\n');
+    const sitemapUpdater = new SitemapUpdater();
+    await sitemapUpdater.addBlogPost(blogPost);
+    console.log('');
+
     // Step 4: Git Automation (if enabled)
     if (AUTO_COMMIT) {
       console.log('🚀 Step 4: Committing to Git and pushing...\n');
@@ -56,7 +63,8 @@ async function main() {
       const files = [
         blogPost.filename,
         `assets/images/blog/${image.filename}`,
-        'blog.html'
+        'blog.html',
+        'sitemap.xml'
       ];
       await git.commitAndPush(content.title, files);
       console.log('');
