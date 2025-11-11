@@ -59,7 +59,27 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  
+
+  <url>
+    <loc>https://olavoices.com/from-lagos-to-the-world-building-your-voice-acting-career</loc>
+    <lastmod>2025-11-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://olavoices.com/crafting-your-sound-the-essential-nigerian-voice-actor-s-home-studio-guide</loc>
+    <lastmod>2025-11-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://olavoices.com/build-your-pro-vo-studio-a-nigerian-actor-s-guide</loc>
+    <lastmod>2025-11-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <url>
     <loc>https://olavoices.com/your-authentic-voice-why-cultural-nuance-is-key-in-global-voiceover</loc>
@@ -67,5 +87,5 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  
+
 </urlset>
