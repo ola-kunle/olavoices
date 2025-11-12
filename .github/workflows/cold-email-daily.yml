@@ -42,9 +42,7 @@ jobs:
           DEBUG: false
         run: node index.js
 
-      - name: Commit and push updates
+      - name: Show automation results
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add cold-email-automation/data/*.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Update cold email data - $(date +'%Y-%m-%d')" && git push)
+          echo "✅ Cold email automation completed successfully"
+          echo "Check logs above for leads found and emails sent"
