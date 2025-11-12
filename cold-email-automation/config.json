@@ -1,0 +1,150 @@
+{
+  "leadGeneration": {
+    "dailyLimit": 3,
+    "sources": ["apollo", "manual"],
+    "qualityFilters": {
+      "minimumCompanySize": 10,
+      "seniorityLevels": ["Director", "VP", "C-Level", "Manager"],
+      "excludeKeywords": ["intern", "junior", "assistant", "coordinator"]
+    }
+  },
+  "targetProfiles": {
+    "ngos": {
+      "enabled": true,
+      "jobTitles": [
+        "Communications Director",
+        "Media Director",
+        "Public Affairs Director",
+        "Training Manager",
+        "Content Manager",
+        "Digital Media Manager",
+        "Public Health Communications",
+        "Advocacy Director"
+      ],
+      "industries": [
+        "Non-Profit Organization Management",
+        "International Affairs",
+        "Public Health",
+        "Education",
+        "Humanitarian"
+      ],
+      "companyKeywords": [
+        "WHO",
+        "UNICEF",
+        "Save the Children",
+        "Oxfam",
+        "International Rescue Committee",
+        "PATH",
+        "CARE",
+        "Plan International",
+        "MSF",
+        "Médecins Sans Frontières"
+      ],
+      "locationFilters": [
+        "Nigeria",
+        "West Africa",
+        "Africa",
+        "Lagos",
+        "Abuja"
+      ],
+      "minimumEmployees": 50,
+      "qualityCriteria": {
+        "requiresAfricaFocus": true,
+        "requiresActiveProjects": true,
+        "minimumBudget": "1M+"
+      }
+    },
+    "gaming": {
+      "enabled": true,
+      "jobTitles": [
+        "Audio Director",
+        "Voice Director",
+        "Casting Director",
+        "Audio Lead",
+        "Sound Designer Director",
+        "Narrative Director",
+        "Audio Manager"
+      ],
+      "industries": [
+        "Computer Games",
+        "Entertainment",
+        "Media Production",
+        "Animation"
+      ],
+      "companyKeywords": [
+        "Ubisoft",
+        "Electronic Arts",
+        "Riot Games",
+        "Square Enix",
+        "Sony Interactive",
+        "Activision",
+        "Bungie",
+        "2K Games",
+        "Kiro'o Games",
+        "Maliyo Games",
+        "Leti Arts",
+        "Carry1st"
+      ],
+      "minimumEmployees": 10,
+      "qualityCriteria": {
+        "requiresPublishedGames": true,
+        "recentActivity": "2 years",
+        "excludeHobbyists": true
+      }
+    }
+  },
+  "emailSequence": {
+    "warmupPhase": {
+      "enabled": true,
+      "dailyLimit": 10,
+      "duration": 14
+    },
+    "activePhase": {
+      "dailyLimit": 30,
+      "maxDailyLimit": 50
+    },
+    "sequence": [
+      {
+        "step": 1,
+        "name": "Initial Outreach",
+        "delayDays": 0,
+        "templateNGO": "ngo-template-1",
+        "templateGaming": "gaming-template-1"
+      },
+      {
+        "step": 2,
+        "name": "Follow-up",
+        "delayDays": 3,
+        "templateNGO": "ngo-template-2",
+        "templateGaming": "gaming-template-2"
+      },
+      {
+        "step": 3,
+        "name": "Value Email",
+        "delayDays": 7,
+        "templateNGO": "ngo-template-3",
+        "templateGaming": "gaming-template-3"
+      }
+    ],
+    "stopOnReply": true,
+    "stopOnBounce": true
+  },
+  "personalization": {
+    "useAI": true,
+    "aiProvider": "gemini",
+    "researchCompany": true,
+    "includeRecentProjects": true,
+    "maxPersonalizationTime": 30
+  },
+  "tracking": {
+    "trackOpens": false,
+    "trackClicks": false,
+    "trackReplies": true,
+    "notifyOnResponse": true
+  },
+  "sender": {
+    "fromName": "Ola",
+    "fromEmail": "hello@olavoices.com",
+    "signature": "Professional Nigerian Voice Actor\nhello@olavoices.com\nwww.olavoices.com"
+  }
+}

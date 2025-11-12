@@ -1,0 +1,23 @@
+# Environment variables
+.env
+
+# Node modules
+node_modules/
+
+# Data files (sensitive)
+data/leads.json
+data/sent.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

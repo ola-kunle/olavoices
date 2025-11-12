@@ -1,0 +1,29 @@
+{
+  "name": "olavoices-cold-email-automation",
+  "version": "1.0.0",
+  "description": "Automated cold email outreach system for OlaVoices",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.js --dry-run",
+    "find-leads": "node generators/leadGenerator.js",
+    "send-emails": "node senders/emailSender.js",
+    "check-responses": "node senders/responseTracker.js"
+  },
+  "keywords": [
+    "cold-email",
+    "automation",
+    "lead-generation",
+    "voiceover"
+  ],
+  "author": "OlaVoices",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2",
+    "googleapis": "^140.0.0",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0"
+  }
+}
