@@ -58,7 +58,6 @@ class LeadGenerator {
     try {
       // Apollo.io People Search API
       const searchParams = {
-        api_key: this.apolloApiKey,
         person_titles: profile.jobTitles,
         person_seniorities: ['director', 'vp', 'c_suite', 'manager'],
         organization_num_employees_ranges: [`${profile.minimumEmployees}+`],
@@ -81,7 +80,8 @@ class LeadGenerator {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache'
+          'Cache-Control': 'no-cache',
+          'X-Api-Key': this.apolloApiKey
         },
         body: JSON.stringify(searchParams)
       });
