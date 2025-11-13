@@ -56,25 +56,19 @@ class LeadGenerator {
     const leads = [];
 
     try {
-      // Apollo.io People Search API
+      // Apollo.io People Search API - Simplified for free tier
       const searchParams = {
-        person_titles: profile.jobTitles,
-        person_seniorities: ['director', 'vp', 'c_suite', 'manager'],
-        organization_num_employees_ranges: [`${profile.minimumEmployees}+`],
+        q_keywords: industry === 'ngos' ? 'Communications Manager NGO' : 'Audio Director Game',
         per_page: limit,
         page: 1
       };
 
-      // Add location filters for NGOs
-      if (industry === 'ngos') {
-        searchParams.person_locations = profile.locationFilters;
-        searchParams.organization_industry_tag_ids = ['5567cd4773696439b10b0000']; // Non-profit
-      }
-
-      // Add industry filters for Gaming
-      if (industry === 'gaming') {
-        searchParams.organization_industry_tag_ids = ['5567cd4773696439b1180000']; // Computer Games
-      }
+      // Optional: Try with just a few titles if keyword search doesn't work
+      // const searchParams = {
+      //   person_titles: profile.jobTitles.slice(0, 3), // Only first 3 titles
+      //   per_page: limit,
+      //   page: 1
+      // };
 
       const response = await fetch('https://api.apollo.io/v1/contacts/search', {
         method: 'POST',
