@@ -1,9 +1,9 @@
 {
   "leadGeneration": {
-    "dailyLimit": 3,
+    "dailyLimit": 5,
     "sources": ["apollo", "manual"],
     "qualityFilters": {
-      "minimumCompanySize": 10,
+      "minimumCompanySize": 5,
       "seniorityLevels": ["Director", "VP", "C-Level", "Manager"],
       "excludeKeywords": ["intern", "junior", "assistant", "coordinator"]
     }
@@ -13,13 +13,24 @@
       "enabled": true,
       "jobTitles": [
         "Communications Director",
+        "Communications Manager",
         "Media Director",
+        "Media Manager",
         "Public Affairs Director",
+        "Public Affairs Manager",
         "Training Manager",
+        "Training Director",
         "Content Manager",
+        "Content Director",
         "Digital Media Manager",
+        "Digital Media Director",
         "Public Health Communications",
-        "Advocacy Director"
+        "Advocacy Director",
+        "Advocacy Manager",
+        "Marketing Director",
+        "Marketing Manager",
+        "Program Manager",
+        "Project Manager"
       ],
       "industries": [
         "Non-Profit Organization Management",
@@ -28,42 +39,43 @@
         "Education",
         "Humanitarian"
       ],
-      "companyKeywords": [
-        "WHO",
-        "UNICEF",
-        "Save the Children",
-        "Oxfam",
-        "International Rescue Committee",
-        "PATH",
-        "CARE",
-        "Plan International",
-        "MSF",
-        "Médecins Sans Frontières"
-      ],
+      "companyKeywords": [],
       "locationFilters": [
         "Nigeria",
         "West Africa",
         "Africa",
         "Lagos",
-        "Abuja"
+        "Abuja",
+        "Kenya",
+        "Ghana",
+        "South Africa"
       ],
-      "minimumEmployees": 50,
+      "minimumEmployees": 20,
       "qualityCriteria": {
-        "requiresAfricaFocus": true,
-        "requiresActiveProjects": true,
-        "minimumBudget": "1M+"
+        "requiresAfricaFocus": false,
+        "requiresActiveProjects": false,
+        "minimumBudget": ""
       }
     },
     "gaming": {
       "enabled": true,
       "jobTitles": [
         "Audio Director",
+        "Audio Manager",
         "Voice Director",
+        "Voice Manager",
         "Casting Director",
+        "Casting Manager",
         "Audio Lead",
-        "Sound Designer Director",
+        "Sound Director",
+        "Sound Manager",
+        "Sound Designer",
         "Narrative Director",
-        "Audio Manager"
+        "Narrative Manager",
+        "Creative Director",
+        "Producer",
+        "Game Producer",
+        "Audio Producer"
       ],
       "industries": [
         "Computer Games",
@@ -71,24 +83,11 @@
         "Media Production",
         "Animation"
       ],
-      "companyKeywords": [
-        "Ubisoft",
-        "Electronic Arts",
-        "Riot Games",
-        "Square Enix",
-        "Sony Interactive",
-        "Activision",
-        "Bungie",
-        "2K Games",
-        "Kiro'o Games",
-        "Maliyo Games",
-        "Leti Arts",
-        "Carry1st"
-      ],
-      "minimumEmployees": 10,
+      "companyKeywords": [],
+      "minimumEmployees": 5,
       "qualityCriteria": {
-        "requiresPublishedGames": true,
-        "recentActivity": "2 years",
+        "requiresPublishedGames": false,
+        "recentActivity": "5 years",
         "excludeHobbyists": true
       }
     }
