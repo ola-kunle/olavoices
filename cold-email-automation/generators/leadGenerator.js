@@ -88,6 +88,16 @@ class LeadGenerator {
 
       const data = await response.json();
 
+      // Debug logging
+      console.log(`  Apollo Response Status: ${response.status}`);
+      if (data.error) {
+        console.log(`  Apollo Error: ${data.error}`);
+      }
+      if (data.message) {
+        console.log(`  Apollo Message: ${data.message}`);
+      }
+      console.log(`  Apollo Contacts Returned: ${data.contacts ? data.contacts.length : 0}`);
+
       if (data.contacts && data.contacts.length > 0) {
         for (const person of data.contacts) {
           if (this.meetsQualityCriteria(person, profile)) {
