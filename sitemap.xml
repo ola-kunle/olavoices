@@ -12,7 +12,7 @@
   <!-- Blog Index -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2025-11-15</lastmod>
+    <lastmod>2025-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -124,6 +124,14 @@
   <url>
     <loc>https://olavoices.com/the-authentic-voice-ivr-systems-african-nuance</loc>
     <lastmod>2025-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/elevate-your-corporate-video-the-power-of-a-nigerian-english-voice</loc>
+    <lastmod>2025-11-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
