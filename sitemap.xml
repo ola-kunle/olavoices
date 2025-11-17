@@ -12,7 +12,7 @@
   <!-- Blog Index -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2025-11-12</lastmod>
+    <lastmod>2025-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -100,6 +100,14 @@
   <url>
     <loc>https://olavoices.com/unlock-global-learning-hire-a-nigerian-voice-actor-for-e-learning</loc>
     <lastmod>2025-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/beyond-the-accent-cultural-authenticity-in-voiceover</loc>
+    <lastmod>2025-11-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
