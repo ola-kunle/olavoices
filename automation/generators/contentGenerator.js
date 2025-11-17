@@ -52,7 +52,7 @@ export class ContentGenerator {
   }
 
   /**
-   * Generate content using Google Gemini (FREE - FIXED MODEL)
+   * Generate content using Google Gemini (FREE - MULTI-MODEL FALLBACK)
    */
   async generateWithGemini(topic, category) {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -61,35 +61,62 @@ export class ContentGenerator {
     const prompt = this.buildPrompt(topic, category);
     const fullPrompt = `${this.getSystemPrompt()}\n\n${prompt}`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: fullPrompt
-            }]
-          }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 8000
-          }
-        })
-      }
-    );
+    // Try multiple Gemini models in order (in case one is overloaded)
+    const models = [
+      'gemini-2.5-flash-preview-05-20',  // Preview version (more stable)
+      'gemini-2.5-flash',                 // Stable version
+      'gemini-2.5-pro-preview-05-06'     // Pro preview (fallback)
+    ];
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(`Gemini API error: ${error.error?.message || response.statusText}`);
+    let lastError = null;
+    for (const model of models) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              contents: [{
+                parts: [{
+                  text: fullPrompt
+                }]
+              }],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 8000
+              }
+            })
+          }
+        );
+
+        if (!response.ok) {
+          const error = await response.json();
+          const errorMsg = error.error?.message || response.statusText;
+
+          // If overloaded (503), try next model
+          if (error.error?.code === 503) {
+            console.warn(`⚠️  ${model} is overloaded, trying next model...`);
+            lastError = new Error(`${model}: ${errorMsg}`);
+            continue;
+          }
+
+          throw new Error(`Gemini API error (${model}): ${errorMsg}`);
+        }
+
+        const data = await response.json();
+        const text = data.candidates[0].content.parts[0].text;
+        console.log(`✅ Generated with ${model}`);
+        return this.parseAIResponse(text);
+      } catch (err) {
+        lastError = err;
+        continue;
+      }
     }
 
-    const data = await response.json();
-    const text = data.candidates[0].content.parts[0].text;
-    return this.parseAIResponse(text);
+    throw lastError || new Error('All Gemini models failed');
   }
 
   /**
