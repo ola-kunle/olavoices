@@ -7,6 +7,7 @@ import { HTMLGenerator } from './generators/htmlGenerator.js';
 import { GitAutomation } from './utils/gitAutomation.js';
 import { BlogListUpdater } from './utils/blogListUpdater.js';
 import { SitemapUpdater } from './utils/sitemapUpdater.js';
+import { RssFeedGenerator } from './utils/rssFeedGenerator.js';
 
 // Load environment variables
 dotenv.config();
@@ -56,6 +57,12 @@ async function main() {
     await sitemapUpdater.addBlogPost(blogPost);
     console.log('');
 
+    // Step 3.7: Update RSS feed (for Pinterest/Zapier automation)
+    console.log('📡 Step 3.7: Updating RSS feed...\n');
+    const rssFeedGenerator = new RssFeedGenerator();
+    await rssFeedGenerator.generateFeed();
+    console.log('');
+
     // Step 4: Git Automation (if enabled)
     if (AUTO_COMMIT) {
       console.log('🚀 Step 4: Committing to Git and pushing...\n');
@@ -64,7 +71,8 @@ async function main() {
         blogPost.filename,
         `assets/images/blog/${image.filename}`,
         'blog.html',
-        'sitemap.xml'
+        'sitemap.xml',
+        'rss.xml'
       ];
       await git.commitAndPush(content.title, files);
       console.log('');
