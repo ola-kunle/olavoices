@@ -205,41 +205,48 @@ export class ContentGenerator {
     // Detect if this is an SEO keyword (contains "hire", "cost", "rates", etc.)
     const isSearchIntent = /hire|cost|rates|pricing|how to|best|guide|find/i.test(topic);
 
-    return `Write a comprehensive, engaging blog post for OlaVoices, a professional Nigerian voice-over artist's website.
+    return `Write a comprehensive, SEO-optimized blog post for OlaVoices, a professional Nigerian voice-over artist's website.
 
 Topic: ${topic}
 Category: ${category.name}
 Target Audience: ${isSearchIntent ? 'Businesses and clients actively searching to hire voice actors' : 'Voice-over clients, aspiring voice actors, and businesses seeking authentic African voices'}
 
 Requirements:
-- Write 1000-1500 words
+- Write 1200-1800 words (longer content ranks better)
 - Use a professional yet conversational tone
-${isSearchIntent ? '- DIRECTLY answer the search query in the first paragraph' : '- Include personal insights from a Nigerian voice actor\'s perspective'}
-${isSearchIntent ? '- Include specific pricing ranges, process details, or hiring steps' : '- Add practical tips and actionable advice'}
+${isSearchIntent ? '- DIRECTLY answer the search query in the first paragraph with actionable information' : '- Include personal insights from a Nigerian voice actor\'s perspective'}
+${isSearchIntent ? '- Include specific pricing ranges ($50-$300 per project), process details, timelines (24-48hr turnaround)' : '- Add practical tips and actionable advice'}
 - Include cultural nuance and authenticity about Nigerian/West African voice work
-- Make it SEO-friendly with natural keyword integration
-- Structure with clear sections and subheadings
-${isSearchIntent ? '- End with a clear call-to-action: "Contact OlaVoices for professional Nigerian voice-over services"' : '- End with a call-to-action encouraging readers to explore OlaVoices services'}
-${isSearchIntent ? '- Include trust signals: years of experience, international clients, professional quality' : ''}
+- Make it SEO-friendly with natural keyword integration (use topic keywords 3-5 times)
+- Structure with clear H2 and H3 headings (at least 4-6 sections)
+- Add a "Frequently Asked Questions" section with 3-4 common questions (great for SEO)
+- Include internal linking opportunities: mention "portfolio", "rates", "contact" naturally
+${isSearchIntent ? '- End with a clear, compelling call-to-action: "Get a FREE quote for your project today"' : '- End with a call-to-action encouraging readers to explore OlaVoices services'}
+${isSearchIntent ? '- Include trust signals: "10+ years experience", "international clients", "broadcast-quality recordings", "fast turnaround"' : ''}
+- Use listicles, numbered steps, or bullet points where appropriate (better for Pinterest pins)
+- Make the first 150 words extremely valuable and keyword-rich (for featured snippets)
 
 Return ONLY a JSON object with this exact structure:
 {
-  "title": "Engaging, SEO-optimized title (40-60 characters)",
-  "metaDescription": "Compelling meta description (120-160 characters)",
-  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
-  "excerpt": "2-3 sentence excerpt for blog listing (150-200 characters)",
-  "body": "Full article content in HTML format with <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em> tags. Use proper semantic HTML.",
-  "imageSearchQuery": "Specific search query for finding a relevant royalty-free image",
-  "imageAltText": "Detailed, SEO-friendly alt text for the hero image",
-  "callToAction": "Brief, engaging CTA text"
+  "title": "Engaging, SEO-optimized title with primary keyword (50-60 characters)",
+  "metaDescription": "Compelling meta description with call-to-action (140-160 characters)",
+  "keywords": ["primary-keyword", "secondary-keyword", "long-tail-keyword-1", "long-tail-keyword-2", "location-keyword"],
+  "excerpt": "Value-packed 2-3 sentence excerpt with primary keyword (150-200 characters)",
+  "body": "Full article content in semantic HTML with <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>, <blockquote> tags. Include FAQ section at the end.",
+  "imageSearchQuery": "Specific, Pinterest-friendly search query (e.g., 'Nigerian voice actor recording studio professional microphone')",
+  "imageAltText": "Detailed, keyword-rich alt text (80-125 characters)",
+  "callToAction": "Action-oriented CTA with urgency or value proposition"
 }
 
 Important:
 - Ensure the content reflects authentic Nigerian/West African voice acting perspective
-- Include real-world examples and scenarios
-- Make it valuable for both clients and voice actors
+- Include real-world examples, case studies, or scenarios
+- Make it valuable for both clients looking to hire AND voice actors learning
 - Use conversational English that's clear and professional
-- Don't use overly promotional language`;
+- Naturally mention "Nigerian voice actor", "West African accent", "authentic African voice" 2-3 times
+- Don't use overly promotional language - focus on education and value
+- Structure content for easy scanning (short paragraphs, subheadings, lists)
+- Optimize for voice search (use natural question phrases in headings)`;
   }
 
   /**

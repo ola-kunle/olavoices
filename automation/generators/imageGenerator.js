@@ -33,10 +33,12 @@ export class ImageGenerator {
       const data = await response.json();
 
       if (data.photos && data.photos.length > 0) {
-        const image = data.photos[0]; // Use first result
+        // Randomize image selection to ensure uniqueness
+        const randomIndex = Math.floor(Math.random() * Math.min(data.photos.length, 5));
+        const image = data.photos[randomIndex];
         const imageUrl = image.src.large;
 
-        console.log(`✅ Found image on Pexels`);
+        console.log(`✅ Found image on Pexels (selected #${randomIndex + 1} of ${data.photos.length})`);
         const filename = await this.downloadAndOptimize(imageUrl, slug);
 
         return {

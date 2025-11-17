@@ -44,6 +44,24 @@
                 gap: 1.5rem;
             }
         }
+        /* Category Filter Buttons */
+        .category-btn {
+            background: #f3f4f6;
+            color: #4b5563;
+            border: 2px solid transparent;
+        }
+        .category-btn:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .category-btn.active {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+        .blog-card.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-ubuntu">
@@ -66,11 +84,33 @@
 
 <!-- Blog Listing Section -->
 <section class="py-16 bg-white">
-    <div class="container mx-auto px-4 max-w-4xl">
-        <h1 class="text-4xl font-bold mb-10 text-center text-red-600">OlaVoices Insights & Stories</h1>
-        <p class="text-center text-lg text-gray-700 mb-12 max-w-2xl mx-auto">
+    <div class="container mx-auto px-4 max-w-6xl">
+        <h1 class="text-4xl font-bold mb-6 text-center text-red-600">OlaVoices Insights & Stories</h1>
+        <p class="text-center text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
             Dive into the world of voice acting with OlaVoices. Here you'll find articles on cultural nuance in voiceover, the journey of a voice actor, industry tips, and more.
         </p>
+
+        <!-- Category Filter Tabs -->
+        <div class="flex flex-wrap justify-center gap-3 mb-10">
+            <button onclick="filterCategory('all')" class="category-btn active px-6 py-2 rounded-full font-semibold transition" data-category="all">
+                All Posts
+            </button>
+            <button onclick="filterCategory('Personal Story')" class="category-btn px-6 py-2 rounded-full font-semibold transition" data-category="Personal Story">
+                Personal Stories
+            </button>
+            <button onclick="filterCategory('Cultural Insights')" class="category-btn px-6 py-2 rounded-full font-semibold transition" data-category="Cultural Insights">
+                Cultural Insights
+            </button>
+            <button onclick="filterCategory('Industry Guide')" class="category-btn px-6 py-2 rounded-full font-semibold transition" data-category="Industry Guide">
+                Industry Guides
+            </button>
+            <button onclick="filterCategory('Tips & Techniques')" class="category-btn px-6 py-2 rounded-full font-semibold transition" data-category="Tips & Techniques">
+                Tips & Techniques
+            </button>
+            <button onclick="filterCategory('Industry Trends')" class="category-btn px-6 py-2 rounded-full font-semibold transition" data-category="Industry Trends">
+                Industry Trends
+            </button>
+        </div>
 
         <div class="blog-grid">
 
@@ -340,6 +380,38 @@
         <p>&copy; 2025 OlaVoices. All rights reserved.</p>
     </div>
 </footer>
+
+<!-- Category Filter Script -->
+<script>
+function filterCategory(category) {
+    // Update button states
+    const buttons = document.querySelectorAll('.category-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.category === category) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Filter blog cards
+    const cards = document.querySelectorAll('.blog-card');
+    cards.forEach(card => {
+        if (category === 'all') {
+            card.classList.remove('hidden');
+        } else {
+            const cardCategory = card.querySelector('span').textContent.trim();
+            if (cardCategory === category ||
+                (category === 'Tips & Techniques' && cardCategory === 'Tips & Techniques') ||
+                (category === 'Industry Guide' && (cardCategory === 'Industry Guide' || cardCategory === 'Industry Trends')) ||
+                (category === 'Tips & Techniques' && (cardCategory === 'Tips & Techniques' || cardCategory === 'Technical Guide' || cardCategory === 'Professional Tips'))) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        }
+    });
+}
+</script>
 
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
