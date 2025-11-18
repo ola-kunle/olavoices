@@ -7,13 +7,26 @@
     <link>https://olavoices.com/blog.html</link>
     <description>Professional voice-over insights, tips, and stories from an authentic Nigerian voice actor. Learn about cultural nuance, studio setup, industry trends, and hiring voice talent.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 18 Nov 2025 13:56:20 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 18 Nov 2025 18:33:03 GMT</lastBuildDate>
     <atom:link href="https://olavoices.com/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://olavoices.com/assets/logo/favicon.png</url>
       <title>OlaVoices</title>
       <link>https://olavoices.com</link>
     </image>
+
+    <item>
+      <title><![CDATA[Authentic African Voice Over for Training Videos]]></title>
+      <link>https://olavoices.com/authentic-african-voice-over-for-training-videos.html</link>
+      <guid isPermaLink="true">https://olavoices.com/authentic-african-voice-over-for-training-videos.html</guid>
+      <description><![CDATA[Discover the power of authentic African voice over for training videos. Learn how to choose the right voice and explore OlaVoices' services today!]]></description>
+      <category><![CDATA[Industry Trends]]></category>
+      <pubDate>Tue, 18 Nov 2025 00:00:00 GMT</pubDate>
+      <enclosure url="https://olavoices.com/assets/images/blog/authentic-african-voice-over-for-training-videos.webp" type="image/webp" />
+      <media:content url="https://olavoices.com/assets/images/blog/authentic-african-voice-over-for-training-videos.webp" medium="image" type="image/webp">
+        <media:title>Nigerian voice actor in a recording studio with a professional microphone</media:title>
+      </media:content>
+    </item>
 
     <item>
       <title><![CDATA[Unlock Global Reach: The Power of an Authentic African Voice for Mobile Apps]]></title>
