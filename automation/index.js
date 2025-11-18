@@ -8,6 +8,7 @@ import { GitAutomation } from './utils/gitAutomation.js';
 import { BlogListUpdater } from './utils/blogListUpdater.js';
 import { SitemapUpdater } from './utils/sitemapUpdater.js';
 import { RssFeedGenerator } from './utils/rssFeedGenerator.js';
+import { PinterestPoster } from './utils/pinterestPoster.js';
 
 // Load environment variables
 dotenv.config();
@@ -57,10 +58,16 @@ async function main() {
     await sitemapUpdater.addBlogPost(blogPost);
     console.log('');
 
-    // Step 3.7: Update RSS feed (for Pinterest/Zapier automation)
+    // Step 3.7: Update RSS feed
     console.log('📡 Step 3.7: Updating RSS feed...\n');
     const rssFeedGenerator = new RssFeedGenerator();
     await rssFeedGenerator.generateFeed();
+    console.log('');
+
+    // Step 3.8: Post to Pinterest (automatic!)
+    console.log('📌 Step 3.8: Posting to Pinterest...\n');
+    const pinterestPoster = new PinterestPoster();
+    await pinterestPoster.createPin(content, image, blogPost);
     console.log('');
 
     // Step 4: Git Automation (if enabled)
