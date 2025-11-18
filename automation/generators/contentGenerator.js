@@ -68,7 +68,7 @@ export class ContentGenerator {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'llama-3.1-70b-versatile', // Best free model for content generation
+        model: 'llama-3.3-70b-versatile', // Latest Llama model (updated Nov 2025)
         messages: [
           {
             role: 'system',
