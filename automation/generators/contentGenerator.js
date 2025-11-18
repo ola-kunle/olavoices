@@ -6,8 +6,9 @@ import config from '../config.json' with { type: 'json' };
  */
 export class ContentGenerator {
   constructor() {
-    // Order: Gemini (FREE) → Anthropic → OpenAI (paid as last resort)
+    // Order: Groq (FREE, fast, reliable) → Gemini (FREE) → Anthropic → OpenAI (paid as last resort)
     this.providers = [
+      { name: 'groq', handler: this.generateWithGroq.bind(this) },
       { name: 'gemini', handler: this.generateWithGemini.bind(this) },
       { name: 'anthropic', handler: this.generateWithAnthropic.bind(this) },
       { name: 'openai', handler: this.generateWithOpenAI.bind(this) }
@@ -49,6 +50,47 @@ export class ContentGenerator {
     }
 
     throw new Error('All AI providers failed to generate content');
+  }
+
+  /**
+   * Generate content using Groq (FREE - FASTEST & MOST RELIABLE)
+   */
+  async generateWithGroq(topic, category) {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) throw new Error('Groq API key not configured');
+
+    const prompt = this.buildPrompt(topic, category);
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-70b-versatile', // Best free model for content generation
+        messages: [
+          {
+            role: 'system',
+            content: this.getSystemPrompt()
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 8000
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Groq API error: ${error.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return this.parseAIResponse(data.choices[0].message.content);
   }
 
   /**
