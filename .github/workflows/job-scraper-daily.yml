@@ -1,0 +1,44 @@
+name: Voice-Over Job Scraper - Daily Run
+
+on:
+  schedule:
+    # Run every day at 8:00 AM UTC (9:00 AM Lagos time)
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  scrape-jobs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: ./job-automation
+        run: npm install
+
+      - name: Run job scraper
+        working-directory: ./job-automation
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DRY_RUN: false
+          DEBUG: false
+        run: node index.js
+
+      - name: Upload job results
+        uses: actions/upload-artifact@v3
+        with:
+          name: job-results
+          path: job-automation/data/
+          retention-days: 30
+
+      - name: Show summary
+        run: |
+          echo "✅ Job scraping completed"
+          echo "📊 Check artifacts for detailed results"

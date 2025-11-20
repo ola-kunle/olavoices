@@ -1,0 +1,125 @@
+{
+  "jobScraping": {
+    "dailyLimit": 50,
+    "platforms": {
+      "voicesDotCom": {
+        "enabled": true,
+        "priority": "high",
+        "scrapeFrequency": "daily",
+        "url": "https://www.voices.com/jobs"
+      },
+      "voice123": {
+        "enabled": true,
+        "priority": "high",
+        "scrapeFrequency": "daily",
+        "url": "https://voice123.com/jobs"
+      },
+      "upwork": {
+        "enabled": true,
+        "priority": "high",
+        "scrapeFrequency": "daily",
+        "searchUrl": "https://www.upwork.com/nx/search/jobs/?q=voice%20over"
+      },
+      "voquent": {
+        "enabled": true,
+        "priority": "high",
+        "scrapeFrequency": "daily",
+        "url": "https://www.voquent.com/voice-actors/jobs/"
+      },
+      "projectCasting": {
+        "enabled": true,
+        "priority": "medium",
+        "scrapeFrequency": "daily",
+        "searchUrl": "https://projectcasting.com/casting-calls/voiceover"
+      },
+      "starNow": {
+        "enabled": true,
+        "priority": "high",
+        "scrapeFrequency": "daily",
+        "regions": ["south-africa", "kenya", "nigeria"]
+      }
+    }
+  },
+  "keywords": {
+    "primary": [
+      "Nigerian voice",
+      "West African accent",
+      "Lagos accent",
+      "African English",
+      "Authentic African",
+      "Black male voice",
+      "Nigerian accent",
+      "West African voice"
+    ],
+    "secondary": [
+      "African narrator",
+      "African character",
+      "African documentary",
+      "African eLearning",
+      "African commercial",
+      "Nigerian narrator",
+      "Lagos voice"
+    ],
+    "tertiary": [
+      "International English",
+      "Diverse voice",
+      "Multicultural",
+      "Global accent",
+      "male voice actor",
+      "professional voice"
+    ],
+    "exclude": [
+      "female only",
+      "woman voice",
+      "children",
+      "kid voice",
+      "unpaid",
+      "free",
+      "exposure only",
+      "no budget"
+    ]
+  },
+  "matching": {
+    "minimumScore": 30,
+    "primaryKeywordWeight": 10,
+    "secondaryKeywordWeight": 5,
+    "tertiaryKeywordWeight": 2,
+    "excludeIfFound": true
+  },
+  "application": {
+    "dailyLimit": 20,
+    "useAI": true,
+    "aiProvider": "gemini",
+    "personalizeProposals": true,
+    "includeDemoReel": true,
+    "demoReelUrl": "https://olavoices.com/audio/demo.mp3",
+    "autoApply": false,
+    "requireManualReview": true
+  },
+  "tracking": {
+    "saveAllJobs": true,
+    "saveApplications": true,
+    "trackResponses": true,
+    "notifyOnMatch": true
+  },
+  "profile": {
+    "name": "Ola",
+    "email": "hello@olavoices.com",
+    "website": "https://olavoices.com",
+    "specialties": [
+      "Nigerian accent",
+      "West African English",
+      "Commercial voice-over",
+      "Corporate narration",
+      "E-learning",
+      "Audiobook narration",
+      "Character voices"
+    ],
+    "experience": "Professional voice actor with authentic Nigerian accent",
+    "rates": {
+      "commercial": "$250-750",
+      "narration": "$200-600",
+      "audiobook": "PFH $200-400"
+    }
+  }
+}

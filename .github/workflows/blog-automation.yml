@@ -1,0 +1,108 @@
+name: Daily Blog Automation
+
+on:
+  schedule:
+    # Run daily at 9:00 AM UTC (adjust to your timezone)
+    # This equals 10:00 AM WAT (West Africa Time, Lagos)
+    - cron: '0 9 * * *'
+
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Run mode'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - preview
+
+jobs:
+  generate-blog-post:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: automation/package.json
+
+      - name: Install dependencies
+        run: |
+          cd automation
+          npm ci
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "Blog Automation Bot"
+          git config --global user.email "automation@olavoices.com"
+
+      - name: Run blog automation
+        env:
+          # AI Provider API Keys
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+          # Image Provider API Keys
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+
+          # Telegram Notifications
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+          # GitHub Token for PR creation
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Environment
+          NODE_ENV: production
+        run: |
+          cd automation
+          MODE="${{ github.event.inputs.mode || 'auto' }}"
+          npm start -- --mode=$MODE
+
+      - name: Push changes (if auto-published)
+        if: success()
+        run: |
+          # Changes will be committed by the automation script
+          # This step is just for logging
+          echo "Blog post processed successfully"
+
+      - name: Create summary
+        if: always()
+        run: |
+          echo "### Blog Automation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Mode:** ${{ github.event.inputs.mode || 'auto' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Time:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🤖 Blog Automation Failed',
+              body: `The blog automation workflow failed.
+
+              **Run:** ${{ github.run_id }}
+              **Time:** ${new Date().toISOString()}
+
+              Please check the workflow logs for details.`,
+              labels: ['automation', 'bug']
+            });
