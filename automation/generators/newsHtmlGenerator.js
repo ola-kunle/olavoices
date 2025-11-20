@@ -27,7 +27,7 @@ export class NewsHtmlGenerator {
     // Format article with paragraphs
     const formattedArticle = article.article
       .split('\n\n')
-      .map(para => `        <p class="text-gray-700 leading-relaxed mb-4">${para.trim()}</p>`)
+      .map(para => `        <p class="text-gray-800 text-lg leading-loose mb-6">${para.trim()}</p>`)
       .join('\n');
 
     const html = `<!DOCTYPE html>
@@ -55,7 +55,16 @@ export class NewsHtmlGenerator {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         .font-ubuntu { font-family: 'Ubuntu', sans-serif; }
-        .news-content p { margin-bottom: 1rem; line-height: 1.8; }
+        .news-content p {
+            margin-bottom: 1.5rem;
+            line-height: 2.0;
+            font-size: 1.125rem;
+            color: #1f2937;
+        }
+        .news-content {
+            max-width: 720px;
+            margin: 0 auto;
+        }
         .source-badge {
             display: inline-flex;
             align-items: center;

@@ -1,0 +1,17 @@
+# Netlify Configuration
+[build]
+  publish = "."
+
+# Remove .html from URLs (Pretty URLs)
+[[redirects]]
+  from = "/*"
+  to = "/:splat.html"
+  status = 200
+  force = false
+
+# Enable clean URLs
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"

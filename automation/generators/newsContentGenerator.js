@@ -120,23 +120,46 @@ Respond in JSON format:
   }
 
   /**
-   * Generate engaging image search query for Pexels
+   * Generate specific, relevant image search query based on article content
    */
   generateImageQuery(article) {
-    // Extract key concepts from headline and category
+    const headline = article.headline?.toLowerCase() || '';
     const category = article.category?.toLowerCase() || '';
 
+    // Match specific topics for better image relevance
+    if (headline.includes('anime') || headline.includes('manga') || headline.includes('jujutsu')) {
+      return 'anime voice acting studio microphone recording booth';
+    }
+
+    if (headline.includes('ai') || headline.includes('artificial intelligence') || headline.includes('technology')) {
+      return 'artificial intelligence technology digital ai voice assistant';
+    }
+
+    if (headline.includes('audiobook') || headline.includes('narration') || headline.includes('narrator')) {
+      return 'audiobook recording headphones microphone narrator reading';
+    }
+
+    if (headline.includes('podcast') || headline.includes('podcasting')) {
+      return 'podcast recording microphone studio host broadcasting';
+    }
+
+    if (headline.includes('nollywood') || headline.includes('film') || headline.includes('movie')) {
+      return 'film production movie set camera director recording';
+    }
+
+    if (headline.includes('voice actor') || headline.includes('voice acting') || headline.includes('dubbing')) {
+      return 'voice actor recording studio microphone sound booth professional';
+    }
+
+    // Fallback based on category
     const queries = {
-      'breaking': 'breaking news newspaper headline urgent',
-      'politics': 'african politics government leadership conference',
-      'business': 'african business professionals office meeting success',
-      'tech': 'technology innovation startup african entrepreneur',
-      'culture': 'african culture celebration traditional modern',
-      'sports': 'sports victory celebration athlete competition',
-      'human interest': 'african people community joy emotional connection'
+      'tech': 'technology innovation digital audio recording studio',
+      'business': 'professional microphone recording business audio production',
+      'culture': 'voice actor recording studio creative artistic',
+      'human interest': 'microphone recording voice professional studio'
     };
 
-    return queries[category] || 'african people modern success celebration';
+    return queries[category] || 'professional voice recording studio microphone audio production';
   }
 
   /**
