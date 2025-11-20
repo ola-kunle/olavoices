@@ -5,20 +5,85 @@ import sharp from 'sharp';
 
 /**
  * Image Generator with Pexels (FREE)
+ * Now with duplicate prevention and relevance tracking
  */
 export class ImageGenerator {
+  constructor() {
+    this.usedImagesPath = path.join(process.cwd(), 'data', 'used-images.json');
+  }
+
   /**
-   * Get image from Pexels (FREE)
+   * Load previously used image IDs
+   */
+  async loadUsedImages() {
+    try {
+      const data = await fs.readFile(this.usedImagesPath, 'utf-8');
+      const parsed = JSON.parse(data);
+      return new Set(parsed.usedImageIds || []);
+    } catch (error) {
+      // File doesn't exist yet, return empty set
+      return new Set();
+    }
+  }
+
+  /**
+   * Save newly used image ID
+   */
+  async saveUsedImage(imageId) {
+    const usedImages = await this.loadUsedImages();
+    usedImages.add(imageId);
+
+    const data = {
+      usedImageIds: Array.from(usedImages),
+      lastUpdated: new Date().toISOString()
+    };
+
+    await fs.mkdir(path.dirname(this.usedImagesPath), { recursive: true });
+    await fs.writeFile(this.usedImagesPath, JSON.stringify(data, null, 2));
+  }
+
+  /**
+   * Add variation to search query for more diverse results
+   */
+  addQueryVariation(baseQuery) {
+    const variations = [
+      'professional',
+      'modern',
+      'authentic',
+      'creative',
+      'natural',
+      'dynamic',
+      'vibrant',
+      'engaging'
+    ];
+
+    // Randomly add a variation 50% of the time
+    if (Math.random() > 0.5) {
+      const variation = variations[Math.floor(Math.random() * variations.length)];
+      return `${variation} ${baseQuery}`;
+    }
+
+    return baseQuery;
+  }
+  /**
+   * Get image from Pexels (FREE) - with duplicate prevention
    */
   async getImage(searchQuery, altText, slug) {
-    console.log(`🖼️  Searching for image: "${searchQuery}"`);
+    // Add variation to search query for diversity
+    const variedQuery = this.addQueryVariation(searchQuery);
+    console.log(`🖼️  Searching for image: "${variedQuery}"`);
 
     const apiKey = process.env.PEXELS_API_KEY;
     if (!apiKey) throw new Error('Pexels API key not configured');
 
     try {
+      // Load previously used images
+      const usedImages = await this.loadUsedImages();
+      console.log(`📊 Tracking ${usedImages.size} previously used images`);
+
+      // Fetch more images for better variety
       const response = await fetch(
-        `https://api.pexels.com/v1/search?query=${encodeURIComponent(searchQuery)}&per_page=5&orientation=landscape`,
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(variedQuery)}&per_page=20&orientation=landscape`,
         {
           headers: {
             'Authorization': apiKey
@@ -33,19 +98,33 @@ export class ImageGenerator {
       const data = await response.json();
 
       if (data.photos && data.photos.length > 0) {
-        // Randomize image selection to ensure uniqueness
-        const randomIndex = Math.floor(Math.random() * Math.min(data.photos.length, 5));
-        const image = data.photos[randomIndex];
+        // Filter out previously used images
+        const availableImages = data.photos.filter(photo => !usedImages.has(photo.id));
+
+        if (availableImages.length === 0) {
+          console.log('⚠️  All fetched images were previously used, trying fallback query...');
+          // Try again with original query (no variation)
+          return await this.getImageFallback(searchQuery, altText, slug, usedImages);
+        }
+
+        // Randomly select from available images
+        const randomIndex = Math.floor(Math.random() * Math.min(availableImages.length, 10));
+        const image = availableImages[randomIndex];
         const imageUrl = image.src.large;
 
-        console.log(`✅ Found image on Pexels (selected #${randomIndex + 1} of ${data.photos.length})`);
+        console.log(`✅ Found unique image (${randomIndex + 1} of ${availableImages.length} available, ${usedImages.size} total used)`);
+
+        // Save this image as used
+        await this.saveUsedImage(image.id);
+
         const filename = await this.downloadAndOptimize(imageUrl, slug);
 
         return {
           filename,
           url: imageUrl,
           alt: altText,
-          provider: 'pexels'
+          provider: 'pexels',
+          imageId: image.id
         };
       }
 
@@ -55,6 +134,57 @@ export class ImageGenerator {
       // Create placeholder
       return await this.generatePlaceholder(slug, altText);
     }
+  }
+
+  /**
+   * Fallback method if all images from varied query were used
+   */
+  async getImageFallback(searchQuery, altText, slug, usedImages) {
+    console.log(`🔄 Trying fallback with original query: "${searchQuery}"`);
+
+    const apiKey = process.env.PEXELS_API_KEY;
+    const response = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(searchQuery)}&per_page=30&orientation=landscape`,
+      {
+        headers: {
+          'Authorization': apiKey
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Pexels API error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (data.photos && data.photos.length > 0) {
+      const availableImages = data.photos.filter(photo => !usedImages.has(photo.id));
+
+      if (availableImages.length === 0) {
+        throw new Error('All available images have been used. Consider expanding search queries.');
+      }
+
+      const randomIndex = Math.floor(Math.random() * availableImages.length);
+      const image = availableImages[randomIndex];
+      const imageUrl = image.src.large;
+
+      console.log(`✅ Fallback successful: found unique image`);
+
+      await this.saveUsedImage(image.id);
+
+      const filename = await this.downloadAndOptimize(imageUrl, slug);
+
+      return {
+        filename,
+        url: imageUrl,
+        alt: altText,
+        provider: 'pexels',
+        imageId: image.id
+      };
+    }
+
+    throw new Error('No images found in fallback');
   }
 
   /**
