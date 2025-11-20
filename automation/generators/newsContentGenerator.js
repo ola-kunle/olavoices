@@ -31,21 +31,28 @@ Write a compelling 500-700 word news article that:
 1. Opens with a PUNCHY, emotional hook (make readers FEEL something)
 2. Expands on the story with key details and context
 3. Includes relevant background information
-4. Explains why this matters (emotional/social/cultural impact)
-5. Ends with a thought-provoking conclusion
-6. Uses journalistic tone (authentic, credible, engaging)
-7. Cites the source naturally in the text (e.g., "According to ${sourceArticle.source?.name}...")
+4. **CRITICAL: Connects this news to the voice-over/voice acting industry**
+   - How does this impact voice actors, voice-over work, or content creation?
+   - Why should voice-over professionals care about this?
+   - What opportunities or challenges does this create for voice talent?
+   - Add a paragraph explaining the voice-over angle naturally
+5. Explains why this matters (emotional/social/cultural impact)
+6. Ends with a thought-provoking conclusion that ties to voice-over
+7. Uses journalistic tone (authentic, credible, engaging)
+8. Cites the source naturally in the text (e.g., "According to ${sourceArticle.source?.name}...")
 
 STYLE:
 - Conversational but professional
 - Touch hearts, strike nerves, evoke reactions
 - Make it shareable (people want to talk about this)
 - Not dry/academic - write like a human
+- **Authentic voice-over industry perspective**
 
 IMPORTANT:
 - Do NOT fabricate details not in the source
 - Do NOT editorialize or add personal opinions
 - DO make it emotionally engaging while staying factual
+- **MUST include voice-over industry connection** (this is a voice-over artist's website)
 
 Respond in JSON format:
 {

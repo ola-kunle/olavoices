@@ -87,11 +87,11 @@ export class NewsAggregator {
   }
 
   /**
-   * AI evaluates if news is emotionally compelling enough to post
+   * AI evaluates if news is emotionally compelling AND relevant to voice-over industry
    */
   async evaluateNewsAppeal(article) {
     try {
-      const prompt = `You are a news editor evaluating if this story should be published.
+      const prompt = `You are a news editor for OlaVoices, a Nigerian voice-over artist's website.
 
 STORY:
 Title: ${article.title}
@@ -99,23 +99,35 @@ Description: ${article.description || 'N/A'}
 Source: ${article.source?.name || 'Unknown'}
 Published: ${article.publishedAt}
 
-EVALUATION CRITERIA:
+EVALUATION CRITERIA (ALL must be met):
 ✅ Does this story touch hearts, strike a nerve, or make you feel something?
+✅ Can this story be connected to the voice-over/voice acting industry?
+   Examples of connections:
+   - Media/Entertainment (Nollywood, music, podcasts → voice actors work in these)
+   - Tech/AI (voice technology, apps, assistants → voice-over applications)
+   - Business/Marketing (advertising, branding → commercial voice-overs)
+   - Education (e-learning, training → voice-over narration)
+   - Culture/Language (African languages, accents → voice authenticity)
+   - Politics/Social Issues (if it affects media/content creation)
 ✅ Would people want to share this or talk about it?
-✅ Is it interesting beyond just African audiences?
 ✅ Is it authentic and properly sourced?
 
-Rate this story from 1-10 on emotional appeal/clickworthiness.
-Then explain why in 1-2 sentences.
+REJECT if:
+❌ Cannot be tied to voice-over industry in any meaningful way
+❌ Too generic or unrelated to media/content creation
+
+Rate this story from 1-10 on VOICE-OVER RELEVANCE + emotional appeal.
+Then explain the voice-over connection in 1-2 sentences.
 
 Respond in JSON format:
 {
   "score": 7,
-  "reasoning": "This is a heartwarming story about...",
+  "reasoning": "Nollywood's growth means more voice-over opportunities for Nigerian actors...",
+  "voiceoverConnection": "Growing film industry = more dubbing and narration work",
   "shouldPublish": true
 }
 
-Score 7+ = publish. Score below 7 = skip.`;
+Score 7+ WITH voice-over connection = publish. Otherwise skip.`;
 
       const completion = await this.groq.chat.completions.create({
         model: 'llama-3.3-70b-versatile',
