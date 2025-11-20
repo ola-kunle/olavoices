@@ -12,22 +12,26 @@ export class NewsAggregator {
   }
 
   /**
-   * Fetch trending African news from multiple sources
+   * Fetch global voice-over industry news
    */
-  async fetchAfricanNews() {
+  async fetchVoiceOverNews() {
     if (!this.newsApiKey) {
       console.log('⚠️  NewsAPI key not configured, using fallback method...');
       return await this.fetchFromGoogleNewsRSS();
     }
 
     try {
-      console.log('📰 Fetching African news from NewsAPI...');
+      console.log('📰 Fetching global voice-over industry news from NewsAPI...');
 
-      // Broad search covering all African countries and topics
+      // Target voice-over industry specifically
       const queries = [
-        'Nigeria OR Ghana OR Kenya OR "South Africa" OR Africa',
-        'Lagos OR Accra OR Nairobi OR "Cape Town" OR African',
-        'Nollywood OR Afrobeats OR "African tech" OR "African business"'
+        '"voice actor" OR "voice-over" OR "voice acting" OR voiceover',
+        'audiobook OR "audio book" OR narration OR narrator',
+        'podcast OR podcasting OR "podcast production"',
+        'dubbing OR "voice dubbing" OR localization',
+        '"AI voice" OR "voice technology" OR "voice synthesis"',
+        'Nollywood OR "Nigerian film" OR "African cinema"',
+        '"e-learning" OR "online education" OR "educational video"'
       ];
 
       let allArticles = [];
@@ -39,8 +43,8 @@ export class NewsAggregator {
           `q=${encodeURIComponent(query)}&` +
           `language=en&` +
           `sortBy=publishedAt&` +
-          `pageSize=20&` +
-          `from=${new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()}`,
+          `pageSize=15&` +
+          `from=${new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()}`,
           {
             headers: { 'X-Api-Key': this.newsApiKey }
           }
@@ -65,8 +69,8 @@ export class NewsAggregator {
         new Map(allArticles.map(article => [article.url, article])).values()
       );
 
-      console.log(`✅ Found ${uniqueArticles.length} unique articles from NewsAPI`);
-      return uniqueArticles.slice(0, 30); // Return top 30
+      console.log(`✅ Found ${uniqueArticles.length} unique voice-over industry articles`);
+      return uniqueArticles.slice(0, 50); // Return top 50 for better filtering
 
     } catch (error) {
       console.error(`❌ NewsAPI fetch failed: ${error.message}`);
@@ -177,9 +181,9 @@ Most stories will be rejected. That's good - authenticity over quantity.`;
    * Find the best news stories to publish (up to 3)
    */
   async findCompellingNews(targetCount = 3) {
-    console.log(`\n🔍 Searching for ${targetCount} compelling African news stories...\n`);
+    console.log(`\n🔍 Searching for ${targetCount} compelling voice-over industry stories...\n`);
 
-    const articles = await this.fetchAfricanNews();
+    const articles = await this.fetchVoiceOverNews();
 
     if (articles.length === 0) {
       console.log('❌ No articles found from news sources');
