@@ -31,7 +31,14 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  
+
+  <url>
+    <loc>https://olavoices.com/beyond-the-accent-cultural-authenticity-in-voiceover</loc>
+    <lastmod>2025-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <url>
     <loc>https://olavoices.com/elearning-voiceover-guide</loc>
     <lastmod>2025-09-15</lastmod>
