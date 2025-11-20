@@ -7,13 +7,26 @@
     <link>https://olavoices.com/blog.html</link>
     <description>Professional voice-over insights, tips, and stories from an authentic Nigerian voice actor. Learn about cultural nuance, studio setup, industry trends, and hiring voice talent.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 19 Nov 2025 09:18:07 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 20 Nov 2025 09:16:58 GMT</lastBuildDate>
     <atom:link href="https://olavoices.com/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://olavoices.com/assets/logo/favicon.png</url>
       <title>OlaVoices</title>
       <link>https://olavoices.com</link>
     </image>
+
+    <item>
+      <title><![CDATA[Audiobook Narration Best Practices: Expert Guide]]></title>
+      <link>https://olavoices.com/audiobook-narration-best-practices-expert-guide.html</link>
+      <guid isPermaLink="true">https://olavoices.com/audiobook-narration-best-practices-expert-guide.html</guid>
+      <description><![CDATA[Discover expert audiobook narration best practices. Hire a professional Nigerian voice actor for high-quality recordings. Get a FREE quote today!]]></description>
+      <category><![CDATA[Industry Guide]]></category>
+      <pubDate>Thu, 20 Nov 2025 00:00:00 GMT</pubDate>
+      <enclosure url="https://olavoices.com/assets/images/blog/audiobook-narration-best-practices-expert-guide.webp" type="image/webp" />
+      <media:content url="https://olavoices.com/assets/images/blog/audiobook-narration-best-practices-expert-guide.webp" medium="image" type="image/webp">
+        <media:title>Professional Nigerian voice actor in a recording studio with a microphone</media:title>
+      </media:content>
+    </item>
 
     <item>
       <title><![CDATA[Hire Nigerian Voice Actor for E-Learning]]></title>
@@ -259,19 +272,6 @@
       <enclosure url="https://olavoices.com/assets/images/luis-quintero-OGnP9dmHBPQ-unsplash.jpg" type="image/webp" />
       <media:content url="https://olavoices.com/assets/images/luis-quintero-OGnP9dmHBPQ-unsplash.jpg" medium="image" type="image/webp">
         <media:title>Voice Acting Success Metrics - Client Campaign Results for Nigerian Voice Actor</media:title>
-      </media:content>
-    </item>
-
-    <item>
-      <title><![CDATA[Voice Acting Mastery: 7 Essential Tips for Authentic African-English Delivery]]></title>
-      <link>https://olavoices.com/voice-acting-tips-guide.html</link>
-      <guid isPermaLink="true">https://olavoices.com/voice-acting-tips-guide.html</guid>
-      <description><![CDATA[Professional voice acting tips from an authentic Nigerian voice actor. Learn techniques for authentic delivery, cultural nuance, and building a successful voice acting career.]]></description>
-      <category><![CDATA[Tips & Techniques]]></category>
-      <pubDate>Mon, 10 Nov 2025 00:00:00 GMT</pubDate>
-      <enclosure url="https://olavoices.com/assets/images/ashkan-forouzani-4sNJEx2V0yk-unsplash.jpg" type="image/webp" />
-      <media:content url="https://olavoices.com/assets/images/ashkan-forouzani-4sNJEx2V0yk-unsplash.jpg" medium="image" type="image/webp">
-        <media:title>Professional Voice Acting Studio - Nigerian Voice Actor Recording Equipment and Setup</media:title>
       </media:content>
     </item>
   </channel>
