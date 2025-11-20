@@ -1,14 +1,16 @@
 {
-  "name": "olavoices-blog-automation",
-  "version": "1.0.0",
-  "description": "FREE automated blog generation with Gemini AI",
+  "name": "olavoices-automation",
+  "version": "2.0.0",
+  "description": "FREE automated blog + news generation with Groq AI",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "news": "node news-automation.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "groq-sdk": "^0.8.0",
     "node-fetch": "^3.3.2",
     "sharp": "^0.34.5"
   }
