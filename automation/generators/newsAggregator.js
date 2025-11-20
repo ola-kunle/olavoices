@@ -87,11 +87,12 @@ export class NewsAggregator {
   }
 
   /**
-   * AI evaluates if news is emotionally compelling AND relevant to voice-over industry
+   * AI evaluates if news is DIRECTLY about voice-over/voice acting industry
+   * STRICT FILTER - No forced connections allowed
    */
   async evaluateNewsAppeal(article) {
     try {
-      const prompt = `You are a news editor for OlaVoices, a Nigerian voice-over artist's website.
+      const prompt = `You are a news editor for OlaVoices, a Nigerian voice-over artist's professional website.
 
 STORY:
 Title: ${article.title}
@@ -99,35 +100,41 @@ Description: ${article.description || 'N/A'}
 Source: ${article.source?.name || 'Unknown'}
 Published: ${article.publishedAt}
 
-EVALUATION CRITERIA (ALL must be met):
-✅ Does this story touch hearts, strike a nerve, or make you feel something?
-✅ Can this story be connected to the voice-over/voice acting industry?
-   Examples of connections:
-   - Media/Entertainment (Nollywood, music, podcasts → voice actors work in these)
-   - Tech/AI (voice technology, apps, assistants → voice-over applications)
-   - Business/Marketing (advertising, branding → commercial voice-overs)
-   - Education (e-learning, training → voice-over narration)
-   - Culture/Language (African languages, accents → voice authenticity)
-   - Politics/Social Issues (if it affects media/content creation)
-✅ Would people want to share this or talk about it?
-✅ Is it authentic and properly sourced?
+STRICT EVALUATION CRITERIA:
 
-REJECT if:
-❌ Cannot be tied to voice-over industry in any meaningful way
-❌ Too generic or unrelated to media/content creation
+✅ ONLY ACCEPT if story is DIRECTLY about one of these:
+1. Voice acting industry itself (voice actors, voice-over work, dubbing studios)
+2. Nollywood/African film PRODUCTION news (new movies being made, casting, production announcements)
+3. Audiobook or podcast industry growth in Africa
+4. E-learning platform launches or education tech developments
+5. AI voice technology developments affecting voice actors
+6. Recording equipment, studio technology, or audio production tools
+7. Content creation platforms hiring voice talent
 
-Rate this story from 1-10 on VOICE-OVER RELEVANCE + emotional appeal.
-Then explain the voice-over connection in 1-2 sentences.
+❌ REJECT ALL of these (no matter how you try to connect them):
+- Celebrity news (unless they're hiring voice actors)
+- Generic entertainment news (concerts, awards shows, etc.)
+- Politics, social issues, general news (NO forced connections)
+- Sports, business, culture news (unless directly about voice-over work)
+- Any story requiring mental gymnastics to connect to voice-over
+
+BE BRUTALLY HONEST:
+- If the story doesn't mention voice-over, dubbing, narration, or audio production → REJECT
+- If you have to stretch to make a connection → REJECT
+- If it's not something a voice actor would care about professionally → REJECT
+
+Rate from 1-10 on DIRECT voice-over industry relevance.
 
 Respond in JSON format:
 {
-  "score": 7,
-  "reasoning": "Nollywood's growth means more voice-over opportunities for Nigerian actors...",
-  "voiceoverConnection": "Growing film industry = more dubbing and narration work",
+  "score": 9,
+  "reasoning": "This is directly about Nollywood studios hiring voice actors for new film dubbing project",
+  "isDirect": true,
   "shouldPublish": true
 }
 
-Score 7+ WITH voice-over connection = publish. Otherwise skip.`;
+Score 8+ AND isDirect=true = publish. Otherwise skip.
+Most stories will be rejected. That's good - authenticity over quantity.`;
 
       const completion = await this.groq.chat.completions.create({
         model: 'llama-3.3-70b-versatile',
