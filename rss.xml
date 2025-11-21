@@ -7,13 +7,26 @@
     <link>https://olavoices.com/blog.html</link>
     <description>Professional voice-over insights, tips, and stories from an authentic Nigerian voice actor. Learn about cultural nuance, studio setup, industry trends, and hiring voice talent.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 21 Nov 2025 06:23:27 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 21 Nov 2025 09:16:42 GMT</lastBuildDate>
     <atom:link href="https://olavoices.com/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://olavoices.com/assets/logo/favicon.png</url>
       <title>OlaVoices</title>
       <link>https://olavoices.com</link>
     </image>
+
+    <item>
+      <title><![CDATA[African Accent Voice Over for Audiobooks: Expert Guide]]></title>
+      <link>https://olavoices.com/african-accent-voice-over-for-audiobooks-expert-guide.html</link>
+      <guid isPermaLink="true">https://olavoices.com/african-accent-voice-over-for-audiobooks-expert-guide.html</guid>
+      <description><![CDATA[Discover the power of authentic African voice overs for audiobooks. Learn how to choose the right Nigerian voice actor and get started with OlaVoices today!]]></description>
+      <category><![CDATA[Industry Guide]]></category>
+      <pubDate>Fri, 21 Nov 2025 00:00:00 GMT</pubDate>
+      <enclosure url="https://olavoices.com/assets/images/blog/african-accent-voice-over-for-audiobooks-expert-guide.webp" type="image/webp" />
+      <media:content url="https://olavoices.com/assets/images/blog/african-accent-voice-over-for-audiobooks-expert-guide.webp" medium="image" type="image/webp">
+        <media:title>Nigerian voice actor in a professional recording studio with a microphone</media:title>
+      </media:content>
+    </item>
 
     <item>
       <title><![CDATA[Audiobook Narration Best Practices: Expert Guide]]></title>
@@ -259,19 +272,6 @@
       <enclosure url="https://olavoices.com/assets/images/the-new-york-public-library-Y3sunBJSRqA-unsplash.jpg" type="image/webp" />
       <media:content url="https://olavoices.com/assets/images/the-new-york-public-library-Y3sunBJSRqA-unsplash.jpg" medium="image" type="image/webp">
         <media:title>E-Learning Students - Global Online Education with Nigerian Voice Actor Narration</media:title>
-      </media:content>
-    </item>
-
-    <item>
-      <title><![CDATA[Success Stories: How Authentic West African Voices Transform Global Campaigns]]></title>
-      <link>https://olavoices.com/client-case-studies.html</link>
-      <guid isPermaLink="true">https://olavoices.com/client-case-studies.html</guid>
-      <description><![CDATA[Real client case studies showing how authentic Nigerian and West African voiceovers increased engagement, built trust, and delivered measurable results.]]></description>
-      <category><![CDATA[Case Studies]]></category>
-      <pubDate>Fri, 03 Oct 2025 00:00:00 GMT</pubDate>
-      <enclosure url="https://olavoices.com/assets/images/luis-quintero-OGnP9dmHBPQ-unsplash.jpg" type="image/webp" />
-      <media:content url="https://olavoices.com/assets/images/luis-quintero-OGnP9dmHBPQ-unsplash.jpg" medium="image" type="image/webp">
-        <media:title>Voice Acting Success Metrics - Client Campaign Results for Nigerian Voice Actor</media:title>
       </media:content>
     </item>
   </channel>
