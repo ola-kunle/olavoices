@@ -13,6 +13,13 @@ export class NewsHtmlGenerator {
     const filename = `news-${slug}.html`;
     const filepath = path.join(process.cwd(), '..', filename);
 
+    // Check for duplicate/similar stories
+    const isDuplicate = await this.checkForDuplicate(slug, article.headline);
+    if (isDuplicate) {
+      console.log(`⚠️  Skipping duplicate story: "${article.headline}"`);
+      return null;
+    }
+
     // Format publication date
     const pubDate = new Date(article.source.publishedAt);
     const formattedDate = pubDate.toLocaleDateString('en-US', {
@@ -333,5 +340,58 @@ ${formattedArticle}
     if (seconds < 604800) return `${Math.floor(seconds / 86400)} days ago`;
 
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  /**
+   * Check if a similar story has already been published
+   * Prevents publishing multiple articles about the same event
+   */
+  async checkForDuplicate(slug, headline) {
+    try {
+      // Load published stories tracker
+      const trackerPath = path.join(process.cwd(), 'data', 'published-stories.json');
+      let tracker = { publishedSlugs: [], lastUpdated: null };
+
+      try {
+        const data = await fs.readFile(trackerPath, 'utf-8');
+        tracker = JSON.parse(data);
+      } catch (err) {
+        // File doesn't exist yet, create it
+        await fs.mkdir(path.dirname(trackerPath), { recursive: true });
+      }
+
+      // Check if this exact slug already exists
+      if (tracker.publishedSlugs.includes(slug)) {
+        return true;
+      }
+
+      // Check for similar slugs (e.g., different variations of same story)
+      // Extract key words from slug (longer words are more significant)
+      const slugWords = slug.split('-').filter(word => word.length > 4);
+
+      for (const publishedSlug of tracker.publishedSlugs) {
+        const publishedWords = publishedSlug.split('-').filter(word => word.length > 4);
+
+        // Count matching words
+        const matchingWords = slugWords.filter(word => publishedWords.includes(word));
+
+        // If 60%+ of significant words match, it's likely a duplicate
+        const matchRatio = matchingWords.length / Math.min(slugWords.length, publishedWords.length);
+        if (matchRatio >= 0.6 && matchingWords.length >= 2) {
+          console.log(`   📊 Similarity: ${(matchRatio * 100).toFixed(0)}% match with "${publishedSlug}"`);
+          return true;
+        }
+      }
+
+      // Not a duplicate - add to tracker
+      tracker.publishedSlugs.push(slug);
+      tracker.lastUpdated = new Date().toISOString();
+      await fs.writeFile(trackerPath, JSON.stringify(tracker, null, 2), 'utf-8');
+
+      return false;
+    } catch (error) {
+      console.error(`⚠️  Error checking for duplicates: ${error.message}`);
+      return false; // If error, allow publishing (fail open)
+    }
   }
 }
