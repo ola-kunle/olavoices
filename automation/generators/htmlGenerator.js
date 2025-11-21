@@ -10,6 +10,14 @@ export class HTMLGenerator {
    */
   async generateBlogPage(content, image) {
     const slug = this.createSlug(content.title);
+
+    // Check for duplicate/similar blog posts
+    const isDuplicate = await this.checkForDuplicate(slug, content);
+    if (isDuplicate) {
+      console.log(`⚠️  Skipping duplicate blog post: "${content.title}"`);
+      return null;
+    }
+
     const publishDate = new Date().toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -173,5 +181,88 @@ export class HTMLGenerator {
       "'": '&#039;'
     };
     return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
+  /**
+   * Check if a similar blog post has already been published
+   * Compares blog content/descriptions, not just titles
+   */
+  async checkForDuplicate(slug, content) {
+    try {
+      // Load published blogs tracker
+      const trackerPath = path.join(process.cwd(), 'data', 'published-blogs.json');
+      let tracker = { publishedBlogs: [], lastUpdated: null };
+
+      try {
+        const data = await fs.readFile(trackerPath, 'utf-8');
+        tracker = JSON.parse(data);
+      } catch (err) {
+        // File doesn't exist yet, create it
+        await fs.mkdir(path.dirname(trackerPath), { recursive: true });
+      }
+
+      // Check if this exact slug already exists
+      const existingBlog = tracker.publishedBlogs.find(b => b.slug === slug);
+      if (existingBlog) {
+        return true;
+      }
+
+      // Extract proper nouns (capitalized words) from title - these are key entities
+      const extractProperNouns = (text) => {
+        return text.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) || [];
+      };
+
+      const currentProperNouns = extractProperNouns(content.title + ' ' + content.metaDescription);
+
+      // Check content similarity with existing blog posts
+      for (const publishedBlog of tracker.publishedBlogs) {
+        const publishedProperNouns = extractProperNouns(publishedBlog.title + ' ' + publishedBlog.excerpt);
+
+        // Check if they share the same key topics (e.g., "E-Learning", "Audiobook")
+        const sharedNouns = currentProperNouns.filter(noun =>
+          publishedProperNouns.some(pn => pn.includes(noun) || noun.includes(pn))
+        );
+
+        // If they share 3+ proper nouns, likely the same topic
+        if (sharedNouns.length >= 3) {
+          console.log(`   📊 Duplicate detected: Both about "${sharedNouns.join(', ')}"`);
+          console.log(`   Previous: "${publishedBlog.title}"`);
+          return true;
+        }
+
+        // Also check content similarity in descriptions
+        const currentWords = new Set(
+          content.metaDescription.toLowerCase().split(/\W+/).filter(w => w.length > 4)
+        );
+        const publishedWords = new Set(
+          publishedBlog.excerpt.toLowerCase().split(/\W+/).filter(w => w.length > 4)
+        );
+
+        const intersection = [...currentWords].filter(w => publishedWords.has(w));
+        const union = new Set([...currentWords, ...publishedWords]);
+        const similarity = intersection.length / union.size;
+
+        // If 70%+ content overlap, it's likely a duplicate
+        if (similarity >= 0.7) {
+          console.log(`   📊 Content similarity: ${(similarity * 100).toFixed(0)}% match with "${publishedBlog.slug}"`);
+          return true;
+        }
+      }
+
+      // Not a duplicate - add to tracker
+      tracker.publishedBlogs.push({
+        slug,
+        title: content.title,
+        excerpt: content.metaDescription,
+        publishedAt: new Date().toISOString()
+      });
+      tracker.lastUpdated = new Date().toISOString();
+      await fs.writeFile(trackerPath, JSON.stringify(tracker, null, 2), 'utf-8');
+
+      return false;
+    } catch (error) {
+      console.error(`⚠️  Error checking for duplicates: ${error.message}`);
+      return false; // If error, allow publishing (fail open)
+    }
   }
 }
