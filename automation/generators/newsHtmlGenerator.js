@@ -14,7 +14,7 @@ export class NewsHtmlGenerator {
     const filepath = path.join(process.cwd(), '..', filename);
 
     // Check for duplicate/similar stories
-    const isDuplicate = await this.checkForDuplicate(slug, article.headline);
+    const isDuplicate = await this.checkForDuplicate(slug, article);
     if (isDuplicate) {
       console.log(`⚠️  Skipping duplicate story: "${article.headline}"`);
       return null;
@@ -344,13 +344,13 @@ ${formattedArticle}
 
   /**
    * Check if a similar story has already been published
-   * Prevents publishing multiple articles about the same event
+   * Compares article content/excerpts, not just titles
    */
-  async checkForDuplicate(slug, headline) {
+  async checkForDuplicate(slug, article) {
     try {
       // Load published stories tracker
       const trackerPath = path.join(process.cwd(), 'data', 'published-stories.json');
-      let tracker = { publishedSlugs: [], lastUpdated: null };
+      let tracker = { publishedStories: [], lastUpdated: null };
 
       try {
         const data = await fs.readFile(trackerPath, 'utf-8');
@@ -361,30 +361,60 @@ ${formattedArticle}
       }
 
       // Check if this exact slug already exists
-      if (tracker.publishedSlugs.includes(slug)) {
+      const existingStory = tracker.publishedStories.find(s => s.slug === slug);
+      if (existingStory) {
         return true;
       }
 
-      // Check for similar slugs (e.g., different variations of same story)
-      // Extract key words from slug (longer words are more significant)
-      const slugWords = slug.split('-').filter(word => word.length > 4);
+      // Extract proper nouns (capitalized words) from headline - these are key entities
+      const extractProperNouns = (text) => {
+        return text.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) || [];
+      };
 
-      for (const publishedSlug of tracker.publishedSlugs) {
-        const publishedWords = publishedSlug.split('-').filter(word => word.length > 4);
+      const currentProperNouns = extractProperNouns(article.headline + ' ' + article.excerpt);
 
-        // Count matching words
-        const matchingWords = slugWords.filter(word => publishedWords.includes(word));
+      // Check content similarity with existing articles
+      for (const publishedStory of tracker.publishedStories) {
+        const publishedProperNouns = extractProperNouns(publishedStory.headline + ' ' + publishedStory.excerpt);
 
-        // If 60%+ of significant words match, it's likely a duplicate
-        const matchRatio = matchingWords.length / Math.min(slugWords.length, publishedWords.length);
-        if (matchRatio >= 0.6 && matchingWords.length >= 2) {
-          console.log(`   📊 Similarity: ${(matchRatio * 100).toFixed(0)}% match with "${publishedSlug}"`);
+        // Check if they share the same key entities (people, companies, etc.)
+        const sharedNouns = currentProperNouns.filter(noun =>
+          publishedProperNouns.some(pn => pn.includes(noun) || noun.includes(pn))
+        );
+
+        // If they share 2+ proper nouns, likely the same story
+        if (sharedNouns.length >= 2) {
+          console.log(`   📊 Duplicate detected: Both about "${sharedNouns.join(', ')}"`);
+          console.log(`   Previous: "${publishedStory.headline}"`);
+          return true;
+        }
+
+        // Also check content similarity in excerpts (for stories without clear proper nouns)
+        const currentWords = new Set(
+          article.excerpt.toLowerCase().split(/\W+/).filter(w => w.length > 4)
+        );
+        const publishedWords = new Set(
+          publishedStory.excerpt.toLowerCase().split(/\W+/).filter(w => w.length > 4)
+        );
+
+        const intersection = [...currentWords].filter(w => publishedWords.has(w));
+        const union = new Set([...currentWords, ...publishedWords]);
+        const similarity = intersection.length / union.size;
+
+        // If 70%+ content overlap, it's likely a duplicate
+        if (similarity >= 0.7) {
+          console.log(`   📊 Content similarity: ${(similarity * 100).toFixed(0)}% match with "${publishedStory.slug}"`);
           return true;
         }
       }
 
       // Not a duplicate - add to tracker
-      tracker.publishedSlugs.push(slug);
+      tracker.publishedStories.push({
+        slug,
+        headline: article.headline,
+        excerpt: article.excerpt,
+        publishedAt: new Date().toISOString()
+      });
       tracker.lastUpdated = new Date().toISOString();
       await fs.writeFile(trackerPath, JSON.stringify(tracker, null, 2), 'utf-8');
 

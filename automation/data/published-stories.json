@@ -1,8 +1,23 @@
 {
-  "publishedSlugs": [
-    "coca-cola-s-ai-holiday-ad-disaster-sparks-debate",
-    "audiobooks-get-a-new-wave-with-seven-seas-launch",
-    "tragedy-strikes-voice-actor-jonathan-joss-killed"
+  "publishedStories": [
+    {
+      "slug": "coca-cola-s-ai-holiday-ad-disaster-sparks-debate",
+      "headline": "Coca-Cola's AI Holiday Ad Disaster Sparks Debate",
+      "excerpt": "Coca-Cola's AI-generated holiday ad sparks debate on AI's role in content creation",
+      "publishedAt": "2025-11-20T00:00:00.000Z"
+    },
+    {
+      "slug": "audiobooks-get-a-new-wave-with-seven-seas-launch",
+      "headline": "Audiobooks Get a New Wave with Seven Seas Launch",
+      "excerpt": "Seven Seas Entertainment launches new audiobook titles expanding voice actor opportunities",
+      "publishedAt": "2025-11-21T00:00:00.000Z"
+    },
+    {
+      "slug": "tragedy-strikes-voice-actor-jonathan-joss-killed",
+      "headline": "Tragedy Strikes: Voice Actor Jonathan Joss Killed",
+      "excerpt": "King of the Hill voice actor Jonathan Joss tragically killed in Texas shooting",
+      "publishedAt": "2025-11-21T00:00:00.000Z"
+    }
   ],
   "lastUpdated": "2025-11-21T00:00:00.000Z"
 }
