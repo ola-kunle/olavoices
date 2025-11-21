@@ -89,7 +89,14 @@ Respond in JSON format:
         throw new Error('Could not parse article JSON from AI response');
       }
 
-      const article = JSON.parse(jsonMatch[0]);
+      // Clean JSON string: remove control characters that break JSON.parse
+      let jsonString = jsonMatch[0]
+        .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control chars
+        .replace(/\n/g, '\\n')  // Escape real newlines
+        .replace(/\r/g, '\\r')  // Escape carriage returns
+        .replace(/\t/g, '\\t'); // Escape tabs
+
+      const article = JSON.parse(jsonString);
 
       // Add source information
       article.source = {
