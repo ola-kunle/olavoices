@@ -44,6 +44,14 @@ async function main() {
     console.log('🏗️  Step 3: Creating blog page...\n');
     const htmlGen = new HTMLGenerator();
     const blogPost = await htmlGen.generateBlogPage(content, image);
+
+    // Check if blog post was skipped (duplicate detected)
+    if (!blogPost) {
+      console.log('⚠️  Blog post was skipped (duplicate or similar content detected)');
+      console.log('✅ Automation completed - no new content published\n');
+      return;
+    }
+
     console.log('');
 
     // Step 3.5: Update blog listing
