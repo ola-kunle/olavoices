@@ -343,8 +343,8 @@ ${formattedArticle}
   }
 
   /**
-   * Check if a similar story has already been published
-   * Compares article content/excerpts, not just titles
+   * Multi-Signal Duplicate Detection
+   * Uses source URL, entity extraction, quotes, and content similarity
    */
   async checkForDuplicate(slug, article) {
     try {
@@ -356,7 +356,6 @@ ${formattedArticle}
         const data = await fs.readFile(trackerPath, 'utf-8');
         tracker = JSON.parse(data);
       } catch (err) {
-        // File doesn't exist yet, create it
         await fs.mkdir(path.dirname(trackerPath), { recursive: true });
       }
 
@@ -366,35 +365,97 @@ ${formattedArticle}
         return true;
       }
 
-      // Extract proper nouns (capitalized words) from headline - these are key entities
-      const extractProperNouns = (text) => {
-        return text.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) || [];
+      // Helper: Extract entities (names, companies, numbers)
+      const extractEntities = (text) => {
+        const properNouns = text.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) || [];
+        const numbers = text.match(/\b\d+(?:,\d{3})*(?:\.\d+)?\s*(?:million|billion|thousand|%|dollars?)?\b/gi) || [];
+        return { properNouns, numbers };
       };
 
-      const currentProperNouns = extractProperNouns(article.headline + ' ' + article.excerpt);
+      // Helper: Extract quotes
+      const extractQuotes = (text) => {
+        return text.match(/"([^"]+)"|'([^']+)'/g) || [];
+      };
 
-      // Check content similarity with existing articles
+      // Helper: Extract event keywords
+      const extractEventType = (text) => {
+        const deathWords = /\b(died|killed|murdered|death|passing|shot)\b/i;
+        const launchWords = /\b(launched|released|announced|unveiled|introduced)\b/i;
+        const legalWords = /\b(indicted|charged|arrested|convicted|sentenced)\b/i;
+        const businessWords = /\b(acquired|merger|ipo|raised|funding)\b/i;
+
+        if (deathWords.test(text)) return 'death';
+        if (launchWords.test(text)) return 'launch';
+        if (legalWords.test(text)) return 'legal';
+        if (businessWords.test(text)) return 'business';
+        return 'other';
+      };
+
+      const currentText = article.headline + ' ' + article.excerpt + ' ' + article.article;
+      const currentEntities = extractEntities(currentText);
+      const currentQuotes = extractQuotes(article.article || '');
+      const currentEventType = extractEventType(currentText);
+
+      // Check against existing stories
       for (const publishedStory of tracker.publishedStories) {
-        const publishedProperNouns = extractProperNouns(publishedStory.headline + ' ' + publishedStory.excerpt);
+        let duplicateScore = 0;
+        const reasons = [];
 
-        // Check if they share the same key entities (people, companies, etc.)
-        const sharedNouns = currentProperNouns.filter(noun =>
-          publishedProperNouns.some(pn => pn.includes(noun) || noun.includes(pn))
-        );
-
-        // If they share 2+ proper nouns with at least one being a company/product name, likely the same story
-        // Check for high-value entities (companies, products, people)
-        const highValueNouns = sharedNouns.filter(noun =>
-          noun.length > 3 && !['News', 'Video', 'Voice', 'Actor'].includes(noun)
-        );
-
-        if (sharedNouns.length >= 2 && highValueNouns.length >= 1) {
-          console.log(`   📊 Duplicate detected: Both about "${sharedNouns.join(', ')}"`);
+        // SIGNAL 1: Source URL match (100% reliable)
+        if (article.source?.url && publishedStory.sourceUrl === article.source.url) {
+          console.log(`   📊 Duplicate: Same source URL`);
           console.log(`   Previous: "${publishedStory.headline}"`);
           return true;
         }
 
-        // Also check content similarity in excerpts (for stories without clear proper nouns)
+        // SIGNAL 2: Entity overlap (companies, people, products)
+        const publishedText = publishedStory.headline + ' ' + publishedStory.excerpt + ' ' + (publishedStory.article || '');
+        const publishedEntities = extractEntities(publishedText);
+
+        const sharedProperNouns = currentEntities.properNouns.filter(noun =>
+          publishedEntities.properNouns.some(pn =>
+            pn.toLowerCase().includes(noun.toLowerCase()) ||
+            noun.toLowerCase().includes(pn.toLowerCase())
+          )
+        );
+
+        const sharedNumbers = currentEntities.numbers.filter(num =>
+          publishedEntities.numbers.some(pn => pn === num)
+        );
+
+        // High-value entities (not generic words)
+        const highValueNouns = sharedProperNouns.filter(noun =>
+          noun.length > 3 && !['News', 'Video', 'Voice', 'Actor', 'Story', 'Says', 'This', 'That'].includes(noun)
+        );
+
+        if (highValueNouns.length >= 2) {
+          duplicateScore += 40;
+          reasons.push(`2+ entities: ${highValueNouns.join(', ')}`);
+        }
+
+        if (sharedNumbers.length >= 1) {
+          duplicateScore += 20;
+          reasons.push(`Numbers: ${sharedNumbers.join(', ')}`);
+        }
+
+        // SIGNAL 3: Event type match
+        const publishedEventType = extractEventType(publishedText);
+        if (currentEventType === publishedEventType && currentEventType !== 'other') {
+          duplicateScore += 15;
+          reasons.push(`Same event type: ${currentEventType}`);
+        }
+
+        // SIGNAL 4: Quote matching (very reliable)
+        if (currentQuotes.length > 0 && publishedStory.article) {
+          const publishedQuotes = extractQuotes(publishedStory.article);
+          const sharedQuotes = currentQuotes.filter(q => publishedQuotes.includes(q));
+          if (sharedQuotes.length >= 1) {
+            duplicateScore += 30;
+            reasons.push('Shared quotes');
+          }
+        }
+
+        // SIGNAL 5: Content similarity (fallback)
         const currentWords = new Set(
           article.excerpt.toLowerCase().split(/\W+/).filter(w => w.length > 4)
         );
@@ -403,21 +464,29 @@ ${formattedArticle}
         );
 
         const intersection = [...currentWords].filter(w => publishedWords.has(w));
-        const union = new Set([...currentWords, ...publishedWords]);
-        const similarity = intersection.length / union.size;
+        const similarity = intersection.length / Math.max(currentWords.size, publishedWords.size);
 
-        // If 50%+ content overlap, it's likely a duplicate
-        if (similarity >= 0.5) {
-          console.log(`   📊 Content similarity: ${(similarity * 100).toFixed(0)}% match with "${publishedStory.slug}"`);
+        if (similarity >= 0.4) {
+          duplicateScore += Math.floor(similarity * 30);
+          reasons.push(`${(similarity * 100).toFixed(0)}% content overlap`);
+        }
+
+        // DECISION: If score >= 60, it's a duplicate
+        if (duplicateScore >= 60) {
+          console.log(`   📊 Duplicate detected (score: ${duplicateScore}/100)`);
+          console.log(`   Reasons: ${reasons.join(' | ')}`);
+          console.log(`   Previous: "${publishedStory.headline}"`);
           return true;
         }
       }
 
-      // Not a duplicate - add to tracker
+      // Not a duplicate - add to tracker with full article text
       tracker.publishedStories.push({
         slug,
         headline: article.headline,
         excerpt: article.excerpt,
+        article: article.article,
+        sourceUrl: article.source?.url,
         publishedAt: new Date().toISOString()
       });
       tracker.lastUpdated = new Date().toISOString();
