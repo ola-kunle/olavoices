@@ -382,8 +382,13 @@ ${formattedArticle}
           publishedProperNouns.some(pn => pn.includes(noun) || noun.includes(pn))
         );
 
-        // If they share 2+ proper nouns, likely the same story
-        if (sharedNouns.length >= 2) {
+        // If they share 2+ proper nouns with at least one being a company/product name, likely the same story
+        // Check for high-value entities (companies, products, people)
+        const highValueNouns = sharedNouns.filter(noun =>
+          noun.length > 3 && !['News', 'Video', 'Voice', 'Actor'].includes(noun)
+        );
+
+        if (sharedNouns.length >= 2 && highValueNouns.length >= 1) {
           console.log(`   📊 Duplicate detected: Both about "${sharedNouns.join(', ')}"`);
           console.log(`   Previous: "${publishedStory.headline}"`);
           return true;
@@ -401,8 +406,8 @@ ${formattedArticle}
         const union = new Set([...currentWords, ...publishedWords]);
         const similarity = intersection.length / union.size;
 
-        // If 70%+ content overlap, it's likely a duplicate
-        if (similarity >= 0.7) {
+        // If 50%+ content overlap, it's likely a duplicate
+        if (similarity >= 0.5) {
           console.log(`   📊 Content similarity: ${(similarity * 100).toFixed(0)}% match with "${publishedStory.slug}"`);
           return true;
         }
