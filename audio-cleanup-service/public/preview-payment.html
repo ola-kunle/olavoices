@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview Your Audio | OlaVoices Audio Cleanup</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: #064e3b;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .status {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .status-ready {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .order-info {
+      background: #f9fafb;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+
+    .order-info h3 {
+      margin-bottom: 16px;
+      color: #111827;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .preview-section {
+      margin: 30px 0;
+    }
+
+    .preview-section h3 {
+      margin-bottom: 20px;
+      color: #111827;
+    }
+
+    .audio-player {
+      background: #f3f4f6;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .audio-player audio {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .file-name {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .preview-notice {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .price-section {
+      background: #ecfdf5;
+      border: 2px solid #10b981;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .price-label {
+      color: #065f46;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .price-amount {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #059669;
+    }
+
+    .btn {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .spinner {
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #10b981;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error {
+      background: #fee2e2;
+      border-left: 4px solid #ef4444;
+      padding: 16px;
+      border-radius: 8px;
+      color: #991b1b;
+    }
+
+    .guarantee {
+      text-align: center;
+      margin-top: 30px;
+      padding: 20px;
+      background: #f9fafb;
+      border-radius: 8px;
+    }
+
+    .guarantee ul {
+      list-style: none;
+      margin-top: 15px;
+    }
+
+    .guarantee li {
+      padding: 8px 0;
+      color: #6b7280;
+    }
+
+    .guarantee li:before {
+      content: "✓ ";
+      color: #10b981;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎙️ Your Audio Is Ready!</h1>
+      <p>Preview and download your cleaned audio file</p>
+    </div>
+
+    <div class="content">
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <h3>Loading your order...</h3>
+      </div>
+
+      <div id="orderContent" style="display: none;">
+        <div class="status">
+          <span class="status-badge status-ready" id="statusBadge">✓ Ready for Download</span>
+        </div>
+
+        <div class="order-info">
+          <h3>Order Details</h3>
+          <div class="info-row">
+            <span><strong>Order ID:</strong></span>
+            <span id="orderId">...</span>
+          </div>
+          <div class="info-row">
+            <span><strong>Customer:</strong></span>
+            <span id="customerName">...</span>
+          </div>
+          <div class="info-row">
+            <span><strong>Format:</strong></span>
+            <span id="deliveryFormat">...</span>
+          </div>
+          <div class="info-row">
+            <span><strong>Files:</strong></span>
+            <span id="fileCount">...</span>
+          </div>
+        </div>
+
+        <div class="preview-section">
+          <h3>Preview Your Cleaned Audio</h3>
+          <div id="audioPlayers"></div>
+          <div class="preview-notice">
+            <strong>ℹ️ Preview Note:</strong> This is a 30-second preview at reduced quality.
+            After payment, you'll receive the full high-quality file in your chosen format.
+          </div>
+        </div>
+
+        <div class="price-section">
+          <div class="price-label">Total Amount</div>
+          <div class="price-amount" id="totalPrice">€45</div>
+          <p style="color: #059669; margin-top: 10px;">
+            Pay securely with Stripe (credit/debit card)
+          </p>
+        </div>
+
+        <button class="btn" id="payButton" onclick="proceedToPayment()">
+          Proceed to Secure Payment →
+        </button>
+
+        <div class="guarantee">
+          <strong>Our Guarantee:</strong>
+          <ul>
+            <li>100% Money-Back Guarantee</li>
+            <li>Free Re-do Within 7 Days</li>
+            <li>Secure Payment via Stripe</li>
+            <li>Download Link Active for 7 Days</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="errorContent" style="display: none;">
+        <div class="error">
+          <h3>Unable to Load Order</h3>
+          <p id="errorMessage">Please check your order link or contact support.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('orderId') || window.location.pathname.split('/').pop();
+
+    async function loadOrder() {
+      try {
+        const response = await fetch(`/api/orders/${orderId}/preview`);
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'Failed to load order');
+        }
+
+        const { order, files } = data;
+
+        // Update order info
+        document.getElementById('orderId').textContent = order.id.slice(0, 16) + '...';
+        document.getElementById('customerName').textContent = order.customer_name;
+        document.getElementById('deliveryFormat').textContent = order.delivery_format;
+        document.getElementById('fileCount').textContent = files.length + ' file(s)';
+        document.getElementById('totalPrice').textContent = `€${order.total_price}`;
+
+        // Render audio players
+        const playersContainer = document.getElementById('audioPlayers');
+        playersContainer.innerHTML = '';
+
+        files.forEach((file, index) => {
+          const playerDiv = document.createElement('div');
+          playerDiv.className = 'audio-player';
+
+          const previewUrl = file.preview_url || file.storage_url;
+
+          playerDiv.innerHTML = `
+            <div class="file-name">File ${index + 1}: ${file.original_filename}</div>
+            ${previewUrl ? `
+              <audio controls>
+                <source src="${previewUrl}" type="audio/mpeg">
+                <source src="${previewUrl}" type="audio/wav">
+                Your browser does not support the audio element.
+              </audio>
+            ` : '<p style="color: #6b7280;">Preview not available - full file will be delivered after payment</p>'}
+          `;
+
+          playersContainer.appendChild(playerDiv);
+        });
+
+        // Show content
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('orderContent').style.display = 'block';
+
+        // Check if already paid
+        if (order.payment_status === 'paid') {
+          document.getElementById('statusBadge').textContent = '✓ Paid - Ready to Download';
+          document.getElementById('payButton').textContent = 'Download Your Files →';
+          document.getElementById('payButton').onclick = () => {
+            window.location.href = `/download/${order.id}`;
+          };
+        }
+
+      } catch (error) {
+        console.error('Error loading order:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('errorContent').style.display = 'block';
+        document.getElementById('errorMessage').textContent = error.message;
+      }
+    }
+
+    async function proceedToPayment() {
+      const button = document.getElementById('payButton');
+      button.disabled = true;
+      button.textContent = 'Creating checkout session...';
+
+      try {
+        const response = await fetch(`/api/orders/${orderId}/checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'Failed to create checkout session');
+        }
+
+        // Redirect to Stripe checkout
+        window.location.href = data.checkoutUrl;
+
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Error: ' + error.message);
+        button.disabled = false;
+        button.textContent = 'Proceed to Secure Payment →';
+      }
+    }
+
+    // Load order on page load
+    loadOrder();
+  </script>
+</body>
+</html>

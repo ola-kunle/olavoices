@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Cleanup Service | OlaVoices</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: #4F46E5;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .form-section {
+      padding: 40px;
+    }
+
+    .upload-area {
+      border: 3px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 60px 20px;
+      text-align: center;
+      background: #f8fafc;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin-bottom: 30px;
+    }
+
+    .upload-area:hover, .upload-area.dragover {
+      border-color: #4F46E5;
+      background: #eef2ff;
+    }
+
+    .upload-area.has-files {
+      border-color: #10B981;
+      background: #ecfdf5;
+    }
+
+    .upload-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .upload-area h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #374151;
+    }
+
+    .upload-area p {
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .btn {
+      background: #4F46E5;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #4338ca;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-success {
+      background: #10B981;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .file-list {
+      margin-bottom: 30px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .file-icon {
+      font-size: 1.5rem;
+    }
+
+    .file-name {
+      font-weight: 500;
+    }
+
+    .file-size {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+
+    .remove-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .remove-btn:hover {
+      background: #dc2626;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #4F46E5;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .submit-section {
+      border-top: 2px solid #e5e7eb;
+      padding-top: 30px;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .price-display {
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .price-display h3 {
+      color: #15803d;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .price-amount {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #15803d;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #4F46E5;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎙️ Audio Cleanup Service</h1>
+      <p>Professional audio processing in 24 hours</p>
+    </div>
+
+    <div class="form-section">
+      <form id="uploadForm">
+        <!-- File Upload Area -->
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">📁</div>
+          <h3>Drop your audio files here</h3>
+          <p>or click to browse (WAV, MP3, AIFF, FLAC, M4A)</p>
+          <button type="button" class="btn" onclick="document.getElementById('audioFiles').click()">
+            Choose Files
+          </button>
+          <input type="file" id="audioFiles" name="audioFiles" class="file-input" multiple accept="audio/*">
+        </div>
+
+        <!-- File List -->
+        <div id="fileList" class="file-list" style="display: none;"></div>
+
+        <!-- Customer Information -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="customerName">Your Name *</label>
+            <input type="text" id="customerName" name="customerName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="customerEmail">Email Address *</label>
+            <input type="email" id="customerEmail" name="customerEmail" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="customerPhone">Phone Number (optional)</label>
+          <input type="tel" id="customerPhone" name="customerPhone">
+        </div>
+
+        <!-- Pricing Package -->
+        <div class="form-group">
+          <label for="pricingPackage">Select Your Package *</label>
+          <select id="pricingPackage" name="pricingPackage" required onchange="updatePrice()">
+            <option value="single">Single Audition - €12 (up to 3 minutes)</option>
+            <option value="per-minute">Per Minute - €15/min (for longer files)</option>
+          </select>
+        </div>
+
+        <!-- Processing Options -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="deliveryFormat">Delivery Format</label>
+            <select id="deliveryFormat" name="deliveryFormat">
+              <option value="WAV 24-bit">WAV 24-bit (Highest Quality)</option>
+              <option value="WAV 16-bit">WAV 16-bit (Standard)</option>
+              <option value="MP3 320kbps">MP3 320kbps (Compressed)</option>
+              <option value="Both WAV & MP3">Both WAV & MP3</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="loudnessTarget">Loudness Target</label>
+            <select id="loudnessTarget" name="loudnessTarget">
+              <option value="LUFS -16">LUFS -16 (Audiobook Standard)</option>
+              <option value="LUFS -14">LUFS -14 (Broadcast Standard)</option>
+              <option value="LUFS -12">LUFS -12 (Commercial/Trailer)</option>
+              <option value="Custom">Custom (specify in notes)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="breathLevel">Breath Removal</label>
+            <select id="breathLevel" name="breathLevel">
+              <option value="Natural">Natural (Light cleanup)</option>
+              <option value="Medium">Medium (Balanced)</option>
+              <option value="Heavy">Heavy (Aggressive removal)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="deadline">Delivery Timeline</label>
+            <select id="deadline" name="deadline">
+              <option value="24-48 hours">24-48 hours (Standard)</option>
+              <option value="12 hours">12 hours (+50% rush fee)</option>
+              <option value="6 hours">6 hours (+100% rush fee)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Special Instructions (optional)</label>
+          <textarea id="notes" name="notes" rows="4" placeholder="Any specific requirements or notes..."></textarea>
+        </div>
+
+        <!-- Submit Section -->
+        <div class="submit-section">
+          <div class="price-display">
+            <h3>Estimated Price</h3>
+            <div class="price-amount" id="priceAmount">€12</div>
+            <p style="color: #6b7280; margin-top: 8px;" id="priceDescription">Single audition (up to 3 minutes)</p>
+          </div>
+
+          <button type="submit" class="btn btn-success" id="submitBtn" style="font-size: 1.2rem; padding: 16px 40px;">
+            Submit Order
+          </button>
+        </div>
+      </form>
+
+      <!-- Loading State -->
+      <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <h3>Uploading your files...</h3>
+        <p>Please wait while we process your order</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedFiles = [];
+
+    // Drag and drop
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('audioFiles');
+    const fileList = document.getElementById('fileList');
+    const form = document.getElementById('uploadForm');
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const files = Array.from(e.dataTransfer.files);
+      handleFiles(files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      handleFiles(files);
+    });
+
+    function handleFiles(files) {
+      selectedFiles = [...selectedFiles, ...files];
+      renderFileList();
+      updatePrice();
+    }
+
+    function renderFileList() {
+      if (selectedFiles.length === 0) {
+        fileList.style.display = 'none';
+        uploadArea.classList.remove('has-files');
+        return;
+      }
+
+      uploadArea.classList.add('has-files');
+      fileList.style.display = 'block';
+      fileList.innerHTML = '';
+
+      selectedFiles.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+          <div class="file-info">
+            <div class="file-icon">🎵</div>
+            <div>
+              <div class="file-name">${file.name}</div>
+              <div class="file-size">${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+            </div>
+          </div>
+          <button type="button" class="remove-btn" onclick="removeFile(${index})">Remove</button>
+        `;
+        fileList.appendChild(fileItem);
+      });
+    }
+
+    function removeFile(index) {
+      selectedFiles.splice(index, 1);
+      renderFileList();
+      updatePrice();
+    }
+
+    function updatePrice() {
+      const pricingPackage = document.getElementById('pricingPackage').value;
+      const deadline = document.getElementById('deadline').value;
+      const fileCount = selectedFiles.length;
+
+      let basePrice = 12; // Default to single audition
+      let description = 'Single audition (up to 3 minutes)';
+
+      if (pricingPackage === 'single') {
+        basePrice = 12;
+        description = 'Single audition (up to 3 minutes)';
+      } else if (pricingPackage === 'per-minute') {
+        basePrice = 15; // This is per minute, actual price calculated on server
+        description = '€15/minute (calculated after upload based on audio duration)';
+      }
+
+      // Apply rush fee multipliers
+      if (deadline === '12 hours') {
+        basePrice *= 1.5;
+        description += ' + 50% rush fee';
+      } else if (deadline === '6 hours') {
+        basePrice *= 2;
+        description += ' + 100% rush fee';
+      }
+
+      if (pricingPackage === 'single') {
+        document.getElementById('priceAmount').textContent = `€${Math.round(basePrice)}`;
+      } else {
+        document.getElementById('priceAmount').textContent = `€${Math.round(basePrice)}/min`;
+      }
+
+      document.getElementById('priceDescription').textContent = description;
+    }
+
+    document.getElementById('deadline').addEventListener('change', updatePrice);
+    document.getElementById('pricingPackage').addEventListener('change', updatePrice);
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (selectedFiles.length === 0) {
+        alert('Please upload at least one audio file');
+        return;
+      }
+
+      const formData = new FormData();
+
+      // Add files
+      selectedFiles.forEach(file => {
+        formData.append('audioFiles', file);
+      });
+
+      // Add form data
+      formData.append('customerName', document.getElementById('customerName').value);
+      formData.append('customerEmail', document.getElementById('customerEmail').value);
+      formData.append('customerPhone', document.getElementById('customerPhone').value);
+      formData.append('deliveryFormat', document.getElementById('deliveryFormat').value);
+      formData.append('loudnessTarget', document.getElementById('loudnessTarget').value);
+      formData.append('breathLevel', document.getElementById('breathLevel').value);
+      formData.append('deadline', document.getElementById('deadline').value);
+      formData.append('notes', document.getElementById('notes').value);
+
+      // Show loading
+      document.querySelector('.form-section > form').style.display = 'none';
+      document.getElementById('loadingState').classList.add('active');
+
+      try {
+        const response = await fetch('/api/orders/create', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Redirect to confirmation page
+          window.location.href = `/order-confirmation.html?orderId=${result.orderId}&price=${result.totalPrice}`;
+        } else {
+          throw new Error(result.error);
+        }
+      } catch (error) {
+        alert('Error submitting order: ' + error.message);
+        document.querySelector('.form-section > form').style.display = 'block';
+        document.getElementById('loadingState').classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>

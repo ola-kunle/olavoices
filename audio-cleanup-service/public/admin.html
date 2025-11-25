@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | Audio Cleanup Service</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background: #f9fafb;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: #111827;
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #6b7280;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-label {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .orders-section {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .section-header h2 {
+      color: #111827;
+    }
+
+    .refresh-btn {
+      background: #4F46E5;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .refresh-btn:hover {
+      background: #4338ca;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #f9fafb;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      font-weight: 600;
+      color: #374151;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    td {
+      color: #6b7280;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-ready {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-completed {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .action-btn {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .action-btn:hover {
+      background: #059669;
+    }
+
+    .action-btn.view {
+      background: #4F46E5;
+    }
+
+    .action-btn.view:hover {
+      background: #4338ca;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      margin-bottom: 24px;
+    }
+
+    .modal-header h2 {
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #6b7280;
+    }
+
+    .upload-area {
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 40px 20px;
+      text-align: center;
+      background: #f9fafb;
+      margin: 20px 0;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .btn {
+      background: #4F46E5;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .btn:hover {
+      background: #4338ca;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎙️ Audio Cleanup Admin</h1>
+      <p>Manage orders and upload processed files</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value" id="totalOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pending Processing</div>
+        <div class="stat-value" id="pendingOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ready for Payment</div>
+        <div class="stat-value" id="readyOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value" id="completedOrders">0</div>
+      </div>
+    </div>
+
+    <div class="orders-section">
+      <div class="section-header">
+        <h2>All Orders</h2>
+        <button class="refresh-btn" onclick="loadOrders()">🔄 Refresh</button>
+      </div>
+
+      <div id="ordersTable"></div>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="modal">
+    <div class="modal-content">
+      <h2 class="modal-header">Upload Processed Files</h2>
+      <p id="modalOrderInfo"></p>
+
+      <div class="upload-area">
+        <p>📁 Select processed audio files</p>
+        <button type="button" class="action-btn" onclick="document.getElementById('processedFiles').click()">
+          Choose Files
+        </button>
+        <input type="file" id="processedFiles" class="file-input" multiple accept="audio/*">
+      </div>
+
+      <div id="selectedFiles"></div>
+
+      <button class="btn" onclick="uploadProcessedFiles()">Upload & Notify Customer</button>
+      <button class="btn" onclick="closeModal()" style="background: #6b7280; margin-top: 10px;">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    let currentOrderId = null;
+    let selectedFiles = [];
+
+    // Load orders on page load
+    loadOrders();
+
+    async function loadOrders() {
+      try {
+        const response = await fetch('/api/admin/orders');
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error);
+        }
+
+        const orders = data.orders;
+
+        // Update stats
+        document.getElementById('totalOrders').textContent = orders.length;
+        document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'pending').length;
+        document.getElementById('readyOrders').textContent = orders.filter(o => o.status === 'ready').length;
+        document.getElementById('completedOrders').textContent = orders.filter(o => o.status === 'completed').length;
+
+        // Render table
+        renderOrdersTable(orders);
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        document.getElementById('ordersTable').innerHTML = '<div class="loading">Error loading orders</div>';
+      }
+    }
+
+    function renderOrdersTable(orders) {
+      if (orders.length === 0) {
+        document.getElementById('ordersTable').innerHTML = '<div class="loading">No orders yet</div>';
+        return;
+      }
+
+      const tableHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Files</th>
+              <th>Date</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orders.map(order => `
+              <tr>
+                <td><strong>${order.id.slice(0, 12)}...</strong></td>
+                <td>${order.customer_name}<br><small>${order.customer_email}</small></td>
+                <td>${order.file_count} files</td>
+                <td>${new Date(order.order_date).toLocaleDateString()}</td>
+                <td>€${order.total_price}</td>
+                <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                <td>
+                  ${order.status === 'pending' ? `
+                    <button class="action-btn" onclick="openUploadModal('${order.id}', '${order.customer_name}')">
+                      Upload Files
+                    </button>
+                  ` : ''}
+                  <button class="action-btn view" onclick="viewOrder('${order.id}')">View</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById('ordersTable').innerHTML = tableHTML;
+    }
+
+    function openUploadModal(orderId, customerName) {
+      currentOrderId = orderId;
+      document.getElementById('modalOrderInfo').textContent = `Order: ${orderId} | Customer: ${customerName}`;
+      document.getElementById('uploadModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('uploadModal').classList.remove('active');
+      currentOrderId = null;
+      selectedFiles = [];
+      document.getElementById('selectedFiles').innerHTML = '';
+    }
+
+    document.getElementById('processedFiles').addEventListener('change', (e) => {
+      selectedFiles = Array.from(e.target.files);
+      renderSelectedFiles();
+    });
+
+    function renderSelectedFiles() {
+      if (selectedFiles.length === 0) return;
+
+      const filesHTML = `
+        <div style="margin: 20px 0;">
+          <strong>Selected Files:</strong>
+          <ul style="margin-top: 10px;">
+            ${selectedFiles.map(f => `<li>${f.name} (${(f.size / 1024 / 1024).toFixed(2)} MB)</li>`).join('')}
+          </ul>
+        </div>
+      `;
+
+      document.getElementById('selectedFiles').innerHTML = filesHTML;
+    }
+
+    async function uploadProcessedFiles() {
+      if (!currentOrderId || selectedFiles.length === 0) {
+        alert('Please select files to upload');
+        return;
+      }
+
+      const formData = new FormData();
+      selectedFiles.forEach(file => {
+        formData.append('processedFiles', file);
+      });
+
+      try {
+        const response = await fetch(`/api/admin/orders/${currentOrderId}/upload-processed`, {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Files uploaded successfully! Customer has been notified.');
+          closeModal();
+          loadOrders();
+        } else {
+          throw new Error(result.error);
+        }
+      } catch (error) {
+        alert('Error uploading files: ' + error.message);
+      }
+    }
+
+    async function viewOrder(orderId) {
+      try {
+        const response = await fetch(`/api/orders/${orderId}`);
+        const data = await response.json();
+
+        if (data.success) {
+          const order = data.order;
+          const files = data.files;
+
+          alert(`
+Order Details:
+--------------
+ID: ${order.id}
+Customer: ${order.customer_name} (${order.customer_email})
+Phone: ${order.customer_phone || 'N/A'}
+Status: ${order.status}
+Price: €${order.total_price}
+Format: ${order.delivery_format}
+Loudness: ${order.loudness_target}
+Breath Level: ${order.breath_level}
+Deadline: ${order.deadline}
+Files: ${files.length}
+Notes: ${order.notes || 'None'}
+          `.trim());
+        }
+      } catch (error) {
+        alert('Error loading order details: ' + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
