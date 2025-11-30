@@ -12,7 +12,7 @@
   <!-- Blog Index -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2025-11-28</lastmod>
+    <lastmod>2025-11-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -468,6 +468,30 @@
   <url>
     <loc>https://olavoices.com/zootopia-2-unleashes-wild-adventures-with-star-studded-voice</loc>
     <lastmod>2025-11-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/anime-fans-outraged-over-ai-voice-dubs-dragon-ball-actor-spe</loc>
+    <lastmod>2025-11-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/amazon-s-ai-anime-dub-sparks-outrage-among-fans</loc>
+    <lastmod>2025-11-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/beloved-voice-actor-tony-germano-dies-at-55</loc>
+    <lastmod>2025-11-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
