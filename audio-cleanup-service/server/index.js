@@ -30,7 +30,7 @@ import {
   sendFilesReadyNotification,
   sendPaymentConfirmation
 } from '../utils/email.js';
-import { uploadFile as uploadToStratus, getDownloadUrl } from '../utils/stratus-storage.js';
+import { uploadFile as uploadToStratus, uploadBuffer, getDownloadUrl } from '../utils/stratus-storage.js';
 import { generatePreview } from '../utils/preview.js';
 import { createPaymentSession } from '../utils/payments.js';
 // TEMPORARY: Cleanup scheduler disabled during migration
@@ -85,41 +85,12 @@ app.use('/api/', apiLimiter);
 app.use(express.static(path.join(__dirname, '../public')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Create uploads directory (use /tmp for Catalyst compatibility)
-const uploadsDir = '/tmp/uploads';
-console.log('📁 Uploads directory:', uploadsDir);
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-  console.log('✅ Created uploads directory');
-} else {
-  console.log('✅ Uploads directory exists');
-}
-
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const orderId = req.body.orderId || 'temp';
-    const dir = path.join(uploadsDir, orderId, 'raw');
-    console.log('📂 Creating upload directory:', dir);
-    try {
-      fs.mkdirSync(dir, { recursive: true });
-      console.log('✅ Upload directory created/exists:', dir);
-      cb(null, dir);
-    } catch (error) {
-      console.error('❌ Error creating upload directory:', error);
-      cb(error);
-    }
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const filename = uniqueSuffix + '-' + file.originalname;
-    console.log('📝 Generated filename:', filename);
-    cb(null, filename);
-  }
-});
+// Configure multer for file uploads (using memory storage for Catalyst compatibility)
+// Files are stored in memory as buffers and uploaded directly to Stratus
+console.log('📁 Using memory storage for file uploads (no disk writes)');
 
 const upload = multer({
-  storage: storage,
+  storage: multer.memoryStorage(),
   limits: {
     fileSize: 200 * 1024 * 1024, // 200MB max (optimized from 500MB)
   },
@@ -283,28 +254,30 @@ app.post('/api/orders/create', uploadLimiter, upload.array('audioFiles', 10), as
     // Upload files to Stratus and insert into Catalyst DataStore
     const files = [];
     for (const file of req.files) {
-      console.log('📤 Uploading file to Stratus...');
-      console.log('   File path:', file.path);
-      console.log('   File exists:', fs.existsSync(file.path));
+      console.log('📤 Uploading file buffer to Stratus...');
+      console.log('   Buffer size:', file.buffer.length, 'bytes');
       console.log('   File size:', file.size);
       console.log('   Original name:', file.originalname);
 
-      // Upload to Stratus
-      const stratusResult = await uploadToStratus(
+      // Upload buffer to Stratus (using memory storage)
+      const stratusResult = await uploadBuffer(
         req,
-        file.path,
+        file.buffer,
         orderId,
         file.originalname,
         'raw'
       );
-      console.log('✅ Stratus upload successful:', stratusResult.object_key);
+      console.log('✅ Stratus buffer upload successful:', stratusResult.object_key);
 
       const storageUrl = `stratus://${stratusResult.bucket_id}/${stratusResult.object_key}`;
+
+      // Generate unique filename for database record
+      const uniqueFilename = `${Date.now()}-${Math.round(Math.random() * 1E9)}-${file.originalname}`;
 
       await insertFile(req, {
         order_id: orderId,
         file_type: 'raw',
-        filename: file.filename,
+        filename: uniqueFilename,
         original_filename: file.originalname,
         file_size: file.size,
         storage_url: storageUrl
@@ -316,10 +289,7 @@ app.post('/api/orders/create', uploadLimiter, upload.array('audioFiles', 10), as
         storage_url: storageUrl
       });
 
-      // Clean up temporary file after upload to Stratus
-      if (fs.existsSync(file.path)) {
-        fs.unlinkSync(file.path);
-      }
+      // No cleanup needed - memory storage handles this automatically
     }
 
     // Get order details for emails
