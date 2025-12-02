@@ -7,12 +7,22 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 
-import db from '../database/schema.js';
+// Catalyst DataStore for cloud database
 import {
-  generateOrderId,
-  createDownloadToken,
-  validateDownloadToken,
-  incrementDownloadCount
+  insertOrder,
+  getOrder,
+  getAllOrders,
+  updateOrder,
+  insertFile,
+  getOrderFiles,
+  createDownloadToken as createToken,
+  getToken,
+  incrementDownloadCount as incrementTokenDownloadCount,
+  logNotification
+} from '../database/catalyst-db.js';
+
+import {
+  generateOrderId
 } from '../utils/tokens.js';
 import {
   sendOrderConfirmation,
@@ -20,10 +30,11 @@ import {
   sendFilesReadyNotification,
   sendPaymentConfirmation
 } from '../utils/email.js';
-import { uploadToR2, saveLocalFile, getPresignedDownloadUrl } from '../utils/storage.js';
+import { uploadFile as uploadToStratus, getDownloadUrl } from '../utils/stratus-storage.js';
 import { generatePreview } from '../utils/preview.js';
 import { createPaymentSession } from '../utils/payments.js';
-import { scheduleAutomaticCleanup } from '../utils/cleanup.js';
+// TEMPORARY: Cleanup scheduler disabled during migration
+// import { scheduleAutomaticCleanup } from '../utils/cleanup.js';
 
 dotenv.config();
 
@@ -31,7 +42,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// Catalyst AppSail uses X_ZOHO_CATALYST_LISTEN_PORT, fallback to PORT for local dev
+const PORT = process.env.X_ZOHO_CATALYST_LISTEN_PORT || process.env.PORT || 3000;
 
 // Middleware
 // CORS configuration for production
@@ -73,10 +85,14 @@ app.use('/api/', apiLimiter);
 app.use(express.static(path.join(__dirname, '../public')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Create uploads directory
-const uploadsDir = path.join(__dirname, '../uploads');
+// Create uploads directory (use /tmp for Catalyst compatibility)
+const uploadsDir = '/tmp/uploads';
+console.log('📁 Uploads directory:', uploadsDir);
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log('✅ Created uploads directory');
+} else {
+  console.log('✅ Uploads directory exists');
 }
 
 // Configure multer for file uploads
@@ -84,12 +100,21 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const orderId = req.body.orderId || 'temp';
     const dir = path.join(uploadsDir, orderId, 'raw');
-    fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
+    console.log('📂 Creating upload directory:', dir);
+    try {
+      fs.mkdirSync(dir, { recursive: true });
+      console.log('✅ Upload directory created/exists:', dir);
+      cb(null, dir);
+    } catch (error) {
+      console.error('❌ Error creating upload directory:', error);
+      cb(error);
+    }
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + '-' + file.originalname);
+    const filename = uniqueSuffix + '-' + file.originalname;
+    console.log('📝 Generated filename:', filename);
+    cb(null, filename);
   }
 });
 
@@ -152,6 +177,37 @@ const uploadProcessed = multer({
 // ============================================
 
 /**
+ * GET /health
+ * Health check endpoint (no database required)
+ */
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    service: 'audio-cleanup-service',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+/**
+ * GET /
+ * Root endpoint
+ */
+app.get('/', (req, res) => {
+  res.json({
+    message: 'OlaVoices Audio Cleanup Service API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      createOrder: 'POST /api/orders/create',
+      getOrder: 'GET /api/orders/:orderId',
+      checkout: 'POST /api/orders/:orderId/checkout'
+    }
+  });
+});
+
+/**
  * POST /api/orders/create
  * Create new order with file uploads (with rate limiting)
  */
@@ -207,68 +263,86 @@ app.post('/api/orders/create', uploadLimiter, upload.array('audioFiles', 10), as
       fs.renameSync(path.dirname(tempDir), orderDir);
     }
 
-    // Insert order into database
-    const insertOrder = db.prepare(`
-      INSERT INTO orders (
-        id, customer_email, customer_name, customer_phone,
-        status, total_price, delivery_format, loudness_target,
-        breath_level, deadline, notes
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
+    // Insert order into Catalyst DataStore
+    await insertOrder(req, {
+      id: orderId,
+      customer_email: customerEmail,
+      customer_name: customerName,
+      customer_phone: customerPhone || null,
+      status: 'pending',
+      total_price: totalPrice,
+      delivery_format: deliveryFormat || 'WAV 24-bit',
+      loudness_target: loudnessTarget || 'LUFS -16',
+      breath_level: breathLevel || 'Natural',
+      deadline: deadline || '24-48 hours',
+      notes: notes || null,
+      payment_status: 'unpaid',
+      currency: 'EUR'
+    });
 
-    insertOrder.run(
-      orderId,
-      customerEmail,
-      customerName,
-      customerPhone || null,
-      'pending',
-      totalPrice,
-      deliveryFormat || 'WAV 24-bit',
-      loudnessTarget || 'LUFS -16',
-      breathLevel || 'Natural',
-      deadline || '24-48 hours',
-      notes || null
-    );
+    // Upload files to Stratus and insert into Catalyst DataStore
+    const files = [];
+    for (const file of req.files) {
+      console.log('📤 Uploading file to Stratus...');
+      console.log('   File path:', file.path);
+      console.log('   File exists:', fs.existsSync(file.path));
+      console.log('   File size:', file.size);
+      console.log('   Original name:', file.originalname);
 
-    // Insert files into database
-    const insertFile = db.prepare(`
-      INSERT INTO files (order_id, file_type, filename, original_filename, file_size, storage_url)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `);
-
-    const files = req.files.map(file => {
-      const storageUrl = `/uploads/${orderId}/raw/${file.filename}`;
-
-      insertFile.run(
+      // Upload to Stratus
+      const stratusResult = await uploadToStratus(
+        req,
+        file.path,
         orderId,
-        'raw',
-        file.filename,
         file.originalname,
-        file.size,
-        storageUrl
+        'raw'
       );
+      console.log('✅ Stratus upload successful:', stratusResult.object_key);
 
-      return {
+      const storageUrl = `stratus://${stratusResult.bucket_id}/${stratusResult.object_key}`;
+
+      await insertFile(req, {
+        order_id: orderId,
+        file_type: 'raw',
+        filename: file.filename,
         original_filename: file.originalname,
         file_size: file.size,
         storage_url: storageUrl
-      };
-    });
+      });
+
+      files.push({
+        original_filename: file.originalname,
+        file_size: file.size,
+        storage_url: storageUrl
+      });
+
+      // Clean up temporary file after upload to Stratus
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
+    }
 
     // Get order details for emails
-    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    const order = await getOrder(req, orderId);
 
     // Send confirmation emails
     await sendOrderConfirmation(order, files);
     await notifyAdminNewOrder(order, files);
 
-    // Log notification
-    const logNotification = db.prepare(`
-      INSERT INTO notifications (order_id, notification_type, sent_to)
-      VALUES (?, ?, ?)
-    `);
-    logNotification.run(orderId, 'order_confirmation', customerEmail);
-    logNotification.run(orderId, 'admin_notification', process.env.ADMIN_EMAIL || 'hello@olavoices.com');
+    // Log notifications in Catalyst DataStore
+    await logNotification(req, {
+      order_id: orderId,
+      notification_type: 'order_confirmation',
+      sent_to: customerEmail,
+      status: 'sent'
+    });
+
+    await logNotification(req, {
+      order_id: orderId,
+      notification_type: 'admin_notification',
+      sent_to: process.env.ADMIN_EMAIL || 'hello@olavoices.com',
+      status: 'sent'
+    });
 
     res.json({
       success: true,
@@ -291,11 +365,11 @@ app.post('/api/orders/create', uploadLimiter, upload.array('audioFiles', 10), as
  * GET /api/orders/:orderId
  * Get order details
  */
-app.get('/api/orders/:orderId', (req, res) => {
+app.get('/api/orders/:orderId', async (req, res) => {
   try {
     const { orderId } = req.params;
 
-    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    const order = await getOrder(req, orderId);
 
     if (!order) {
       return res.status(404).json({
@@ -304,7 +378,7 @@ app.get('/api/orders/:orderId', (req, res) => {
       });
     }
 
-    const files = db.prepare('SELECT * FROM files WHERE order_id = ?').all(orderId);
+    const files = await getOrderFiles(req, orderId);
 
     res.json({
       success: true,
@@ -325,21 +399,31 @@ app.get('/api/orders/:orderId', (req, res) => {
  * GET /api/admin/orders
  * Get all orders (admin only - add authentication later)
  */
-app.get('/api/admin/orders', (req, res) => {
+app.get('/api/admin/orders', async (req, res) => {
   try {
-    const orders = db.prepare(`
-      SELECT
-        o.*,
-        COUNT(f.id) as file_count
-      FROM orders o
-      LEFT JOIN files f ON o.id = f.order_id AND f.file_type = 'raw'
-      GROUP BY o.id
-      ORDER BY o.order_date DESC
-    `).all();
+    // Get all orders from Catalyst DataStore
+    const orders = await getAllOrders(req);
+
+    // Get file counts for each order
+    const ordersWithCounts = await Promise.all(
+      orders.map(async (order) => {
+        const files = await getOrderFiles(req, order.id);
+        const rawFiles = files.filter(f => f.file_type === 'raw');
+        return {
+          ...order,
+          file_count: rawFiles.length
+        };
+      })
+    );
+
+    // Sort by order_date descending (most recent first)
+    ordersWithCounts.sort((a, b) =>
+      new Date(b.order_date || b.CREATEDTIME) - new Date(a.order_date || a.CREATEDTIME)
+    );
 
     res.json({
       success: true,
-      orders
+      orders: ordersWithCounts
     });
 
   } catch (error) {
@@ -359,7 +443,7 @@ app.post('/api/admin/orders/:orderId/upload-processed', uploadProcessed.array('p
   try {
     const { orderId } = req.params;
 
-    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    const order = await getOrder(req, orderId);
 
     if (!order) {
       return res.status(404).json({
@@ -368,50 +452,73 @@ app.post('/api/admin/orders/:orderId/upload-processed', uploadProcessed.array('p
       });
     }
 
-    // Save processed files and generate previews
-    const insertFile = db.prepare(`
-      INSERT INTO files (order_id, file_type, filename, original_filename, file_size, storage_url, preview_url)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-
+    // Upload processed files to Stratus and generate previews
     for (const file of req.files) {
-      const storageUrl = `/uploads/${orderId}/processed/${file.filename}`;
+      // Upload processed file to Stratus
+      const stratusResult = await uploadToStratus(
+        req,
+        file.path,
+        orderId,
+        file.originalname,
+        'processed'
+      );
 
-      // Generate preview (30-second sample)
+      const storageUrl = `stratus://${stratusResult.bucket_id}/${stratusResult.object_key}`;
+
+      // Generate preview (30-second sample) - keep preview local temporarily
       const previewFilename = `preview-${file.filename}`;
       const previewPath = path.join(uploadsDir, orderId, 'processed', previewFilename);
 
       await generatePreview(file.path, previewPath);
 
-      const previewUrl = fs.existsSync(previewPath)
-        ? `/uploads/${orderId}/processed/${previewFilename}`
-        : null;
+      let previewUrl = null;
+      if (fs.existsSync(previewPath)) {
+        // Upload preview to Stratus
+        const previewResult = await uploadToStratus(
+          req,
+          previewPath,
+          orderId,
+          previewFilename,
+          'preview'
+        );
+        previewUrl = `stratus://${previewResult.bucket_id}/${previewResult.object_key}`;
 
-      insertFile.run(
-        orderId,
-        'processed',
-        file.filename,
-        file.originalname,
-        file.size,
-        storageUrl,
-        previewUrl
-      );
+        // Clean up local preview file
+        fs.unlinkSync(previewPath);
+      }
 
-      console.log(`✅ Processed file added${previewUrl ? ' with preview' : ''}: ${file.originalname}`);
+      await insertFile(req, {
+        order_id: orderId,
+        file_type: 'processed',
+        filename: file.filename,
+        original_filename: file.originalname,
+        file_size: file.size,
+        storage_url: storageUrl,
+        preview_url: previewUrl
+      });
+
+      // Clean up temporary processed file
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
+
+      console.log(`✅ Processed file uploaded to Stratus${previewUrl ? ' with preview' : ''}: ${file.originalname}`);
     }
 
     // Update order status
-    db.prepare('UPDATE orders SET status = ? WHERE id = ?').run('ready', orderId);
+    await updateOrder(req, orderId, { status: 'ready' });
 
     // Send notification to customer
     const previewUrl = `${process.env.BASE_URL || 'http://localhost:3000'}/order/${orderId}/preview`;
     await sendFilesReadyNotification(order, previewUrl);
 
     // Log notification
-    db.prepare(`
-      INSERT INTO notifications (order_id, notification_type, sent_to)
-      VALUES (?, ?, ?)
-    `).run(orderId, 'files_ready', order.customer_email);
+    await logNotification(req, {
+      order_id: orderId,
+      notification_type: 'files_ready',
+      sent_to: order.customer_email,
+      status: 'sent'
+    });
 
     res.json({
       success: true,
@@ -437,7 +544,7 @@ app.post('/api/orders/:orderId/payment', async (req, res) => {
     const { orderId } = req.params;
     const { paymentIntentId } = req.body;
 
-    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    const order = await getOrder(req, orderId);
 
     if (!order) {
       return res.status(404).json({
@@ -447,23 +554,35 @@ app.post('/api/orders/:orderId/payment', async (req, res) => {
     }
 
     // Update payment status
-    db.prepare(`
-      UPDATE orders
-      SET payment_status = ?, payment_intent_id = ?, status = ?
-      WHERE id = ?
-    `).run('paid', paymentIntentId, 'completed', orderId);
+    await updateOrder(req, orderId, {
+      payment_status: 'paid',
+      payment_intent_id: paymentIntentId,
+      status: 'completed'
+    });
 
     // Get processed files
-    const processedFiles = db.prepare(`
-      SELECT * FROM files
-      WHERE order_id = ? AND file_type = 'processed'
-    `).all(orderId);
+    const allFiles = await getOrderFiles(req, orderId);
+    const processedFiles = allFiles.filter(f => f.file_type === 'processed');
 
     // Create download tokens
-    const tokens = processedFiles.map(file => {
-      const token = createDownloadToken(orderId, file.id);
-      return { fileId: file.id, token };
-    });
+    const { nanoid } = await import('nanoid');
+    const tokens = [];
+    for (const file of processedFiles) {
+      const token = nanoid(32);
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+
+      await createToken(req, {
+        token,
+        order_id: orderId,
+        file_id: file.ROWID,
+        expires_at: expiresAt.toISOString(),
+        download_count: 0,
+        max_downloads: 3
+      });
+
+      tokens.push({ fileId: file.ROWID, token });
+    }
 
     // Generate download URL
     const downloadUrl = `${process.env.BASE_URL || 'http://localhost:3000'}/download/${orderId}`;
@@ -472,10 +591,12 @@ app.post('/api/orders/:orderId/payment', async (req, res) => {
     await sendPaymentConfirmation(order, downloadUrl);
 
     // Log notification
-    db.prepare(`
-      INSERT INTO notifications (order_id, notification_type, sent_to)
-      VALUES (?, ?, ?)
-    `).run(orderId, 'payment_confirmation', order.customer_email);
+    await logNotification(req, {
+      order_id: orderId,
+      notification_type: 'payment_confirmation',
+      sent_to: order.customer_email,
+      status: 'sent'
+    });
 
     res.json({
       success: true,
@@ -496,24 +617,40 @@ app.post('/api/orders/:orderId/payment', async (req, res) => {
  * GET /api/download/:token
  * Download file with token
  */
-app.get('/api/download/:token', (req, res) => {
+app.get('/api/download/:token', async (req, res) => {
   try {
     const { token } = req.params;
 
-    // Validate token
-    const validation = validateDownloadToken(token);
+    // Get and validate token
+    const tokenData = await getToken(req, token);
 
-    if (!validation.valid) {
+    if (!tokenData) {
       return res.status(403).json({
         success: false,
-        error: validation.reason
+        error: 'Invalid or expired download token'
       });
     }
 
-    const tokenData = validation.data;
+    // Check if token has expired
+    const expiresAt = new Date(tokenData.expires_at);
+    if (expiresAt < new Date()) {
+      return res.status(403).json({
+        success: false,
+        error: 'Download token has expired'
+      });
+    }
 
-    // Get file info
-    const file = db.prepare('SELECT * FROM files WHERE id = ?').get(tokenData.file_id);
+    // Check if max downloads reached
+    if (tokenData.download_count >= tokenData.max_downloads) {
+      return res.status(403).json({
+        success: false,
+        error: 'Maximum download limit reached'
+      });
+    }
+
+    // Get file info by ROWID (Catalyst uses ROWID instead of id)
+    const allFiles = await getOrderFiles(req, tokenData.order_id);
+    const file = allFiles.find(f => f.ROWID === tokenData.file_id);
 
     if (!file) {
       return res.status(404).json({
@@ -523,19 +660,16 @@ app.get('/api/download/:token', (req, res) => {
     }
 
     // Increment download count
-    incrementDownloadCount(token);
+    await incrementTokenDownloadCount(req, token);
 
-    // Send file
-    const filePath = path.join(__dirname, '..', file.storage_url);
+    // Extract object key from storage URL (format: stratus://bucket/object_key)
+    const objectKey = file.storage_url.replace(/^stratus:\/\/[^/]+\//, '');
 
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({
-        success: false,
-        error: 'File not found on server'
-      });
-    }
+    // Generate presigned download URL from Stratus (expires in 1 hour)
+    const downloadUrl = await getDownloadUrl(req, objectKey, 3600);
 
-    res.download(filePath, file.original_filename);
+    // Redirect to presigned URL
+    res.redirect(downloadUrl);
 
   } catch (error) {
     console.error('❌ Download error:', error);
@@ -554,7 +688,7 @@ app.get('/api/orders/:orderId/preview', async (req, res) => {
   try {
     const { orderId } = req.params;
 
-    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    const order = await getOrder(req, orderId);
 
     if (!order) {
       return res.status(404).json({
@@ -563,11 +697,9 @@ app.get('/api/orders/:orderId/preview', async (req, res) => {
       });
     }
 
-    // Get processed files with preview URLs
-    const processedFiles = db.prepare(`
-      SELECT * FROM files
-      WHERE order_id = ? AND file_type = 'processed'
-    `).all(orderId);
+    // Get all files and filter for processed files
+    const allFiles = await getOrderFiles(req, orderId);
+    const processedFiles = allFiles.filter(f => f.file_type === 'processed');
 
     res.json({
       success: true,
@@ -593,7 +725,7 @@ app.post('/api/orders/:orderId/checkout', async (req, res) => {
   try {
     const { orderId } = req.params;
 
-    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    const order = await getOrder(req, orderId);
 
     if (!order) {
       return res.status(404).json({
@@ -653,27 +785,47 @@ app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (re
       const orderId = session.client_reference_id;
 
       // Update order payment status
-      db.prepare(`
-        UPDATE orders
-        SET payment_status = 'paid', payment_intent_id = ?, status = 'completed'
-        WHERE id = ?
-      `).run(session.payment_intent, orderId);
+      await updateOrder(req, orderId, {
+        payment_status: 'paid',
+        payment_intent_id: session.payment_intent,
+        status: 'completed'
+      });
 
       // Get order for email
-      const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+      const order = await getOrder(req, orderId);
 
-      // Create download tokens
-      const processedFiles = db.prepare(`
-        SELECT * FROM files WHERE order_id = ? AND file_type = 'processed'
-      `).all(orderId);
+      // Create download tokens for processed files
+      const allFiles = await getOrderFiles(req, orderId);
+      const processedFiles = allFiles.filter(f => f.file_type === 'processed');
 
-      processedFiles.forEach(file => {
-        createDownloadToken(orderId, file.id);
-      });
+      const { nanoid } = await import('nanoid');
+
+      for (const file of processedFiles) {
+        const token = nanoid(32);
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+
+        await createToken(req, {
+          token,
+          order_id: orderId,
+          file_id: file.ROWID,
+          expires_at: expiresAt.toISOString(),
+          download_count: 0,
+          max_downloads: 3
+        });
+      }
 
       // Send confirmation email
       const downloadUrl = `${process.env.BASE_URL}/download/${orderId}`;
       await sendPaymentConfirmation(order, downloadUrl);
+
+      // Log notification
+      await logNotification(req, {
+        order_id: orderId,
+        notification_type: 'payment_confirmation',
+        sent_to: order.customer_email,
+        status: 'sent'
+      });
 
       console.log(`✅ Payment confirmed for order ${orderId}`);
     }
@@ -694,7 +846,7 @@ app.get('/download/:orderId', async (req, res) => {
   try {
     const { orderId } = req.params;
 
-    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    const order = await getOrder(req, orderId);
 
     if (!order) {
       return res.status(404).send('Order not found');
@@ -704,13 +856,28 @@ app.get('/download/:orderId', async (req, res) => {
       return res.status(403).send('Payment required');
     }
 
-    // Get processed files with download tokens
-    const files = db.prepare(`
-      SELECT f.*, dt.token, dt.download_count, dt.max_downloads, dt.expires_at
-      FROM files f
-      LEFT JOIN download_tokens dt ON f.id = dt.file_id
-      WHERE f.order_id = ? AND f.file_type = 'processed'
-    `).all(orderId);
+    // Get processed files
+    const allFiles = await getOrderFiles(req, orderId);
+    const processedFiles = allFiles.filter(f => f.file_type === 'processed');
+
+    // Get download tokens table for matching
+    const catalyst = await import('zcatalyst-sdk-node');
+    const app = catalyst.default.initialize(req);
+    const datastore = app.datastore();
+    const tokensTable = datastore.table(process.env.DATASTORE_TOKENS_TABLE_ID || '5522000000017187');
+    const allTokens = await tokensTable.getRows({ order_id: orderId });
+
+    // Combine files with their tokens
+    const filesWithTokens = processedFiles.map(file => {
+      const token = allTokens.find(t => t.file_id === file.ROWID);
+      return {
+        ...file,
+        token: token?.token,
+        download_count: token?.download_count || 0,
+        max_downloads: token?.max_downloads || 3,
+        expires_at: token?.expires_at
+      };
+    });
 
     // Simple download page
     const html = `
@@ -729,7 +896,7 @@ app.get('/download/:orderId', async (req, res) => {
       <body>
         <h1>Your Cleaned Audio Files</h1>
         <p>Thank you for your payment! Download your files below:</p>
-        ${files.map(file => `
+        ${filesWithTokens.map(file => `
           <div class="file">
             <strong>${file.original_filename}</strong><br>
             <small>Downloads: ${file.download_count || 0}/${file.max_downloads || 3}</small><br>
@@ -759,12 +926,13 @@ app.listen(PORT, () => {
   console.log('');
   console.log('🎙️  OlaVoices Audio Cleanup Service');
   console.log('=====================================');
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`✅ Database initialized`);
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Catalyst DataStore migration complete - all routes migrated`);
   console.log('');
 
-  // Start automatic cleanup scheduler
-  scheduleAutomaticCleanup();
+  // TEMPORARY: Automatic cleanup disabled during migration
+  // TODO: Re-enable after migrating to Catalyst DataStore
+  // scheduleAutomaticCleanup();
 });
 
 export default app;
