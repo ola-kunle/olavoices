@@ -12,7 +12,7 @@
   <!-- Blog Index -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2025-12-01</lastmod>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -540,6 +540,30 @@
   <url>
     <loc>https://olavoices.com/amazon-s-ai-dubbing-disaster-sparks-outrage</loc>
     <lastmod>2025-12-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/voice-actor-s-800-payment-for-billion-dollar-game-sparks-out</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/idris-elba-s-ad-lib-steals-the-scene-in-zootopia-2</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/voice-actor-sarah-natochenny-leaps-to-live-action</loc>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
