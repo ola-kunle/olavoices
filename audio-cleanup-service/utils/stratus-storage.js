@@ -90,35 +90,23 @@ function generateObjectKey(orderId, filename, fileType) {
  */
 export async function uploadBuffer(req, buffer, orderId, originalFilename, fileType) {
   try {
-    const bucket = getBucket(req);
-    const objectKey = generateObjectKey(orderId, originalFilename, fileType);
     const fileSize = buffer.length;
 
     if (fileSize > MAX_FILE_SIZE) {
       throw new Error(`File size (${fileSize} bytes) exceeds maximum allowed (${MAX_FILE_SIZE} bytes)`);
     }
 
-    console.log(`📤 Uploading buffer to Stratus: ${objectKey} (${(fileSize / 1024 / 1024).toFixed(2)} MB)`);
+    console.log(`📤 Uploading buffer to Stratus: ${originalFilename} (${(fileSize / 1024 / 1024).toFixed(2)} MB)`);
 
-    // Write buffer to temporary file for Stratus upload
+    // Write buffer to temporary file
     const tempPath = `/tmp/upload-${Date.now()}-${Math.random().toString(36).substring(7)}.tmp`;
     fs.writeFileSync(tempPath, buffer);
 
     try {
-      // Use standard upload (multipart not needed for buffers since they're in memory)
-      const uploadResult = await bucket.uploadObject({
-        file_path: tempPath,
-        object_name: objectKey
-      });
-
+      // Use the existing uploadFile function which already works
+      const result = await uploadFile(req, tempPath, orderId, originalFilename, fileType);
       console.log('✅ Buffer upload successful');
-
-      return {
-        object_key: objectKey,
-        bucket_id: BUCKET_ID,
-        file_size: fileSize,
-        uploaded_at: new Date().toISOString()
-      };
+      return result;
     } finally {
       // Clean up temp file
       if (fs.existsSync(tempPath)) {
