@@ -89,6 +89,9 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 // Files are stored in memory as buffers and uploaded directly to Stratus
 console.log('📁 Using memory storage for file uploads (no disk writes)');
 
+// Upload directory for processed files and previews (only used by admin routes)
+const uploadsDir = '/tmp/uploads';
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
