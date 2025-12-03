@@ -300,7 +300,10 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get('orderId') || window.location.pathname.split('/').pop();
+    // Extract orderId from URL path: /order/ORDER_ID/preview
+    const pathParts = window.location.pathname.split('/');
+    const orderIdFromPath = pathParts[2]; // /order/ORDER_ID/preview -> index 2
+    const orderId = urlParams.get('orderId') || orderIdFromPath;
 
     async function loadOrder() {
       try {
