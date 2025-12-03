@@ -151,10 +151,23 @@ export async function uploadFile(req, localFilePath, orderId, originalFilename, 
       uploadResult = await uploadMultipart(bucket, localFilePath, objectKey);
     } else {
       // Standard upload for smaller files
-      uploadResult = await bucket.uploadObject({
-        file_path: localFilePath,
-        object_name: objectKey
-      });
+      // Try common method names for object storage SDKs
+      try {
+        uploadResult = await bucket.upload({
+          file_path: localFilePath,
+          object_name: objectKey
+        });
+      } catch (uploadError) {
+        // If 'upload' doesn't work, try 'uploadFile'
+        if (uploadError.message && uploadError.message.includes('not a function')) {
+          uploadResult = await bucket.uploadFile({
+            file_path: localFilePath,
+            object_name: objectKey
+          });
+        } else {
+          throw uploadError;
+        }
+      }
     }
 
     console.log('✅ Upload successful');
