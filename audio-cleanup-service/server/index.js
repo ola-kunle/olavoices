@@ -30,7 +30,7 @@ import {
   sendFilesReadyNotification,
   sendPaymentConfirmation
 } from '../utils/email.js';
-import { uploadFile as uploadToStratus, uploadBuffer, getDownloadUrl } from '../utils/stratus-storage.js';
+import { uploadFile as uploadToTebi, uploadBuffer, getDownloadUrl } from '../utils/tebi-storage.js';
 import { generatePreview } from '../utils/preview.js';
 import { createPaymentSession } from '../utils/payments.js';
 // TEMPORARY: Cleanup scheduler disabled during migration
@@ -262,17 +262,17 @@ app.post('/api/orders/create', uploadLimiter, upload.array('audioFiles', 10), as
       console.log('   File size:', file.size);
       console.log('   Original name:', file.originalname);
 
-      // Upload buffer to Stratus (using memory storage)
-      const stratusResult = await uploadBuffer(
+      // Upload buffer to Tebi (using memory storage)
+      const tebiResult = await uploadBuffer(
         req,
         file.buffer,
         orderId,
         file.originalname,
         'raw'
       );
-      console.log('✅ Stratus buffer upload successful:', stratusResult.object_key);
+      console.log('✅ Tebi buffer upload successful:', tebiResult.object_key);
 
-      const storageUrl = `stratus://${stratusResult.bucket_id}/${stratusResult.object_key}`;
+      const storageUrl = `tebi://${tebiResult.bucket_id}/${tebiResult.object_key}`;
 
       // Generate unique filename for database record
       const uniqueFilename = `${Date.now()}-${Math.round(Math.random() * 1E9)}-${file.originalname}`;
@@ -425,10 +425,10 @@ app.post('/api/admin/orders/:orderId/upload-processed', uploadProcessed.array('p
       });
     }
 
-    // Upload processed files to Stratus and generate previews
+    // Upload processed files to Tebi and generate previews
     for (const file of req.files) {
-      // Upload processed file to Stratus
-      const stratusResult = await uploadToStratus(
+      // Upload processed file to Tebi
+      const tebiResult = await uploadToTebi(
         req,
         file.path,
         orderId,
@@ -436,7 +436,7 @@ app.post('/api/admin/orders/:orderId/upload-processed', uploadProcessed.array('p
         'processed'
       );
 
-      const storageUrl = `stratus://${stratusResult.bucket_id}/${stratusResult.object_key}`;
+      const storageUrl = `tebi://${tebiResult.bucket_id}/${tebiResult.object_key}`;
 
       // Generate preview (30-second sample) - keep preview local temporarily
       const previewFilename = `preview-${file.filename}`;
@@ -446,15 +446,15 @@ app.post('/api/admin/orders/:orderId/upload-processed', uploadProcessed.array('p
 
       let previewUrl = null;
       if (fs.existsSync(previewPath)) {
-        // Upload preview to Stratus
-        const previewResult = await uploadToStratus(
+        // Upload preview to Tebi
+        const previewResult = await uploadToTebi(
           req,
           previewPath,
           orderId,
           previewFilename,
           'preview'
         );
-        previewUrl = `stratus://${previewResult.bucket_id}/${previewResult.object_key}`;
+        previewUrl = `tebi://${previewResult.bucket_id}/${previewResult.object_key}`;
 
         // Clean up local preview file
         fs.unlinkSync(previewPath);
@@ -635,10 +635,10 @@ app.get('/api/download/:token', async (req, res) => {
     // Increment download count
     await incrementTokenDownloadCount(req, token);
 
-    // Extract object key from storage URL (format: stratus://bucket/object_key)
-    const objectKey = file.storage_url.replace(/^stratus:\/\/[^/]+\//, '');
+    // Extract object key from storage URL (format: tebi://bucket/object_key)
+    const objectKey = file.storage_url.replace(/^tebi:\/\/[^/]+\//, '');
 
-    // Generate presigned download URL from Stratus (expires in 1 hour)
+    // Generate presigned download URL from Tebi (expires in 1 hour)
     const downloadUrl = await getDownloadUrl(req, objectKey, 3600);
 
     // Redirect to presigned URL
