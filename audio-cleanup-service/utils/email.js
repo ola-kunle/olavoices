@@ -15,7 +15,7 @@ export async function sendOrderConfirmation(order, files) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'OlaVoices Audio Cleanup <cleanup@olavoices.com>',
+      from: 'OlaVoices Audio Cleanup <hello@olavoices.com>',
       to: [order.customer_email],
       subject: `Order Confirmation - #${order.id.slice(0, 8)}`,
       html: `
@@ -73,7 +73,7 @@ export async function notifyAdminNewOrder(order, files) {
 
   try {
     const { data, error} = await resend.emails.send({
-      from: 'OlaVoices System <system@olavoices.com>',
+      from: 'OlaVoices System <hello@olavoices.com>',
       to: [process.env.ADMIN_EMAIL || 'hello@olavoices.com'],
       subject: `🎙️ New Audio Cleanup Order - #${order.id.slice(0, 8)}`,
       html: `
@@ -102,7 +102,9 @@ export async function notifyAdminNewOrder(order, files) {
 
         ${order.notes ? `<p><strong>Customer Notes:</strong><br>${order.notes}</p>` : ''}
 
-        <p><a href="${process.env.BASE_URL || 'http://localhost:3000'}/admin/orders/${order.id}" style="background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Order in Admin Panel</a></p>
+        <p><a href="${process.env.BASE_URL || 'http://localhost:3000'}/admin.html" style="background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Order in Admin Panel</a></p>
+
+        <p style="color: #6b7280; font-size: 0.9rem;">Order ID: <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${order.id}</code></p>
       `
     });
 
@@ -130,7 +132,7 @@ export async function sendFilesReadyNotification(order, previewUrl) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'OlaVoices Audio Cleanup <cleanup@olavoices.com>',
+      from: 'OlaVoices Audio Cleanup <hello@olavoices.com>',
       to: [order.customer_email],
       subject: `Your Audio Files Are Ready! - #${order.id.slice(0, 8)}`,
       html: `
@@ -191,7 +193,7 @@ export async function sendPaymentConfirmation(order, downloadUrl) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'OlaVoices Audio Cleanup <cleanup@olavoices.com>',
+      from: 'OlaVoices Audio Cleanup <hello@olavoices.com>',
       to: [order.customer_email],
       subject: `Payment Received - Download Your Files - #${order.id.slice(0, 8)}`,
       html: `
