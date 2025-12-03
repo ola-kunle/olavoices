@@ -30,7 +30,7 @@ import {
   sendFilesReadyNotification,
   sendPaymentConfirmation
 } from '../utils/email.js';
-import { uploadFile as uploadToTebi, uploadBuffer, getDownloadUrl } from '../utils/tebi-storage.js';
+import { uploadFile as uploadToTebi, uploadBuffer, getDownloadUrl, getPresignedUrl } from '../utils/tebi-storage.js';
 import { generatePreview } from '../utils/preview.js';
 import { createPaymentSession } from '../utils/payments.js';
 // TEMPORARY: Cleanup scheduler disabled during migration
@@ -674,11 +674,41 @@ app.get('/api/orders/:orderId/preview', async (req, res) => {
     const allFiles = await getOrderFiles(req, orderId);
     const processedFiles = allFiles.filter(f => f.file_type === 'processed');
 
+    // Convert Tebi storage URLs to HTTP presigned URLs
+    const filesWithUrls = await Promise.all(processedFiles.map(async (file) => {
+      let httpStorageUrl = null;
+      let httpPreviewUrl = null;
+
+      // Convert storage_url if exists
+      if (file.storage_url && file.storage_url.startsWith('tebi://')) {
+        try {
+          httpStorageUrl = await getPresignedUrl(req, file.storage_url);
+        } catch (error) {
+          console.error(`Failed to generate storage URL for ${file.filename}:`, error);
+        }
+      }
+
+      // Convert preview_url if exists
+      if (file.preview_url && file.preview_url.startsWith('tebi://')) {
+        try {
+          httpPreviewUrl = await getPresignedUrl(req, file.preview_url);
+        } catch (error) {
+          console.error(`Failed to generate preview URL for ${file.filename}:`, error);
+        }
+      }
+
+      return {
+        ...file,
+        storage_url: httpStorageUrl,
+        preview_url: httpPreviewUrl || httpStorageUrl // Fallback to storage_url if no preview
+      };
+    }));
+
     res.json({
       success: true,
       order,
-      files: processedFiles,
-      previewAvailable: processedFiles.length > 0
+      files: filesWithUrls,
+      previewAvailable: filesWithUrls.length > 0
     });
 
   } catch (error) {
