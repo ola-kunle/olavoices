@@ -812,6 +812,14 @@ app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (re
 });
 
 /**
+ * GET /order/:orderId/preview
+ * Preview page where customers can listen and proceed to payment
+ */
+app.get('/order/:orderId/preview', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/preview-payment.html'));
+});
+
+/**
  * GET /download/:orderId
  * Download page with all files for paid order
  */
