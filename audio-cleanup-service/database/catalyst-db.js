@@ -409,8 +409,15 @@ export async function getAllOrders(req) {
  * @returns {Promise<Object>} Update result
  */
 export async function updateOrder(req, orderId, updates) {
+  // First get the order to find its ROWID
+  const order = await getOrder(req, orderId);
+
+  if (!order || !order.ROWID) {
+    throw new Error(`Order ${orderId} not found or missing ROWID`);
+  }
+
   const table = getTable(req, 'orders');
-  return await table.updateRow({ id: orderId }, updates);
+  return await table.updateRow({ ROWID: order.ROWID }, updates);
 }
 
 /**
