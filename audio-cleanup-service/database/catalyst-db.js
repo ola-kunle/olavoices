@@ -378,14 +378,27 @@ export async function getOrder(req, orderId) {
  * @returns {Promise<Array>} All orders
  */
 export async function getAllOrders(req) {
-  const app = catalyst.initialize(req);
-  const zcql = app.zcql();
-  const result = await zcql.executeZCQLQuery(`SELECT * FROM orders ORDER BY CREATEDTIME DESC`);
+  const table = getTable(req, 'orders');
+  const allOrders = [];
+  let hasMoreRecords = true;
+  let nextToken = null;
 
-  if (result && result.length > 0 && result[0].orders) {
-    return Array.isArray(result[0].orders) ? result[0].orders : [result[0].orders];
+  // Fetch all pages of orders
+  while (hasMoreRecords) {
+    const response = await table.getPagedRows({ nextToken, maxRows: 100 });
+
+    if (response.data && response.data.length > 0) {
+      allOrders.push(...response.data);
+    }
+
+    hasMoreRecords = response.more_records;
+    nextToken = response.next_token;
   }
-  return [];
+
+  // Sort by CREATEDTIME descending (most recent first)
+  allOrders.sort((a, b) => new Date(b.CREATEDTIME) - new Date(a.CREATEDTIME));
+
+  return allOrders;
 }
 
 /**
