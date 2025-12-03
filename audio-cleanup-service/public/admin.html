@@ -371,8 +371,8 @@
               <tr>
                 <td><strong>${order.id.slice(0, 12)}...</strong></td>
                 <td>${order.customer_name}<br><small>${order.customer_email}</small></td>
-                <td>${order.file_count} files</td>
-                <td>${new Date(order.order_date).toLocaleDateString()}</td>
+                <td>${order.file_count || 0} files</td>
+                <td>${new Date(order.CREATEDTIME || order.order_date).toLocaleDateString()}</td>
                 <td>€${order.total_price}</td>
                 <td><span class="status-badge status-${order.status}">${order.status}</span></td>
                 <td>
