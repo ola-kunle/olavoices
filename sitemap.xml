@@ -12,7 +12,7 @@
   <!-- Blog Index -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2025-12-04</lastmod>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -612,6 +612,14 @@
   <url>
     <loc>https://olavoices.com/amazon-s-ai-dub-disaster-sparks-outrage</loc>
     <lastmod>2025-12-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/beloved-voice-actor-s-dark-secret-exposed</loc>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
