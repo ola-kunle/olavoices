@@ -1,0 +1,27 @@
+{
+  "defaults": {
+    "project": "5522000000012084",
+    "env": "Development"
+  },
+  "services": {
+    "appsail": {
+      "audio-cleanup-service": {
+        "stack": "node20",
+        "type": "expressjs",
+        "serving": {
+          "app_name": "server/index.js"
+        },
+        "build": {
+          "build_command": "",
+          "output_directory": ""
+        }
+      }
+    }
+  },
+  "appsail": [
+    {
+      "source": ".",
+      "name": "audio-cleanup-service"
+    }
+  ]
+}

@@ -13,6 +13,7 @@ let analyser;
 let dataArray;
 let animationId;
 let audioBuffer; // Store decoded audio for deep analysis
+let lastAnalyzedFeatures = null; // Store features for feedback collection
 
 // Voice type profiles
 const voiceTypes = {
@@ -299,6 +300,17 @@ function performVoiceAnalysisEnhanced(buffer) {
     const pitchEstimate = estimatePitch(channelData, sampleRate);
     const paceAnalysis = analyzePace(channelData, sampleRate, duration);
     const dynamicRange = calculateDynamicRange(channelData);
+
+    // Store features globally for feedback collection
+    lastAnalyzedFeatures = {
+        spectralCentroid,
+        zeroCrossingRate,
+        rmsEnergy,
+        energyDistribution,
+        pitch: pitchEstimate,
+        pace: paceAnalysis,
+        dynamicRange
+    };
 
     // Enhanced classification using all features
     return classifyVoiceTypeEnhanced({
@@ -671,30 +683,72 @@ function showResults(voiceType) {
                 </div>
             </div>
 
-            <!-- Accuracy Feedback -->
-            <div class="bg-purple-50 rounded-lg p-6 mb-6" id="feedback-section">
-                <h3 class="font-bold text-xl mb-3 text-purple-800 text-center">
-                    <i class="fas fa-star mr-2"></i>Help Us Improve
-                </h3>
-                <p class="text-gray-700 mb-4 text-center">Did we get your voice type right?</p>
-                <div class="flex gap-3 justify-center mb-3">
-                    <button onclick="submitFeedback('${voiceType}', true)" class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-all font-semibold">
-                        <i class="fas fa-thumbs-up mr-2"></i>Yes, Accurate!
-                    </button>
-                    <button onclick="showOtherVoiceTypes('${voiceType}')" class="bg-orange-600 text-white px-8 py-3 rounded-lg hover:bg-orange-700 transition-all font-semibold">
-                        <i class="fas fa-thumbs-down mr-2"></i>Not Quite
-                    </button>
-                </div>
-                <div id="other-types" style="display: none;" class="mt-4">
-                    <p class="text-sm text-gray-600 mb-3 text-center">Which voice type describes you better?</p>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                        ${Object.keys(voiceTypes).filter(t => t !== voiceType).map(type => `
-                            <button onclick="submitFeedback('${voiceType}', false, '${type}')" class="bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-100 transition-all text-sm">
-                                ${voiceTypes[type].icon} ${voiceTypes[type].name}
-                            </button>
-                        `).join('')}
+            <!-- Niche Experience Feedback -->
+            <div class="bg-gray-50 rounded-lg p-6 mt-6" id="feedback-section">
+                <details class="cursor-pointer">
+                    <summary class="text-center font-semibold text-gray-700 hover:text-purple-600 transition-all">
+                        📊 Help Us Research Voice Patterns (click to expand)
+                    </summary>
+                    <div class="mt-6">
+                        <p class="text-gray-600 text-center mb-4">
+                            Which of these niches have you worked in or plan to pursue?<br>
+                            <span class="text-sm">(Select all that apply - this helps us improve the analyzer)</span>
+                        </p>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                            <label class="flex items-center gap-2 p-3 border-2 border-gray-200 rounded-lg hover:border-purple-400 cursor-pointer transition-all">
+                                <input type="checkbox" name="niche" value="audiobooks" class="w-4 h-4">
+                                <span class="text-sm">📚 Audiobooks</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-3 border-2 border-gray-200 rounded-lg hover:border-purple-400 cursor-pointer transition-all">
+                                <input type="checkbox" name="niche" value="commercials" class="w-4 h-4">
+                                <span class="text-sm">📺 Commercials</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-3 border-2 border-gray-200 rounded-lg hover:border-purple-400 cursor-pointer transition-all">
+                                <input type="checkbox" name="niche" value="documentary" class="w-4 h-4">
+                                <span class="text-sm">🎬 Documentary</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-3 border-2 border-gray-200 rounded-lg hover:border-purple-400 cursor-pointer transition-all">
+                                <input type="checkbox" name="niche" value="elearning" class="w-4 h-4">
+                                <span class="text-sm">🎓 E-Learning</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-3 border-2 border-gray-200 rounded-lg hover:border-purple-400 cursor-pointer transition-all">
+                                <input type="checkbox" name="niche" value="gaming" class="w-4 h-4">
+                                <span class="text-sm">🎮 Gaming/Animation</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-3 border-2 border-gray-200 rounded-lg hover:border-purple-400 cursor-pointer transition-all">
+                                <input type="checkbox" name="niche" value="podcasts" class="w-4 h-4">
+                                <span class="text-sm">🎙️ Podcasts</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-3 border-2 border-gray-200 rounded-lg hover:border-purple-400 cursor-pointer transition-all">
+                                <input type="checkbox" name="niche" value="corporate" class="w-4 h-4">
+                                <span class="text-sm">💼 Corporate</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-3 border-2 border-gray-200 rounded-lg hover:border-purple-400 cursor-pointer transition-all">
+                                <input type="checkbox" name="niche" value="character" class="w-4 h-4">
+                                <span class="text-sm">🎭 Character</span>
+                            </label>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm text-gray-600 mb-2">Experience level:</label>
+                            <select id="experience-level" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-purple-400 focus:outline-none">
+                                <option value="beginner">Beginner (just starting)</option>
+                                <option value="intermediate">1-3 years</option>
+                                <option value="advanced">3+ years</option>
+                                <option value="not_specified">Prefer not to say</option>
+                            </select>
+                        </div>
+
+                        <button onclick="submitNicheFeedback('${voiceType}')" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-all">
+                            Submit Feedback
+                        </button>
+
+                        <p class="text-xs text-gray-500 text-center mt-3">
+                            Your feedback helps us train our AI to better serve aspiring voice actors
+                        </p>
                     </div>
-                </div>
+                </details>
             </div>
 
             <div class="text-center border-t pt-6">
@@ -761,63 +815,92 @@ function captureEmail(event) {
 
 // ============ FEEDBACK COLLECTION FUNCTIONS ============
 
-/**
- * Show alternative voice type options
- */
-function showOtherVoiceTypes(predictedType) {
-    document.getElementById('other-types').style.display = 'block';
-}
+const CATALYST_API = 'https://audio-cleanup-service-30038743990.development.catalystappsail.eu/server/voice-feedback';
 
 /**
- * Submit feedback about voice type accuracy
- * This data will be used to train future ML models
+ * Submit niche feedback to backend
+ * Collects user's actual niche experience for ML training
  */
-function submitFeedback(predictedType, isAccurate, actualType = null) {
+async function submitNicheFeedback(predictedType) {
+    // Get selected niches
+    const selectedNiches = Array.from(
+        document.querySelectorAll('input[name="niche"]:checked')
+    ).map(cb => cb.value);
+
+    if (selectedNiches.length === 0) {
+        alert('Please select at least one niche you\'re interested in.');
+        return;
+    }
+
+    // Get experience level
+    const experienceLevel = document.getElementById('experience-level').value;
+
+    // Prepare feedback data
     const feedbackData = {
-        predicted: predictedType,
-        accurate: isAccurate,
-        actual: actualType || predictedType,
+        predicted_type: predictedType,
+        actual_niches: selectedNiches,
+        experience_level: experienceLevel,
+        features: lastAnalyzedFeatures, // Extracted audio features
         timestamp: new Date().toISOString()
     };
 
-    // Track in Google Analytics
-    if (typeof gtag !== 'undefined') {
-        gtag('event', 'voice_type_feedback', {
-            'predicted_type': predictedType,
-            'accurate': isAccurate,
-            'actual_type': actualType || predictedType,
-            'match': isAccurate
-        });
-    }
-
-    // Store in localStorage for future ML training
-    try {
-        const existingFeedback = JSON.parse(localStorage.getItem('voiceAnalyzerFeedback') || '[]');
-        existingFeedback.push(feedbackData);
-        localStorage.setItem('voiceAnalyzerFeedback', JSON.stringify(existingFeedback));
-    } catch (e) {
-        console.log('Could not store feedback locally:', e);
-    }
-
-    // Show thank you message
+    // Show loading state
     const feedbackSection = document.getElementById('feedback-section');
+    const originalContent = feedbackSection.innerHTML;
     feedbackSection.innerHTML = `
-        <div class="text-center py-6">
-            <i class="fas fa-check-circle text-6xl text-green-600 mb-4"></i>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Thank You!</h3>
-            <p class="text-gray-600">Your feedback helps us improve the analyzer for everyone.</p>
-            ${!isAccurate && actualType ? `
-                <p class="text-sm text-purple-600 mt-3">
-                    We'll use this to train our AI to better recognize ${voiceTypes[actualType].name} voices.
-                </p>
-            ` : ''}
+        <div class="text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-600 border-t-transparent"></div>
+            <p class="text-gray-600 mt-3">Submitting feedback...</p>
         </div>
     `;
 
-    // TODO: Send to backend when ready
-    // fetch('/api/voice-feedback', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(feedbackData)
-    // });
+    try {
+        // Send to Catalyst backend
+        const response = await fetch(CATALYST_API, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(feedbackData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        // Track in Google Analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'voice_niche_feedback', {
+                predicted_type: predictedType,
+                niche_count: selectedNiches.length,
+                experience_level: experienceLevel
+            });
+        }
+
+        // Show success message
+        feedbackSection.innerHTML = `
+            <div class="text-center py-8 bg-green-50 rounded-lg">
+                <i class="fas fa-check-circle text-6xl text-green-600 mb-4"></i>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Thank You!</h3>
+                <p class="text-gray-600 mb-3">Your feedback helps us improve the analyzer for everyone.</p>
+                <p class="text-sm text-purple-600">
+                    We'll use this data to train our AI to better recognize voices like yours.
+                </p>
+            </div>
+        `;
+
+    } catch (error) {
+        console.error('Failed to submit feedback:', error);
+
+        // Show error (but don't disrupt UX too much)
+        feedbackSection.innerHTML = originalContent;
+        alert('Unable to submit feedback right now. Your experience still helps us improve!');
+
+        // Track error in Google Analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'voice_feedback_error', {
+                error: error.message
+            });
+        }
+    }
 }

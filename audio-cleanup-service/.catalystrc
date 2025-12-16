@@ -1,0 +1,38 @@
+{
+  "defaults": {
+    "project": 1,
+    "env": 1
+  },
+  "actives": {
+    "project": 1,
+    "env": 1
+  },
+  "projects": [
+    {
+      "idx": 1,
+      "id": "5522000000012084",
+      "name": "olavoices",
+      "domain": {
+        "id": "30038743990",
+        "name": "olavoices-20110797832.development"
+      },
+      "timezone": "Europe/Madrid",
+      "env": [
+        {
+          "idx": 1,
+          "id": "20110797832",
+          "name": "Development",
+          "type": 3,
+          "env_status": "Active",
+          "project_details": {
+            "project_name": "olavoices",
+            "id": "5522000000012084",
+            "project_type": "Live"
+          },
+          "is_default": true,
+          "action_required": false
+        }
+      ]
+    }
+  ]
+}

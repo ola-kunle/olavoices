@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | Audio Cleanup Service</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo h1 {
+      font-size: 2rem;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .logo p {
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      color: #374151;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #4F46E5;
+    }
+
+    .btn-login {
+      width: 100%;
+      background: #4F46E5;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-login:hover {
+      background: #4338ca;
+    }
+
+    .btn-login:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .error-message {
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-link a {
+      color: #4F46E5;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <h1>🔒 Admin Login</h1>
+      <p>Audio Cleanup Service</p>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+
+    <!-- Catalyst will render the login form here -->
+    <div id="catalyst-login-form"></div>
+
+    <div class="back-link">
+      <a href="/">← Back to Home</a>
+    </div>
+  </div>
+
+  <!-- Catalyst Web SDK -->
+  <script src="https://static.zohocdn.com/catalyst/sdk/js/4.5.0/catalystWebSDK.js"></script>
+  <script src="/__catalyst/sdk/init.js"></script>
+
+  <script>
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Wait for Catalyst SDK to load
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        // Check if Catalyst SDK loaded
+        if (typeof catalyst === 'undefined' || !catalyst.auth) {
+          console.error('Catalyst SDK failed to load');
+          errorMessage.textContent = 'Authentication system not available. Please check your connection and refresh.';
+          errorMessage.classList.add('show');
+          return;
+        }
+
+        try {
+          // Check if already authenticated first
+          catalyst.auth.isUserAuthenticated()
+            .then(isAuth => {
+              if (isAuth) {
+                // Already logged in - redirect immediately
+                console.log('Already authenticated, redirecting...');
+                window.location.href = '/admin.html';
+              } else {
+                // Not authenticated - show login form
+                console.log('Not authenticated, showing login form...');
+
+                // Use Catalyst's login but intercept before it redirects
+                const loginDiv = document.getElementById('catalyst-login-form');
+                loginDiv.innerHTML = '<p style="text-align:center; padding:20px;">Please login via Catalyst Console or contact admin.</p><p style="text-align:center;"><a href="/admin.html">Go to Admin Panel</a></p>';
+              }
+            })
+            .catch(err => {
+              console.error('Auth check error:', err);
+              errorMessage.textContent = 'Please create an admin user in Catalyst Console first, then access /admin.html directly after logging in via the Console.';
+              errorMessage.classList.add('show');
+            });
+        } catch (error) {
+          console.error('Catalyst init error:', error);
+          errorMessage.textContent = 'Failed to initialize authentication: ' + error.message;
+          errorMessage.classList.add('show');
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>

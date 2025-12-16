@@ -1,0 +1,43 @@
+offering a done-for-you audio cleaning service that's faster and more affordable than hiring a local audio engineer
+
+Breath removal (natural-sounding)
+Mouth noise/click reduction
+Trimming dead air with proper padding
+Light de-essing
+
+* Delivery in multiple formats
+
+Plosive softening
+
+Loudness normalization (LUFS compliance)
+
+"Professional Audio Cleanup for Voice Actors Skip the tedious editing. Focus on performing. 24-hour turnaround. Broadcast-ready files."
+
+"Audition Ready" - $47 flat
+* Up to 5 separate audition files
+* All cleaned and normalized
+* Delivered in 24 hours
+Turnaround: 24-48 hours
+Price: $15-30 per finished minute
+
+"Spending too much time cleaning audio instead of auditioning? Let us handle the technical cleanup while you focus on booking more work. Upload your raw file → We remove breaths, clicks, and noise → Get back broadcast-ready audio in 24 hours"
+
+1. Problem (client voice): “I love the talent’s read, but the breaths, mouth clicks, and room hiss are killing me—and I need final files tonight.”
+Solution (your promise): “Broadcast-ready voice-over in 24 hours: breaths tamed, clicks gone, noise floor ≤ –60 dB, LUFS-compliant, zero artifacts—guaranteed or it’s free.”
+
+Workflow Blueprint ─────────────────────────────────
+1. Client uploads WAV/AIFF (drag-and-drop widget, generates job ID).
+2. Intake form captures: desired loudness spec, max breath level, head/tail padding, deadline.
+3. Deliver via secure download link.
+4. One free revision within 72 h → scope creep controlled.
+
+Hero section:
+“Voice-over cleanup in hours, not days. Upload. Rest. Deliver.”
+
+Risk reversals: ✔ 100 % money-back guarantee ✔ Free redo if your engineer flags an artifact within 7 days ✔ Secure NDA on every upload
+Call-to-action buttons: “Clean My Audio Now” → scrolls to pricing table or opens modal with file-upload.
+
+
+
+
+

@@ -1,0 +1,12 @@
+{
+  "name": "voice-analyzer-ml",
+  "version": "1.0.0",
+  "description": "Machine learning model training for voice type classification",
+  "main": "train-voice-model.js",
+  "scripts": {
+    "train": "node train-voice-model.js"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^4.11.0"
+  }
+}

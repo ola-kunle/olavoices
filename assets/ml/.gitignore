@@ -1,0 +1,5 @@
+node_modules/
+training-data.json
+voice-classifier/
+voice-classifier-v2/
+*.log
