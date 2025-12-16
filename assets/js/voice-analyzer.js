@@ -671,6 +671,32 @@ function showResults(voiceType) {
                 </div>
             </div>
 
+            <!-- Accuracy Feedback -->
+            <div class="bg-purple-50 rounded-lg p-6 mb-6" id="feedback-section">
+                <h3 class="font-bold text-xl mb-3 text-purple-800 text-center">
+                    <i class="fas fa-star mr-2"></i>Help Us Improve
+                </h3>
+                <p class="text-gray-700 mb-4 text-center">Did we get your voice type right?</p>
+                <div class="flex gap-3 justify-center mb-3">
+                    <button onclick="submitFeedback('${voiceType}', true)" class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-all font-semibold">
+                        <i class="fas fa-thumbs-up mr-2"></i>Yes, Accurate!
+                    </button>
+                    <button onclick="showOtherVoiceTypes('${voiceType}')" class="bg-orange-600 text-white px-8 py-3 rounded-lg hover:bg-orange-700 transition-all font-semibold">
+                        <i class="fas fa-thumbs-down mr-2"></i>Not Quite
+                    </button>
+                </div>
+                <div id="other-types" style="display: none;" class="mt-4">
+                    <p class="text-sm text-gray-600 mb-3 text-center">Which voice type describes you better?</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        ${Object.keys(voiceTypes).filter(t => t !== voiceType).map(type => `
+                            <button onclick="submitFeedback('${voiceType}', false, '${type}')" class="bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-100 transition-all text-sm">
+                                ${voiceTypes[type].icon} ${voiceTypes[type].name}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+
             <div class="text-center border-t pt-6">
                 <p class="text-gray-600 mb-4">Share your voice type:</p>
                 <div class="flex gap-3 justify-center">
@@ -731,4 +757,67 @@ function captureEmail(event) {
     // You can add backend integration here to store the email
     alert('Thanks! Check your email for the guide (you can implement email integration later)');
     event.target.reset();
+}
+
+// ============ FEEDBACK COLLECTION FUNCTIONS ============
+
+/**
+ * Show alternative voice type options
+ */
+function showOtherVoiceTypes(predictedType) {
+    document.getElementById('other-types').style.display = 'block';
+}
+
+/**
+ * Submit feedback about voice type accuracy
+ * This data will be used to train future ML models
+ */
+function submitFeedback(predictedType, isAccurate, actualType = null) {
+    const feedbackData = {
+        predicted: predictedType,
+        accurate: isAccurate,
+        actual: actualType || predictedType,
+        timestamp: new Date().toISOString()
+    };
+
+    // Track in Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'voice_type_feedback', {
+            'predicted_type': predictedType,
+            'accurate': isAccurate,
+            'actual_type': actualType || predictedType,
+            'match': isAccurate
+        });
+    }
+
+    // Store in localStorage for future ML training
+    try {
+        const existingFeedback = JSON.parse(localStorage.getItem('voiceAnalyzerFeedback') || '[]');
+        existingFeedback.push(feedbackData);
+        localStorage.setItem('voiceAnalyzerFeedback', JSON.stringify(existingFeedback));
+    } catch (e) {
+        console.log('Could not store feedback locally:', e);
+    }
+
+    // Show thank you message
+    const feedbackSection = document.getElementById('feedback-section');
+    feedbackSection.innerHTML = `
+        <div class="text-center py-6">
+            <i class="fas fa-check-circle text-6xl text-green-600 mb-4"></i>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Thank You!</h3>
+            <p class="text-gray-600">Your feedback helps us improve the analyzer for everyone.</p>
+            ${!isAccurate && actualType ? `
+                <p class="text-sm text-purple-600 mt-3">
+                    We'll use this to train our AI to better recognize ${voiceTypes[actualType].name} voices.
+                </p>
+            ` : ''}
+        </div>
+    `;
+
+    // TODO: Send to backend when ready
+    // fetch('/api/voice-feedback', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(feedbackData)
+    // });
 }

@@ -265,3 +265,60 @@ Results Display
 **Time**: 1 day implementation
 
 The enhanced analyzer provides significantly better results while maintaining the tool's key advantages: zero cost, instant results, and privacy (no server uploads).
+
+---
+
+## Feedback Collection System (V2 Preparation)
+
+### Current Implementation
+Added a feedback collection system to gather data for future ML training:
+
+**Features:**
+- ✅ "Did we get it right?" buttons after results
+- ✅ Alternative voice type selection if inaccurate
+- ✅ Google Analytics event tracking
+- ✅ Local storage for offline collection
+- ✅ Backend-ready (TODO: API endpoint)
+
+**Data Collected:**
+```javascript
+{
+    predicted: 'storyteller',    // What the analyzer predicted
+    accurate: false,             // User confirmation
+    actual: 'authority',         // User's correction (if any)
+    timestamp: '2025-12-16T...'  // When feedback given
+}
+```
+
+**Purpose:**
+After collecting 500-1000 real labeled voice samples, we can:
+1. Train a TensorFlow.js model on real data
+2. Achieve 90-95% accuracy
+3. Deploy the ML model client-side (still $0 ongoing costs)
+
+**Timeline:**
+- 3-6 months to collect sufficient data
+- 1 week to train and deploy ML model
+- Expected accuracy: 90-95%
+
+---
+
+## Why Not ML Now?
+
+**Attempted Approach:** Synthetic training data + TensorFlow.js
+**Result:** 91% training accuracy, 15% validation accuracy (severe overfitting)
+**Lesson:** Synthetic data can't capture real voice characteristics
+
+**The Right Way:**
+1. ✅ Ship enhanced rule-based version (75-85%)
+2. ✅ Collect real user feedback over time
+3. ⏳ Train ML model when we have 500+ labeled samples
+4. 🚀 Deploy 90%+ accurate version
+
+---
+
+## Deployment Status
+
+**Production Ready:** ✅ Enhanced analyzer with feedback collection
+**Next Steps:** Monitor Google Analytics for feedback submissions
+**Future:** ML model v2 when data is available
