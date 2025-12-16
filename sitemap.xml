@@ -16,7 +16,23 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  
+
+  <!-- News Index -->
+  <url>
+    <loc>https://olavoices.com/news</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Audio Cleanup Service (REVENUE PAGE) -->
+  <url>
+    <loc>https://olavoices.com/audio-cleanup</loc>
+    <lastmod>2025-12-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Blog Posts -->
   <url>
     <loc>https://olavoices.com/my-voice-my-story</loc>
