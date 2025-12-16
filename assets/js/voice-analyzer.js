@@ -213,6 +213,14 @@ function analyzeRecording() {
             // Decode audio buffer
             audioBuffer = await audioContext.decodeAudioData(e.target.result);
 
+            // CRITICAL: Validate recording has actual speech
+            const validationResult = validateRecording(audioBuffer);
+
+            if (!validationResult.isValid) {
+                showRecordingError(validationResult.reason);
+                return;
+            }
+
             // Perform enhanced analysis
             const analysis = performVoiceAnalysisEnhanced(audioBuffer);
 
@@ -222,14 +230,144 @@ function analyzeRecording() {
             }, 3000);
         } catch (error) {
             console.error('Audio analysis error:', error);
-            // Fallback to basic analysis
-            const analysis = performVoiceAnalysis(dataArray, 30);
-            setTimeout(() => {
-                showResults(analysis);
-            }, 3000);
+            showRecordingError('technical');
         }
     };
     fileReader.readAsArrayBuffer(audioBlob);
+}
+
+/**
+ * Validate that recording contains actual speech
+ * Returns: { isValid: boolean, reason: string }
+ */
+function validateRecording(buffer) {
+    const channelData = buffer.getChannelData(0);
+    const sampleRate = buffer.sampleRate;
+
+    // 1. Check total RMS energy (detect if mostly silence)
+    const totalRMS = calculateRMSEnergy(channelData);
+
+    if (totalRMS < 0.01) {
+        return {
+            isValid: false,
+            reason: 'silence'
+        };
+    }
+
+    // 2. Check for speech segments (frames above threshold)
+    const frameSize = Math.floor(sampleRate * 0.02); // 20ms frames
+    const energyThreshold = 0.02;
+    let speechFrames = 0;
+    let totalFrames = 0;
+
+    for (let i = 0; i < channelData.length - frameSize; i += frameSize) {
+        const frame = channelData.slice(i, i + frameSize);
+        const frameEnergy = calculateRMSEnergy(frame);
+
+        if (frameEnergy > energyThreshold) {
+            speechFrames++;
+        }
+        totalFrames++;
+    }
+
+    const speechRatio = speechFrames / totalFrames;
+
+    // Need at least 20% of recording to contain speech
+    if (speechRatio < 0.2) {
+        return {
+            isValid: false,
+            reason: 'too_quiet'
+        };
+    }
+
+    // 3. Check recording duration (must be at least 5 seconds)
+    if (buffer.duration < 5) {
+        return {
+            isValid: false,
+            reason: 'too_short'
+        };
+    }
+
+    // 4. Check for variation (not just static noise)
+    const variance = calculateVariance(Array.from(channelData.slice(0, Math.min(channelData.length, 48000))));
+
+    if (variance < 0.001) {
+        return {
+            isValid: false,
+            reason: 'no_variation'
+        };
+    }
+
+    // All checks passed
+    return {
+        isValid: true,
+        reason: 'valid'
+    };
+}
+
+/**
+ * Show error message when recording is invalid
+ */
+function showRecordingError(reason) {
+    let errorTitle = 'Recording Issue';
+    let errorMessage = 'Please try recording again.';
+    let errorIcon = '⚠️';
+
+    switch (reason) {
+        case 'silence':
+            errorTitle = 'No Audio Detected';
+            errorMessage = 'We couldn\'t detect any speech in your recording. Please make sure your microphone is working and speak clearly into it.';
+            errorIcon = '🔇';
+            break;
+
+        case 'too_quiet':
+            errorTitle = 'Audio Too Quiet';
+            errorMessage = 'Your recording was very quiet. Please speak louder and closer to your microphone.';
+            errorIcon = '🔉';
+            break;
+
+        case 'too_short':
+            errorTitle = 'Recording Too Short';
+            errorMessage = 'Please record for at least 5 seconds. Read the full script for best results.';
+            errorIcon = '⏱️';
+            break;
+
+        case 'no_variation':
+            errorTitle = 'Static Detected';
+            errorMessage = 'The recording appears to be static or background noise. Please speak the script clearly.';
+            errorIcon = '📻';
+            break;
+
+        case 'technical':
+            errorTitle = 'Technical Error';
+            errorMessage = 'Something went wrong analyzing your recording. Please try again.';
+            errorIcon = '❌';
+            break;
+    }
+
+    // Show error screen
+    document.getElementById('screen-analyzing').classList.remove('active');
+    document.getElementById('screen-recording').classList.add('active');
+    document.getElementById('step3').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+
+    // Reset recording state
+    document.getElementById('recordBtn').classList.remove('recording-pulse');
+    document.getElementById('recordBtnText').textContent = 'Try Again';
+    document.getElementById('recordingStatus').innerHTML = `
+        <div class="bg-red-50 border-2 border-red-200 rounded-lg p-4 mt-4">
+            <div class="text-4xl mb-2">${errorIcon}</div>
+            <div class="font-bold text-red-800 mb-2">${errorTitle}</div>
+            <div class="text-red-700">${errorMessage}</div>
+        </div>
+    `;
+
+    // Track error in Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'recording_validation_failed', {
+            'reason': reason
+        });
+    }
 }
 
 function performVoiceAnalysis(frequencyData, duration) {
