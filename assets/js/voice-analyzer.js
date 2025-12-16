@@ -1,5 +1,6 @@
 /**
- * Voice Type Analyzer
+ * Voice Type Analyzer - Enhanced Version
+ * Advanced audio analysis using Web Audio API
  * Analyzes voice recordings to determine voice acting type
  */
 
@@ -11,6 +12,7 @@ let audioContext;
 let analyser;
 let dataArray;
 let animationId;
+let audioBuffer; // Store decoded audio for deep analysis
 
 // Voice type profiles
 const voiceTypes = {
@@ -202,21 +204,31 @@ function analyzeRecording() {
 
     // Create audio blob
     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-    const audioUrl = URL.createObjectURL(audioBlob);
-    const audio = new Audio(audioUrl);
 
-    // Perform analysis
-    audio.addEventListener('loadedmetadata', () => {
-        const duration = audio.duration;
+    // Decode audio for deep analysis
+    const fileReader = new FileReader();
+    fileReader.onload = async (e) => {
+        try {
+            // Decode audio buffer
+            audioBuffer = await audioContext.decodeAudioData(e.target.result);
 
-        // Simple analysis (we'll use the audio data we collected)
-        const analysis = performVoiceAnalysis(dataArray, duration);
+            // Perform enhanced analysis
+            const analysis = performVoiceAnalysisEnhanced(audioBuffer);
 
-        // Simulate processing time for better UX
-        setTimeout(() => {
-            showResults(analysis);
-        }, 3000);
-    });
+            // Simulate processing time for better UX
+            setTimeout(() => {
+                showResults(analysis);
+            }, 3000);
+        } catch (error) {
+            console.error('Audio analysis error:', error);
+            // Fallback to basic analysis
+            const analysis = performVoiceAnalysis(dataArray, 30);
+            setTimeout(() => {
+                showResults(analysis);
+            }, 3000);
+        }
+    };
+    fileReader.readAsArrayBuffer(audioBlob);
 }
 
 function performVoiceAnalysis(frequencyData, duration) {
@@ -266,6 +278,329 @@ function calculateVariance(data) {
     const mean = data.reduce((a, b) => a + b) / data.length;
     const squaredDiffs = data.map(x => Math.pow(x - mean, 2));
     return Math.sqrt(squaredDiffs.reduce((a, b) => a + b) / data.length);
+}
+
+// ============ ENHANCED AUDIO ANALYSIS FUNCTIONS ============
+
+/**
+ * Main enhanced analysis function
+ * Extracts advanced audio features for better voice type classification
+ */
+function performVoiceAnalysisEnhanced(buffer) {
+    const channelData = buffer.getChannelData(0); // Use first channel (mono or left)
+    const sampleRate = buffer.sampleRate;
+    const duration = buffer.duration;
+
+    // Extract advanced features
+    const spectralCentroid = calculateSpectralCentroid(channelData, sampleRate);
+    const zeroCrossingRate = calculateZeroCrossingRate(channelData);
+    const rmsEnergy = calculateRMSEnergy(channelData);
+    const energyDistribution = analyzeEnergyDistribution(channelData, sampleRate);
+    const pitchEstimate = estimatePitch(channelData, sampleRate);
+    const paceAnalysis = analyzePace(channelData, sampleRate, duration);
+    const dynamicRange = calculateDynamicRange(channelData);
+
+    // Enhanced classification using all features
+    return classifyVoiceTypeEnhanced({
+        spectralCentroid,
+        zeroCrossingRate,
+        rmsEnergy,
+        energyDistribution,
+        pitch: pitchEstimate,
+        pace: paceAnalysis,
+        dynamicRange
+    });
+}
+
+/**
+ * Spectral Centroid - measures "brightness" of the voice
+ * Higher values = brighter, more energetic voice
+ * Lower values = darker, more authoritative voice
+ */
+function calculateSpectralCentroid(audioData, sampleRate) {
+    const fftSize = 2048;
+    const numFrames = Math.floor(audioData.length / fftSize);
+    let totalCentroid = 0;
+
+    for (let i = 0; i < numFrames; i++) {
+        const frame = audioData.slice(i * fftSize, (i + 1) * fftSize);
+        const spectrum = performFFT(frame);
+
+        let numerator = 0;
+        let denominator = 0;
+
+        for (let j = 0; j < spectrum.length; j++) {
+            const frequency = (j * sampleRate) / fftSize;
+            numerator += frequency * spectrum[j];
+            denominator += spectrum[j];
+        }
+
+        if (denominator > 0) {
+            totalCentroid += numerator / denominator;
+        }
+    }
+
+    return totalCentroid / numFrames; // Average centroid across all frames
+}
+
+/**
+ * Simplified FFT using basic frequency analysis
+ */
+function performFFT(frame) {
+    // Simplified magnitude spectrum calculation
+    const spectrum = new Array(frame.length / 2).fill(0);
+
+    for (let i = 0; i < spectrum.length; i++) {
+        let real = 0;
+        let imag = 0;
+
+        for (let j = 0; j < frame.length; j++) {
+            const angle = (2 * Math.PI * i * j) / frame.length;
+            real += frame[j] * Math.cos(angle);
+            imag += frame[j] * Math.sin(angle);
+        }
+
+        spectrum[i] = Math.sqrt(real * real + imag * imag);
+    }
+
+    return spectrum;
+}
+
+/**
+ * Zero-Crossing Rate - measures how often the signal crosses zero
+ * Higher ZCR = more noise/breathiness, energetic delivery
+ * Lower ZCR = cleaner tone, more resonant voice
+ */
+function calculateZeroCrossingRate(audioData) {
+    let crossings = 0;
+
+    for (let i = 1; i < audioData.length; i++) {
+        if ((audioData[i] >= 0 && audioData[i - 1] < 0) ||
+            (audioData[i] < 0 && audioData[i - 1] >= 0)) {
+            crossings++;
+        }
+    }
+
+    return crossings / audioData.length;
+}
+
+/**
+ * RMS Energy - measures overall loudness and dynamic control
+ * Higher RMS with low variance = consistent, controlled delivery (educator/narrator)
+ * Higher RMS with high variance = dynamic, expressive delivery (character/energizer)
+ */
+function calculateRMSEnergy(audioData) {
+    const sumSquares = audioData.reduce((sum, sample) => sum + sample * sample, 0);
+    return Math.sqrt(sumSquares / audioData.length);
+}
+
+/**
+ * Analyze energy distribution across frequency bands
+ * Helps identify resonance and vocal characteristics
+ */
+function analyzeEnergyDistribution(audioData, sampleRate) {
+    const fftSize = 2048;
+    const spectrum = performFFT(audioData.slice(0, fftSize));
+
+    // Define frequency bands
+    const bands = {
+        low: { min: 0, max: 250 },        // Bass/chest resonance
+        midLow: { min: 250, max: 500 },   // Fundamental frequencies
+        mid: { min: 500, max: 2000 },     // Vowel formants
+        high: { min: 2000, max: 4000 },   // Clarity/presence
+        veryHigh: { min: 4000, max: 8000 } // Sibilance/air
+    };
+
+    const energy = {};
+    const binWidth = sampleRate / fftSize;
+
+    for (const [band, range] of Object.entries(bands)) {
+        const startBin = Math.floor(range.min / binWidth);
+        const endBin = Math.floor(range.max / binWidth);
+
+        let bandEnergy = 0;
+        for (let i = startBin; i < endBin && i < spectrum.length; i++) {
+            bandEnergy += spectrum[i];
+        }
+
+        energy[band] = bandEnergy / (endBin - startBin);
+    }
+
+    return energy;
+}
+
+/**
+ * Estimate pitch using autocorrelation
+ * More accurate than simple frequency averaging
+ */
+function estimatePitch(audioData, sampleRate) {
+    const minFreq = 80;  // ~E2 (lower male voice)
+    const maxFreq = 400; // ~G4 (higher female voice)
+
+    const minPeriod = Math.floor(sampleRate / maxFreq);
+    const maxPeriod = Math.floor(sampleRate / minFreq);
+
+    // Use first 2048 samples for pitch detection
+    const frame = audioData.slice(0, 2048);
+
+    let maxCorrelation = 0;
+    let bestPeriod = minPeriod;
+
+    for (let period = minPeriod; period < maxPeriod && period < frame.length / 2; period++) {
+        let correlation = 0;
+
+        for (let i = 0; i < frame.length - period; i++) {
+            correlation += frame[i] * frame[i + period];
+        }
+
+        if (correlation > maxCorrelation) {
+            maxCorrelation = correlation;
+            bestPeriod = period;
+        }
+    }
+
+    const frequency = sampleRate / bestPeriod;
+    return frequency;
+}
+
+/**
+ * Analyze pace by detecting speech vs silence
+ * More accurate than simple duration estimation
+ */
+function analyzePace(audioData, sampleRate, duration) {
+    const frameSize = Math.floor(sampleRate * 0.02); // 20ms frames
+    const energyThreshold = 0.02; // Silence threshold
+
+    let speechFrames = 0;
+    let totalFrames = 0;
+
+    for (let i = 0; i < audioData.length - frameSize; i += frameSize) {
+        const frame = audioData.slice(i, i + frameSize);
+        const energy = calculateRMSEnergy(frame);
+
+        if (energy > energyThreshold) {
+            speechFrames++;
+        }
+        totalFrames++;
+    }
+
+    const speechRatio = speechFrames / totalFrames;
+
+    // Estimate words per minute based on speech density
+    // ~50 words in script, adjust for actual speech time
+    const actualSpeechTime = duration * speechRatio;
+    const wordsPerMinute = actualSpeechTime > 0 ? (50 / actualSpeechTime) * 60 : 150;
+
+    return {
+        wpm: wordsPerMinute,
+        speechRatio: speechRatio,
+        pauseDensity: 1 - speechRatio
+    };
+}
+
+/**
+ * Calculate dynamic range - difference between loudest and quietest parts
+ */
+function calculateDynamicRange(audioData) {
+    const frameSize = 2048;
+    const energies = [];
+
+    for (let i = 0; i < audioData.length - frameSize; i += frameSize) {
+        const frame = audioData.slice(i, i + frameSize);
+        energies.push(calculateRMSEnergy(frame));
+    }
+
+    const maxEnergy = Math.max(...energies);
+    const minEnergy = Math.min(...energies.filter(e => e > 0.001)); // Ignore near-silence
+
+    return maxEnergy / (minEnergy || 0.001); // Ratio of loud to quiet
+}
+
+/**
+ * Enhanced voice type classification using all extracted features
+ */
+function classifyVoiceTypeEnhanced(features) {
+    const { spectralCentroid, zeroCrossingRate, rmsEnergy, energyDistribution,
+            pitch, pace, dynamicRange } = features;
+
+    // Normalize and categorize features
+    const brightness = spectralCentroid > 2000 ? 'bright' : spectralCentroid > 1200 ? 'balanced' : 'warm';
+    const texture = zeroCrossingRate > 0.1 ? 'energetic' : zeroCrossingRate > 0.05 ? 'moderate' : 'smooth';
+    const pitchCategory = pitch > 200 ? 'high' : pitch > 140 ? 'medium' : 'low';
+    const paceCategory = pace.wpm > 170 ? 'fast' : pace.wpm > 130 ? 'medium' : 'slow';
+    const expressiveness = dynamicRange > 15 ? 'highly_expressive' : dynamicRange > 8 ? 'expressive' : 'controlled';
+
+    // Enhanced scoring system for each voice type
+    const scores = {
+        authority: 0,
+        storyteller: 0,
+        energizer: 0,
+        educator: 0,
+        character: 0,
+        versatile: 0
+    };
+
+    // AUTHORITY: Low pitch, warm tone, controlled delivery, strong low frequencies
+    if (pitchCategory === 'low') scores.authority += 3;
+    if (brightness === 'warm') scores.authority += 2;
+    if (expressiveness === 'controlled') scores.authority += 2;
+    if (paceCategory === 'slow' || paceCategory === 'medium') scores.authority += 2;
+    if (energyDistribution.low > energyDistribution.high) scores.authority += 2;
+
+    // STORYTELLER: Balanced tone, moderate pace, smooth texture, good energy control
+    if (brightness === 'balanced') scores.storyteller += 3;
+    if (texture === 'smooth' || texture === 'moderate') scores.storyteller += 2;
+    if (paceCategory === 'medium') scores.storyteller += 3;
+    if (expressiveness === 'expressive') scores.storyteller += 2;
+    if (pace.pauseDensity > 0.15 && pace.pauseDensity < 0.35) scores.storyteller += 2;
+
+    // ENERGIZER: High pitch, bright tone, fast pace, energetic texture
+    if (pitchCategory === 'high') scores.energizer += 3;
+    if (brightness === 'bright') scores.energizer += 3;
+    if (paceCategory === 'fast') scores.energizer += 3;
+    if (texture === 'energetic') scores.energizer += 2;
+    if (pace.speechRatio > 0.75) scores.energizer += 2;
+
+    // EDUCATOR: Clear articulation, consistent energy, medium pace, balanced frequencies
+    if (paceCategory === 'medium') scores.educator += 2;
+    if (expressiveness === 'controlled') scores.educator += 3;
+    if (brightness === 'balanced') scores.educator += 2;
+    if (energyDistribution.mid > energyDistribution.low &&
+        energyDistribution.mid > energyDistribution.veryHigh) scores.educator += 2;
+    if (Math.abs(pace.wpm - 150) < 20) scores.educator += 2; // Close to ideal teaching pace
+
+    // CHARACTER: Wide dynamic range, high expressiveness, varied texture
+    if (expressiveness === 'highly_expressive') scores.character += 4;
+    if (dynamicRange > 12) scores.character += 3;
+    if (texture === 'energetic') scores.character += 2;
+    if (pace.pauseDensity > 0.25) scores.character += 2; // Uses pauses dramatically
+
+    // VERSATILE: Balanced across all metrics, no extreme characteristics
+    const isBalanced = brightness === 'balanced' &&
+                       texture === 'moderate' &&
+                       paceCategory === 'medium' &&
+                       expressiveness === 'expressive';
+    if (isBalanced) scores.versatile += 5;
+    if (pitchCategory === 'medium') scores.versatile += 2;
+    if (dynamicRange > 8 && dynamicRange < 15) scores.versatile += 2;
+
+    // Find highest scoring voice type
+    let maxScore = 0;
+    let voiceType = 'versatile'; // Default
+
+    for (const [type, score] of Object.entries(scores)) {
+        if (score > maxScore) {
+            maxScore = score;
+            voiceType = type;
+        }
+    }
+
+    // If no clear winner (all scores low), default to versatile
+    if (maxScore < 3) {
+        voiceType = 'versatile';
+    }
+
+    return voiceType;
 }
 
 function classifyVoiceType(pitch, pace, range, variance) {
