@@ -128,45 +128,113 @@ Respond in JSON format:
 
   /**
    * Generate specific, relevant image search query based on article content
+   * ENHANCED: Multiple query variations per topic for diversity
    */
   generateImageQuery(article) {
     const headline = article.headline?.toLowerCase() || '';
     const category = article.category?.toLowerCase() || '';
 
-    // Match specific topics for better image relevance
+    // Helper to pick random query from array
+    const pickRandom = (queries) => queries[Math.floor(Math.random() * queries.length)];
+
+    // Match specific topics - NOW WITH MULTIPLE VARIATIONS
     if (headline.includes('anime') || headline.includes('manga') || headline.includes('jujutsu')) {
-      return 'anime voice acting studio microphone recording booth';
+      return pickRandom([
+        'anime voice acting studio microphone recording booth',
+        'animation dubbing voice actor microphone studio',
+        'japanese anime character voice recording session',
+        'voice over talent anime production studio',
+        'manga adaptation voice acting recording'
+      ]);
     }
 
     if (headline.includes('ai') || headline.includes('artificial intelligence') || headline.includes('technology')) {
-      return 'artificial intelligence technology digital ai voice assistant';
+      return pickRandom([
+        'artificial intelligence technology digital ai voice assistant',
+        'ai voice synthesis technology futuristic studio',
+        'voice recognition ai technology microphone',
+        'digital voice assistant artificial intelligence',
+        'ai powered voice technology modern workspace'
+      ]);
     }
 
     if (headline.includes('audiobook') || headline.includes('narration') || headline.includes('narrator')) {
-      return 'audiobook recording headphones microphone narrator reading';
+      return pickRandom([
+        'audiobook recording headphones microphone narrator reading',
+        'book narrator voice actor studio reading manuscript',
+        'audiobook production professional narrator microphone',
+        'voice talent reading book studio recording',
+        'narrator performing audiobook with headphones'
+      ]);
     }
 
     if (headline.includes('podcast') || headline.includes('podcasting')) {
-      return 'podcast recording microphone studio host broadcasting';
+      return pickRandom([
+        'podcast recording microphone studio host broadcasting',
+        'podcaster speaking into microphone sound booth',
+        'podcast studio setup audio equipment broadcasting',
+        'radio style podcast recording session',
+        'podcast host microphone sound mixing board'
+      ]);
     }
 
     if (headline.includes('nollywood') || headline.includes('film') || headline.includes('movie')) {
-      return 'film production movie set camera director recording';
+      return pickRandom([
+        'film production movie set camera director recording',
+        'cinema movie production behind the scenes',
+        'film set voice over recording studio',
+        'movie production audio recording session',
+        'african film industry nollywood production'
+      ]);
     }
 
     if (headline.includes('voice actor') || headline.includes('voice acting') || headline.includes('dubbing')) {
-      return 'voice actor recording studio microphone sound booth professional';
+      return pickRandom([
+        'voice actor recording studio microphone sound booth',
+        'professional voice talent performing in booth',
+        'voice over artist studio session recording',
+        'dubbing actor microphone sound isolation booth',
+        'voice performer audio recording equipment',
+        'vocal artist in professional recording studio'
+      ]);
     }
 
-    // Fallback based on category
-    const queries = {
-      'tech': 'technology innovation digital audio recording studio',
-      'business': 'professional microphone recording business audio production',
-      'culture': 'voice actor recording studio creative artistic',
-      'human interest': 'microphone recording voice professional studio'
+    // Fallback based on category - ALSO WITH VARIATIONS
+    const categoryQueries = {
+      'tech': [
+        'technology innovation digital audio recording studio',
+        'tech audio equipment modern recording setup',
+        'digital voice technology professional workspace'
+      ],
+      'business': [
+        'professional microphone recording business audio production',
+        'corporate audio production meeting room',
+        'business professional voice recording studio'
+      ],
+      'culture': [
+        'voice actor recording studio creative artistic',
+        'creative artist voice recording cultural expression',
+        'artistic voice performance studio culture'
+      ],
+      'human interest': [
+        'microphone recording voice professional studio',
+        'human voice emotional performance recording',
+        'personal story voice recording intimate setting'
+      ]
     };
 
-    return queries[category] || 'professional voice recording studio microphone audio production';
+    if (categoryQueries[category]) {
+      return pickRandom(categoryQueries[category]);
+    }
+
+    // Ultimate fallback with variations
+    return pickRandom([
+      'professional voice recording studio microphone audio production',
+      'audio engineer sound mixing board recording studio',
+      'broadcast quality voice recording professional setup',
+      'voice recording session modern studio equipment',
+      'audio production workspace professional microphone'
+    ]);
   }
 
   /**

@@ -44,9 +44,11 @@ export class ImageGenerator {
 
   /**
    * Add variation to search query for more diverse results
+   * ENHANCED: Multiple variations + topic-specific keywords
    */
   addQueryVariation(baseQuery) {
-    const variations = [
+    // Primary style variations
+    const styleVariations = [
       'professional',
       'modern',
       'authentic',
@@ -54,16 +56,63 @@ export class ImageGenerator {
       'natural',
       'dynamic',
       'vibrant',
-      'engaging'
+      'engaging',
+      'cinematic',
+      'dramatic',
+      'intimate',
+      'powerful',
+      'contemporary',
+      'atmospheric',
+      'artistic'
     ];
 
-    // Randomly add a variation 50% of the time
-    if (Math.random() > 0.5) {
-      const variation = variations[Math.floor(Math.random() * variations.length)];
-      return `${variation} ${baseQuery}`;
+    // Secondary context variations
+    const contextVariations = [
+      'close-up',
+      'wide angle',
+      'focused',
+      'ambient lighting',
+      'warm tones',
+      'cool tones',
+      'dramatic lighting',
+      'natural light',
+      'high contrast',
+      'soft focus'
+    ];
+
+    // Topic-specific variations
+    const topicVariations = {
+      'voice': ['vocal', 'speaking', 'narrating', 'performing', 'expressing'],
+      'studio': ['booth', 'workspace', 'production', 'recording space', 'facility'],
+      'microphone': ['mic', 'audio equipment', 'recording gear', 'sound device'],
+      'actor': ['performer', 'artist', 'talent', 'professional', 'creator']
+    };
+
+    let variedQuery = baseQuery;
+
+    // ALWAYS add at least one style variation (100% of the time)
+    const style = styleVariations[Math.floor(Math.random() * styleVariations.length)];
+    variedQuery = `${style} ${variedQuery}`;
+
+    // 70% chance: Add contextual variation
+    if (Math.random() > 0.3) {
+      const context = contextVariations[Math.floor(Math.random() * contextVariations.length)];
+      variedQuery = `${variedQuery} ${context}`;
     }
 
-    return baseQuery;
+    // 60% chance: Replace common words with synonyms for more variety
+    if (Math.random() > 0.4) {
+      for (const [key, synonyms] of Object.entries(topicVariations)) {
+        if (variedQuery.includes(key)) {
+          const synonym = synonyms[Math.floor(Math.random() * synonyms.length)];
+          // Replace only first occurrence to maintain query coherence
+          variedQuery = variedQuery.replace(key, synonym);
+          break; // Only replace one word to avoid over-modification
+        }
+      }
+    }
+
+    return variedQuery;
   }
   /**
    * Get image from Pexels (FREE) - with duplicate prevention

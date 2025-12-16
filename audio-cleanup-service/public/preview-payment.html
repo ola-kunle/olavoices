@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Preview Your Audio | OlaVoices Audio Cleanup</title>
+
+  <!-- SEO Meta Tags -->
+  <title>Preview Your Cleaned Audio | OlaVoices</title>
+  <meta name="description" content="Listen to your professionally cleaned audio preview. Pay securely and download broadcast-ready files.">
+  <link rel="canonical" href="https://olavoices.com/audio-cleanup/preview">
+  <meta name="robots" content="noindex, nofollow">
+
   <style>
     * {
       margin: 0;
@@ -261,7 +267,7 @@
           <h3>Preview Your Cleaned Audio</h3>
           <div id="audioPlayers"></div>
           <div class="preview-notice">
-            <strong>ℹ️ Preview Note:</strong> This is a 30-second preview at reduced quality.
+            <strong>ℹ️ Preview Note:</strong> This is a 15-second preview at reduced quality.
             After payment, you'll receive the full high-quality file in your chosen format.
           </div>
         </div>
@@ -336,7 +342,7 @@
           playerDiv.innerHTML = `
             <div class="file-name">File ${index + 1}: ${file.original_filename}</div>
             ${previewUrl ? `
-              <audio controls>
+              <audio controls data-preview-player="true">
                 <source src="${previewUrl}" type="audio/mpeg">
                 <source src="${previewUrl}" type="audio/wav">
                 Your browser does not support the audio element.
@@ -345,6 +351,25 @@
           `;
 
           playersContainer.appendChild(playerDiv);
+        });
+
+        // Limit all audio players to 15 seconds
+        document.querySelectorAll('audio[data-preview-player="true"]').forEach(audio => {
+          const PREVIEW_DURATION = 15; // seconds
+
+          audio.addEventListener('timeupdate', function() {
+            if (this.currentTime >= PREVIEW_DURATION) {
+              this.pause();
+              this.currentTime = 0; // Reset to beginning
+            }
+          });
+
+          audio.addEventListener('loadedmetadata', function() {
+            // Ensure the player knows it's limited to 15 seconds
+            if (this.duration > PREVIEW_DURATION) {
+              console.log(`Audio limited to ${PREVIEW_DURATION}s preview (full: ${this.duration.toFixed(1)}s)`);
+            }
+          });
         });
 
         // Show content

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO Meta Tags -->
+  <title>Track Your Audio Cleanup Order | OlaVoices</title>
+  <meta name="description" content="Track your audio cleanup order status in real-time. Check processing progress and get updates on your voice over audio cleanup service.">
+  <link rel="canonical" href="https://olavoices.com/audio-cleanup/track">
+  <meta name="robots" content="noindex, nofollow">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .search-section {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      margin-bottom: 30px;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .search-form input {
+      flex: 1;
+      padding: 14px 18px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .search-form input:focus {
+      outline: none;
+      border-color: #4F46E5;
+    }
+
+    .search-form button {
+      background: #4F46E5;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .search-form button:hover {
+      background: #4338ca;
+    }
+
+    .search-form button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .search-hint {
+      color: #6b7280;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .order-details {
+      display: none;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .order-details.show {
+      display: block;
+    }
+
+    .order-header {
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .order-id {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-ready {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-completed {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .timeline {
+      margin: 30px 0;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .timeline-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 40px;
+      width: 2px;
+      height: calc(100% + 4px);
+      background: #e5e7eb;
+    }
+
+    .timeline-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+
+    .timeline-dot.completed {
+      background: #10b981;
+      color: white;
+    }
+
+    .timeline-dot.pending {
+      background: #e5e7eb;
+      color: #9ca3af;
+    }
+
+    .timeline-content {
+      flex: 1;
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    .timeline-desc {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+
+    .timeline-date {
+      color: #9ca3af;
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .info-item {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+    }
+
+    .info-label {
+      color: #6b7280;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      color: #111827;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .files-section {
+      margin: 30px 0;
+    }
+
+    .files-section h3 {
+      color: #111827;
+      margin-bottom: 16px;
+    }
+
+    .file-list {
+      list-style: none;
+    }
+
+    .file-item {
+      background: #f9fafb;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .file-name {
+      color: #111827;
+      font-weight: 500;
+    }
+
+    .file-size {
+      color: #6b7280;
+      font-size: 0.85rem;
+    }
+
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #4F46E5;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #4338ca;
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .error-message {
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .success-message {
+      background: #f0fdf4;
+      color: #166534;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .back-link a {
+      color: white;
+      text-decoration: none;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .back-link a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Track Your Order</h1>
+      <p>Enter your order ID to check the status of your audio cleanup</p>
+    </div>
+
+    <div class="search-section">
+      <form class="search-form" id="searchForm">
+        <input
+          type="text"
+          id="orderIdInput"
+          placeholder="Enter your Order ID (e.g., ACS-abc123...)"
+          required
+        >
+        <button type="submit" id="searchBtn">Track Order</button>
+      </form>
+      <p class="search-hint">Your order ID was sent to your email when you placed your order</p>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
+
+    <div class="order-details" id="orderDetails">
+      <div class="order-header">
+        <div class="order-id" id="orderId"></div>
+        <span class="status-badge" id="statusBadge"></span>
+      </div>
+
+      <div class="timeline" id="timeline"></div>
+
+      <div class="info-grid" id="infoGrid"></div>
+
+      <div class="files-section" id="filesSection">
+        <h3>Uploaded Files</h3>
+        <ul class="file-list" id="fileList"></ul>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="resendNotification()">
+          Resend Notification Email
+        </button>
+        <button class="btn btn-secondary" onclick="searchAgain()">
+          Search Another Order
+        </button>
+      </div>
+    </div>
+
+    <div class="back-link">
+      <a href="/">← Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    const searchForm = document.getElementById('searchForm');
+    const orderIdInput = document.getElementById('orderIdInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const orderDetails = document.getElementById('orderDetails');
+    const errorMessage = document.getElementById('errorMessage');
+    const successMessage = document.getElementById('successMessage');
+    let currentOrder = null;
+
+    // Check if order ID is in URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderIdFromUrl = urlParams.get('orderId');
+    if (orderIdFromUrl) {
+      orderIdInput.value = orderIdFromUrl;
+      trackOrder(orderIdFromUrl);
+    }
+
+    searchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const orderId = orderIdInput.value.trim();
+      await trackOrder(orderId);
+    });
+
+    async function trackOrder(orderId) {
+      // Hide previous messages
+      errorMessage.classList.remove('show');
+      successMessage.classList.remove('show');
+      orderDetails.classList.remove('show');
+
+      searchBtn.disabled = true;
+      searchBtn.textContent = 'Searching...';
+
+      try {
+        const response = await fetch(`/api/orders/track/${orderId}`);
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'Order not found');
+        }
+
+        currentOrder = data.order;
+        displayOrderDetails(data.order, data.files);
+
+      } catch (error) {
+        errorMessage.textContent = error.message;
+        errorMessage.classList.add('show');
+      } finally {
+        searchBtn.disabled = false;
+        searchBtn.textContent = 'Track Order';
+      }
+    }
+
+    function displayOrderDetails(order, files) {
+      // Display order ID and status
+      document.getElementById('orderId').textContent = `Order ${order.id}`;
+
+      const statusBadge = document.getElementById('statusBadge');
+      statusBadge.textContent = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+      statusBadge.className = `status-badge status-${order.status}`;
+
+      // Display timeline
+      const timeline = document.getElementById('timeline');
+      const timelineSteps = [
+        {
+          title: 'Order Received',
+          desc: 'Your files have been uploaded successfully',
+          date: new Date(order.CREATEDTIME || order.order_date).toLocaleString(),
+          completed: true
+        },
+        {
+          title: 'Processing',
+          desc: 'Our team is cleaning and processing your audio',
+          date: order.status !== 'pending' ? 'In progress' : 'Waiting to start',
+          completed: order.status !== 'pending'
+        },
+        {
+          title: 'Ready for Preview',
+          desc: 'Your processed files are ready to preview and pay',
+          date: order.status === 'ready' || order.status === 'completed' ? 'Ready' : 'Pending',
+          completed: order.status === 'ready' || order.status === 'completed'
+        },
+        {
+          title: 'Completed',
+          desc: 'Payment received, download links sent to your email',
+          date: order.status === 'completed' ? 'Completed' : 'Pending payment',
+          completed: order.status === 'completed'
+        }
+      ];
+
+      timeline.innerHTML = timelineSteps.map(step => `
+        <div class="timeline-item">
+          <div class="timeline-dot ${step.completed ? 'completed' : 'pending'}">
+            ${step.completed ? '✓' : '○'}
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-title">${step.title}</div>
+            <div class="timeline-desc">${step.desc}</div>
+            <div class="timeline-date">${step.date}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // Display order information
+      const infoGrid = document.getElementById('infoGrid');
+      infoGrid.innerHTML = `
+        <div class="info-item">
+          <div class="info-label">Customer</div>
+          <div class="info-value">${order.customer_name}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <div class="info-value">${order.customer_email}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Total Price</div>
+          <div class="info-value">€${order.total_price}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Payment Status</div>
+          <div class="info-value">${order.payment_status === 'paid' ? 'Paid' : 'Unpaid'}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Delivery Format</div>
+          <div class="info-value">${order.delivery_format}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Deadline</div>
+          <div class="info-value">${order.deadline}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Loudness Target</div>
+          <div class="info-value">${order.loudness_target}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Breath Level</div>
+          <div class="info-value">${order.breath_level}</div>
+        </div>
+      `;
+
+      // Display files
+      const fileList = document.getElementById('fileList');
+      const rawFiles = files.filter(f => f.file_type === 'raw');
+
+      if (rawFiles.length > 0) {
+        fileList.innerHTML = rawFiles.map(file => `
+          <li class="file-item">
+            <span class="file-name">${file.original_filename}</span>
+            <span class="file-size">${formatFileSize(file.file_size)}</span>
+          </li>
+        `).join('');
+      } else {
+        fileList.innerHTML = '<li class="file-item">No files found</li>';
+      }
+
+      // Show order details
+      orderDetails.classList.add('show');
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    async function resendNotification() {
+      if (!currentOrder) return;
+
+      try {
+        const response = await fetch(`/api/orders/${currentOrder.id}/resend-notification`, {
+          method: 'POST'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          successMessage.textContent = 'Notification email sent successfully!';
+          successMessage.classList.add('show');
+
+          setTimeout(() => {
+            successMessage.classList.remove('show');
+          }, 5000);
+        } else {
+          throw new Error(data.error || 'Failed to send notification');
+        }
+
+      } catch (error) {
+        errorMessage.textContent = error.message;
+        errorMessage.classList.add('show');
+      }
+    }
+
+    function searchAgain() {
+      orderDetails.classList.remove('show');
+      orderIdInput.value = '';
+      orderIdInput.focus();
+      currentOrder = null;
+    }
+  </script>
+</body>
+</html>
