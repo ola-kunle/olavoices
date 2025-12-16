@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Type Analyzer - Discover Your Perfect Voice Acting Niche | OlaVoices</title>
+    <meta name="description" content="Free voice type analyzer for aspiring voice actors. Record your voice and discover your perfect niche - audiobook, commercial, documentary, or e-learning. Instant results!">
+    <meta name="keywords" content="voice type analyzer, voice acting test, find your voice type, voice actor assessment, voice acting niche">
+    <link rel="canonical" href="https://olavoices.com/voice-type-analyzer">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Voice Type Analyzer - Discover Your Voice Acting Niche">
+    <meta property="og:description" content="Find out what type of voice actor you are! Take our free voice analysis and discover your perfect niche.">
+    <meta property="og:image" content="https://olavoices.com/assets/logo/favicon.png">
+    <meta property="og:url" content="https://olavoices.com/voice-type-analyzer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Voice Type Analyzer - Find Your Voice Acting Niche">
+    <meta name="twitter:description" content="Discover what type of voice actor you are in 60 seconds!">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZLFTKSBLMT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZLFTKSBLMT');
+    </script>
+
+    <link rel="icon" href="assets/logo/favicon2.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .font-ubuntu { font-family: 'Ubuntu', sans-serif; }
+
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+
+        .step-indicator.active {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .recording-pulse {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .waveform {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 60px;
+        }
+
+        .waveform-bar {
+            width: 4px;
+            background: #dc2626;
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+            border-left: 6px solid #dc2626;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        #screen-start, #screen-recording, #screen-analyzing, #screen-results {
+            display: none;
+        }
+
+        #screen-start.active, #screen-recording.active, #screen-analyzing.active, #screen-results.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-ubuntu">
+
+<!-- Header -->
+<header class="bg-white shadow-md py-4">
+    <div class="container mx-auto px-4 flex items-center justify-between">
+        <div class="logo-container">
+            <a href="index.html">
+                <img src="assets/logo/favicon.png" alt="OlaVoices Logo" class="h-12">
+            </a>
+        </div>
+        <nav>
+            <ul class="flex space-x-6 text-sm md:text-base">
+                <li><a href="index.html" class="hover:text-red-600">Home</a></li>
+                <li><a href="blog.html" class="hover:text-red-600">Blog</a></li>
+                <li><a href="index.html#contact" class="hover:text-red-600">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+
+    <!-- Progress Steps -->
+    <div class="flex justify-center items-center mb-12 gap-4">
+        <div class="step-indicator active flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 font-bold text-gray-600" id="step1">
+            1
+        </div>
+        <div class="w-16 h-1 bg-gray-200" id="line1"></div>
+        <div class="step-indicator flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 font-bold text-gray-600" id="step2">
+            2
+        </div>
+        <div class="w-16 h-1 bg-gray-200" id="line2"></div>
+        <div class="step-indicator flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 font-bold text-gray-600" id="step3">
+            3
+        </div>
+    </div>
+
+    <!-- SCREEN 1: Start -->
+    <div id="screen-start" class="active">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                🎙️ Discover Your Voice Type
+            </h1>
+            <p class="text-xl text-gray-600 mb-6">
+                Find out what kind of voice actor you are in just 60 seconds
+            </p>
+            <p class="text-gray-500 max-w-2xl mx-auto">
+                Record yourself reading a short script, and we'll analyze your voice to discover your perfect niche - whether it's audiobooks, commercials, documentaries, or e-learning.
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <h2 class="text-2xl font-bold mb-6 text-center">How It Works</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-microphone text-2xl text-red-600"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">1. Record</h3>
+                    <p class="text-sm text-gray-600">Read a 30-second script in your natural voice</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-2xl text-red-600"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">2. Analyze</h3>
+                    <p class="text-sm text-gray-600">We analyze your pitch, pace, and vocal qualities</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-star text-2xl text-red-600"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">3. Discover</h3>
+                    <p class="text-sm text-gray-600">Get your voice type and recommended niches</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button onclick="startAnalysis()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-12 rounded-lg text-xl shadow-lg transform hover:scale-105 transition-all duration-300">
+                Start Free Analysis →
+            </button>
+            <p class="text-sm text-gray-500 mt-4">No signup required • Takes 60 seconds • 100% free</p>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: Recording -->
+    <div id="screen-recording">
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-3xl font-bold text-center mb-6">Record Your Voice</h2>
+
+            <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                <p class="text-sm text-gray-600 mb-4 text-center">Read this script naturally, as if speaking to a friend:</p>
+                <div class="bg-white rounded-lg p-6 border-2 border-gray-200">
+                    <p class="text-lg leading-relaxed" id="recordingScript">
+                        "Voice acting is more than just reading words. It's about bringing stories to life, connecting with audiences, and making every sentence feel authentic. Whether you're narrating an audiobook, voicing a commercial, or teaching through e-learning, your unique voice has the power to captivate and inspire."
+                    </p>
+                </div>
+            </div>
+
+            <div class="text-center mb-6">
+                <div id="waveform" class="waveform mb-6">
+                    <!-- Waveform bars will be generated here -->
+                </div>
+
+                <div class="text-4xl font-bold text-gray-400 mb-4" id="timer">00:30</div>
+
+                <button id="recordBtn" onclick="toggleRecording()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-12 rounded-full text-xl shadow-lg transition-all duration-300">
+                    <i class="fas fa-microphone mr-2"></i>
+                    <span id="recordBtnText">Start Recording</span>
+                </button>
+
+                <p class="text-sm text-gray-500 mt-4" id="recordingStatus">Click to start recording</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: Analyzing -->
+    <div id="screen-analyzing">
+        <div class="bg-white rounded-xl shadow-lg p-12 text-center">
+            <div class="mb-8">
+                <div class="inline-block">
+                    <div class="w-24 h-24 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            </div>
+            <h2 class="text-3xl font-bold mb-4">Analyzing Your Voice...</h2>
+            <p class="text-gray-600 mb-6" id="analyzingText">Examining vocal characteristics</p>
+            <div class="max-w-md mx-auto">
+                <div class="space-y-2 text-left">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                        <span class="text-gray-600">Pitch range detected</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                        <span class="text-gray-600">Pace and rhythm analyzed</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                        <span class="text-gray-600">Vocal tone mapped</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-spinner fa-spin text-red-600"></i>
+                        <span class="text-gray-600">Generating your profile...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: Results (will be populated dynamically) -->
+    <div id="screen-results">
+        <!-- Results will be injected here -->
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-8 mt-16">
+    <div class="container mx-auto px-4 text-center">
+        <p>&copy; 2025 OlaVoices. All rights reserved.</p>
+        <p class="mt-2">
+            <a href="index.html" class="hover:text-red-400">Home</a> |
+            <a href="blog.html" class="hover:text-red-400 ml-2">Blog</a> |
+            <a href="index.html#contact" class="hover:text-red-400 ml-2">Contact</a>
+        </p>
+    </div>
+</footer>
+
+<script src="assets/js/voice-analyzer.js"></script>
+
+</body>
+</html>
