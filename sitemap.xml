@@ -4,41 +4,41 @@
   <!-- Homepage -->
   <url>
     <loc>https://olavoices.com/</loc>
-    <lastmod>2025-10-16</lastmod>
+    <lastmod>2025-12-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
-  <!-- Blog Index -->
+
+  <!-- Audio Cleanup Service (PRIMARY REVENUE PAGE) -->
+  <url>
+    <loc>https://olavoices.com/audio-cleanup</loc>
+    <lastmod>2025-12-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Voice Type Analyzer (PRIMARY LEAD GENERATION TOOL) -->
+  <url>
+    <loc>https://olavoices.com/voice-type-analyzer</loc>
+    <lastmod>2025-12-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Blog Index (Content Hub) -->
   <url>
     <loc>https://olavoices.com/blog</loc>
     <lastmod>2025-12-17</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
 
-  <!-- News Index -->
+  <!-- News Index (Fresh Content) -->
   <url>
     <loc>https://olavoices.com/news</loc>
-    <lastmod>2025-12-16</lastmod>
+    <lastmod>2025-12-17</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Audio Cleanup Service (REVENUE PAGE) -->
-  <url>
-    <loc>https://olavoices.com/audio-cleanup</loc>
-    <lastmod>2025-12-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Voice Type Analyzer (LEAD GENERATION TOOL) -->
-  <url>
-    <loc>https://olavoices.com/voice-type-analyzer</loc>
-    <lastmod>2025-12-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.75</priority>
   </url>
 
   <!-- Blog Posts -->

@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Professional audio cleanup service for voice actor auditions. Get broadcast-ready files in 24 hours. Breath removal, de-clicking, and professional mastering.">
-    <title>Audition Cleanup Service | OlaVoices</title>
-    <link rel="canonical" href="https://olavoices.com/audio-cleanup.html">
+    <meta name="description" content="Professional audio cleanup for voice actors. €12 per audition. 24-48hr turnaround. Breath removal, de-clicking, LUFS mastering. Preview before you pay. ACX/Audible ready.">
+    <title>Audio Cleanup Service €12 | 24hr Turnaround | Preview First | OlaVoices</title>
+    <link rel="canonical" href="https://olavoices.com/audio-cleanup">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://olavoices.com/audio-cleanup">
+    <meta property="og:title" content="Professional Audio Cleanup for Voice Actors - €12 per Audition">
+    <meta property="og:description" content="24hr turnaround. Preview before you pay. Breath removal, de-clicking, LUFS mastering. ACX ready.">
+    <meta property="og:image" content="https://olavoices.com/assets/logo/favicon.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:url" content="https://olavoices.com/audio-cleanup">
+    <meta property="twitter:title" content="Audio Cleanup Service for Voice Actors - €12">
+    <meta property="twitter:description" content="Professional audio cleanup. 24hr turnaround. Preview before payment.">
+    <meta property="twitter:image" content="https://olavoices.com/assets/logo/favicon.png">
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZLFTKSBLMT"></script>
@@ -64,11 +78,41 @@
             </a>
         </div>
 
-        <ul class="hidden md:flex space-x-6">
+        <!-- Desktop Navigation -->
+        <ul class="hidden md:flex space-x-6 items-center">
             <li><a href="index.html" class="hover:text-red-600">Home</a></li>
             <li><a href="index.html#services" class="hover:text-red-600">Services</a></li>
-            <li><a href="audio-cleanup.html" class="text-red-600 font-semibold">Audition Cleanup</a></li>
+            <li><a href="index.html#portfolio" class="hover:text-red-600">Portfolio</a></li>
+            <li><a href="blog.html" class="hover:text-red-600">Blog</a></li>
             <li><a href="index.html#contact" class="hover:text-red-600">Contact</a></li>
+            <!-- Primary CTAs as Buttons -->
+            <li><a href="voice-type-analyzer.html" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-all font-semibold shadow-md">🎙️ Voice Test</a></li>
+            <li><a href="audio-cleanup.html" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all font-semibold shadow-md border-2 border-green-300">Audio Cleanup</a></li>
+        </ul>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-toggle" class="md:hidden flex flex-col space-y-1 p-2">
+            <span class="w-6 h-0.5 bg-gray-600 transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-gray-600 transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-gray-600 transition-all duration-300"></span>
+        </button>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <ul class="flex flex-col space-y-0">
+            <li><a href="index.html" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Home</a></li>
+            <li><a href="index.html#services" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Services</a></li>
+            <li><a href="index.html#portfolio" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Portfolio</a></li>
+            <li><a href="blog.html" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Blog</a></li>
+            <li><a href="index.html#contact" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Contact</a></li>
+            <!-- Primary CTAs -->
+            <li class="p-3 bg-gray-50">
+                <a href="voice-type-analyzer.html" class="block text-center bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition-all font-semibold shadow-md">🎙️ Free Voice Test</a>
+            </li>
+            <li class="p-3 bg-green-50">
+                <a href="audio-cleanup.html" class="block text-center bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-all font-semibold shadow-md border-2 border-green-300">Audio Cleanup Service (Current Page)</a>
+            </li>
         </ul>
     </div>
 </nav>

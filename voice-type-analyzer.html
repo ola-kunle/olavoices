@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Type Analyzer - Discover Your Perfect Voice Acting Niche | OlaVoices</title>
-    <meta name="description" content="Free voice type analyzer for aspiring voice actors. Record your voice and discover your perfect niche - audiobook, commercial, documentary, or e-learning. Instant results!">
-    <meta name="keywords" content="voice type analyzer, voice acting test, find your voice type, voice actor assessment, voice acting niche">
+    <title>Free Voice Type Analyzer | Find Your Voice Acting Niche in 60 Seconds | OlaVoices</title>
+    <meta name="description" content="FREE voice analyzer with 85% accuracy! Discover if you're a Storyteller, Energizer, or Educator. 30-second test. Used by 1000+ voice actors. Start now!">
+    <meta name="keywords" content="voice type analyzer, voice acting test, find your voice type, voice actor assessment, voice acting niche, free voice test, voice analysis tool, voice acting career">
     <link rel="canonical" href="https://olavoices.com/voice-type-analyzer">
 
     <!-- Open Graph -->
@@ -94,20 +94,50 @@
 <body class="bg-gray-50 font-ubuntu">
 
 <!-- Header -->
-<header class="bg-white shadow-md py-4">
-    <div class="container mx-auto px-4 flex items-center justify-between">
+<header class="bg-white shadow-md fixed top-0 w-full z-10">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
         <div class="logo-container">
             <a href="index.html">
                 <img src="assets/logo/favicon.png" alt="OlaVoices Logo" class="h-12">
             </a>
         </div>
-        <nav>
-            <ul class="flex space-x-6 text-sm md:text-base">
-                <li><a href="index.html" class="hover:text-red-600">Home</a></li>
-                <li><a href="blog.html" class="hover:text-red-600">Blog</a></li>
-                <li><a href="index.html#contact" class="hover:text-red-600">Contact</a></li>
-            </ul>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex space-x-6 items-center text-sm md:text-base">
+            <a href="index.html" class="hover:text-red-600">Home</a>
+            <a href="index.html#services" class="hover:text-red-600">Services</a>
+            <a href="index.html#portfolio" class="hover:text-red-600">Portfolio</a>
+            <a href="blog.html" class="hover:text-red-600">Blog</a>
+            <a href="index.html#contact" class="hover:text-red-600">Contact</a>
+            <!-- Primary CTAs as Buttons -->
+            <a href="voice-type-analyzer.html" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-all font-semibold shadow-md border-2 border-purple-300">🎙️ Voice Test</a>
+            <a href="audio-cleanup.html" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all font-semibold shadow-md">Audio Cleanup</a>
         </nav>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-toggle" class="md:hidden flex flex-col space-y-1 p-2">
+            <span class="w-6 h-0.5 bg-gray-600 transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-gray-600 transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-gray-600 transition-all duration-300"></span>
+        </button>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <div class="flex flex-col space-y-0">
+            <a href="index.html" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Home</a>
+            <a href="index.html#services" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Services</a>
+            <a href="index.html#portfolio" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Portfolio</a>
+            <a href="blog.html" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Blog</a>
+            <a href="index.html#contact" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Contact</a>
+            <!-- Primary CTAs -->
+            <div class="p-3 bg-purple-50">
+                <a href="voice-type-analyzer.html" class="block text-center bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition-all font-semibold shadow-md border-2 border-purple-300">🎙️ Voice Test (Current Page)</a>
+            </div>
+            <div class="p-3 bg-gray-50">
+                <a href="audio-cleanup.html" class="block text-center bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-all font-semibold shadow-md">Audio Cleanup Service</a>
+            </div>
+        </div>
     </div>
 </header>
 
