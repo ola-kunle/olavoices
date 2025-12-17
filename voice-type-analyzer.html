@@ -141,7 +141,7 @@
     </div>
 </header>
 
-<div class="container mx-auto px-4 py-12 max-w-4xl">
+<div class="container mx-auto px-4 pt-24 pb-12 max-w-4xl">
 
     <!-- Progress Steps -->
     <div class="flex justify-center items-center mb-12 gap-4">
@@ -291,6 +291,44 @@
 </footer>
 
 <script src="assets/js/voice-analyzer.js"></script>
+
+<script>
+    // Mobile Menu Toggle
+    document.addEventListener('DOMContentLoaded', () => {
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuSpans = mobileMenuToggle.querySelectorAll('span');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+
+            // Animate hamburger to X
+            if (mobileMenu.classList.contains('hidden')) {
+                // Reset to hamburger
+                menuSpans[0].style.transform = 'rotate(0deg) translateY(0px)';
+                menuSpans[1].style.opacity = '1';
+                menuSpans[2].style.transform = 'rotate(0deg) translateY(0px)';
+            } else {
+                // Transform to X
+                menuSpans[0].style.transform = 'rotate(45deg) translateY(6px)';
+                menuSpans[1].style.opacity = '0';
+                menuSpans[2].style.transform = 'rotate(-45deg) translateY(-6px)';
+            }
+        });
+
+        // Close menu when clicking on a link
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                // Reset hamburger icon
+                menuSpans[0].style.transform = 'rotate(0deg) translateY(0px)';
+                menuSpans[1].style.opacity = '1';
+                menuSpans[2].style.transform = 'rotate(0deg) translateY(0px)';
+            });
+        });
+    });
+</script>
 
 </body>
 </html>
