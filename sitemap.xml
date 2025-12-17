@@ -25,6 +25,14 @@
     <priority>0.95</priority>
   </url>
 
+  <!-- FAQ Page (SEO GOLDMINE) -->
+  <url>
+    <loc>https://olavoices.com/faq</loc>
+    <lastmod>2025-12-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
   <!-- Blog Index (Content Hub) -->
   <url>
     <loc>https://olavoices.com/blog</loc>
