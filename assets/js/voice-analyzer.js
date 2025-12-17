@@ -341,33 +341,36 @@ function validateHumanVoice(audioData, sampleRate) {
 
         // Human voice F1 typically: 300-900 Hz (vowel height)
         // Human voice F2 typically: 800-2500 Hz (vowel frontness)
-        if (formants.f1 < 200 || formants.f1 > 1200 ||
-            formants.f2 < 600 || formants.f2 > 3000) {
+        // Relaxed ranges to accommodate different voices and recording conditions
+        if (formants.f1 < 150 || formants.f1 > 1500 ||
+            formants.f2 < 500 || formants.f2 > 3500) {
             continue; // Not in human voice range
         }
 
         // 2. Check harmonics-to-noise ratio
-        // Human speech has clear harmonic structure (HNR > 5 dB)
+        // Human speech has clear harmonic structure
+        // Relaxed threshold for noisy environments
         const hnr = calculateHNR(frame, sampleRate);
-        if (hnr < 3) {
+        if (hnr < 1) {
             continue; // Too noisy for human speech
         }
 
         // 3. Check spectral tilt (human voices have specific frequency roll-off)
         const tilt = calculateSpectralTilt(frame, sampleRate);
         // Human voices: -12 to -6 dB/octave
-        // Music/instruments: often flatter or steeper
-        if (tilt > -3 || tilt < -20) {
+        // Relaxed to allow for different recording conditions
+        if (tilt > -2 || tilt < -25) {
             continue; // Not typical human voice pattern
         }
 
         validFrames++;
     }
 
-    // Need at least 40% of high-energy frames to pass human voice checks
+    // Need at least 20% of high-energy frames to pass human voice checks
+    // Relaxed from 40% to allow recordings with background noise
     const validRatio = validFrames / frameCount;
 
-    if (validRatio < 0.4) {
+    if (validRatio < 0.2) {
         return {
             isValid: false,
             reason: 'not_human_voice'
