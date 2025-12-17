@@ -298,11 +298,211 @@ function validateRecording(buffer) {
         };
     }
 
+    // 5. CRITICAL: Validate this is human voice (not cat, music, etc.)
+    const humanVoiceCheck = validateHumanVoice(channelData, sampleRate);
+
+    if (!humanVoiceCheck.isValid) {
+        return {
+            isValid: false,
+            reason: humanVoiceCheck.reason
+        };
+    }
+
     // All checks passed
     return {
         isValid: true,
         reason: 'valid'
     };
+}
+
+/**
+ * Validate that audio is specifically human voice
+ * Prevents cats, music, instruments, or other audio from being analyzed
+ * Uses formant analysis and harmonic structure detection
+ */
+function validateHumanVoice(audioData, sampleRate) {
+    // Analyze multiple frames to get consistent reading
+    const frameCount = 10;
+    const frameSize = 2048;
+    const stride = Math.floor((audioData.length - frameSize) / frameCount);
+
+    let validFrames = 0;
+
+    for (let i = 0; i < frameCount; i++) {
+        const offset = i * stride;
+        const frame = audioData.slice(offset, offset + frameSize);
+
+        // Skip low-energy frames
+        const energy = calculateRMSEnergy(frame);
+        if (energy < 0.02) continue;
+
+        // 1. Check formants (vocal tract resonances unique to humans)
+        const formants = estimateFormants(frame, sampleRate);
+
+        // Human voice F1 typically: 300-900 Hz (vowel height)
+        // Human voice F2 typically: 800-2500 Hz (vowel frontness)
+        if (formants.f1 < 200 || formants.f1 > 1200 ||
+            formants.f2 < 600 || formants.f2 > 3000) {
+            continue; // Not in human voice range
+        }
+
+        // 2. Check harmonics-to-noise ratio
+        // Human speech has clear harmonic structure (HNR > 5 dB)
+        const hnr = calculateHNR(frame, sampleRate);
+        if (hnr < 3) {
+            continue; // Too noisy for human speech
+        }
+
+        // 3. Check spectral tilt (human voices have specific frequency roll-off)
+        const tilt = calculateSpectralTilt(frame, sampleRate);
+        // Human voices: -12 to -6 dB/octave
+        // Music/instruments: often flatter or steeper
+        if (tilt > -3 || tilt < -20) {
+            continue; // Not typical human voice pattern
+        }
+
+        validFrames++;
+    }
+
+    // Need at least 40% of high-energy frames to pass human voice checks
+    const validRatio = validFrames / frameCount;
+
+    if (validRatio < 0.4) {
+        return {
+            isValid: false,
+            reason: 'not_human_voice'
+        };
+    }
+
+    return {
+        isValid: true,
+        reason: 'valid'
+    };
+}
+
+/**
+ * Estimate formants (vocal tract resonances)
+ * F1 and F2 are most reliable for voice detection
+ */
+function estimateFormants(audioData, sampleRate) {
+    const spectrum = performFFT(audioData);
+    const binWidth = sampleRate / audioData.length;
+
+    // Find peaks in spectrum (formants are peaks in frequency response)
+    const peaks = [];
+
+    for (let i = 2; i < spectrum.length - 2; i++) {
+        // Look for local maxima
+        if (spectrum[i] > spectrum[i-1] &&
+            spectrum[i] > spectrum[i+1] &&
+            spectrum[i] > spectrum[i-2] &&
+            spectrum[i] > spectrum[i+2]) {
+
+            const frequency = i * binWidth;
+
+            // Only consider peaks in human voice range (200-3000 Hz)
+            if (frequency > 200 && frequency < 3000) {
+                peaks.push({
+                    frequency: frequency,
+                    magnitude: spectrum[i]
+                });
+            }
+        }
+    }
+
+    // Sort by magnitude
+    peaks.sort((a, b) => b.magnitude - a.magnitude);
+
+    // First two strongest peaks are likely F1 and F2
+    const f1 = peaks[0] ? peaks[0].frequency : 0;
+    const f2 = peaks[1] ? peaks[1].frequency : 0;
+
+    // Ensure F2 > F1 (by definition)
+    if (f2 < f1) {
+        return { f1: f2, f2: f1 };
+    }
+
+    return { f1, f2 };
+}
+
+/**
+ * Calculate Harmonics-to-Noise Ratio
+ * Human speech has clear harmonic structure (periodic)
+ * Music/cats/noise have different harmonic patterns
+ */
+function calculateHNR(audioData, sampleRate) {
+    // Find fundamental frequency (pitch)
+    const f0 = estimatePitch(audioData, sampleRate);
+
+    if (f0 < 80 || f0 > 400) {
+        return 0; // Outside human voice range
+    }
+
+    const spectrum = performFFT(audioData);
+    const binWidth = sampleRate / audioData.length;
+
+    // Measure energy at harmonic frequencies vs non-harmonic
+    let harmonicEnergy = 0;
+    let noiseEnergy = 0;
+
+    // Check first 10 harmonics
+    for (let h = 1; h <= 10; h++) {
+        const harmonicFreq = f0 * h;
+        const bin = Math.round(harmonicFreq / binWidth);
+
+        if (bin >= spectrum.length) break;
+
+        // Energy at harmonic
+        harmonicEnergy += spectrum[bin];
+
+        // Energy between harmonics (noise)
+        const noiseBin = bin + Math.floor((f0 / binWidth) / 2);
+        if (noiseBin < spectrum.length) {
+            noiseEnergy += spectrum[noiseBin];
+        }
+    }
+
+    // HNR in dB
+    if (noiseEnergy === 0) return 20; // Clean harmonic signal
+
+    const hnr = 10 * Math.log10(harmonicEnergy / noiseEnergy);
+    return hnr;
+}
+
+/**
+ * Calculate spectral tilt (frequency roll-off)
+ * Human voices have characteristic -6 to -12 dB/octave roll-off
+ */
+function calculateSpectralTilt(audioData, sampleRate) {
+    const spectrum = performFFT(audioData);
+    const binWidth = sampleRate / audioData.length;
+
+    // Measure energy in low band (200-500 Hz) vs high band (2000-4000 Hz)
+    const lowBandStart = Math.floor(200 / binWidth);
+    const lowBandEnd = Math.floor(500 / binWidth);
+    const highBandStart = Math.floor(2000 / binWidth);
+    const highBandEnd = Math.floor(4000 / binWidth);
+
+    let lowEnergy = 0;
+    let highEnergy = 0;
+
+    for (let i = lowBandStart; i < lowBandEnd && i < spectrum.length; i++) {
+        lowEnergy += spectrum[i];
+    }
+
+    for (let i = highBandStart; i < highBandEnd && i < spectrum.length; i++) {
+        highEnergy += spectrum[i];
+    }
+
+    lowEnergy /= (lowBandEnd - lowBandStart);
+    highEnergy /= (highBandEnd - highBandStart);
+
+    if (lowEnergy === 0 || highEnergy === 0) return 0;
+
+    // Tilt in dB/octave (3 octaves between bands)
+    const tilt = (10 * Math.log10(highEnergy / lowEnergy)) / 3;
+
+    return tilt;
 }
 
 /**
@@ -336,6 +536,12 @@ function showRecordingError(reason) {
             errorTitle = 'Static Detected';
             errorMessage = 'The recording appears to be static or background noise. Please speak the script clearly.';
             errorIcon = '📻';
+            break;
+
+        case 'not_human_voice':
+            errorTitle = 'Human Voice Not Detected';
+            errorMessage = 'We couldn\'t detect human speech characteristics in your recording. Please read the script in your natural speaking voice. Make sure there\'s no background music or other sounds.';
+            errorIcon = '🎤';
             break;
 
         case 'technical':
