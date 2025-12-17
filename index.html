@@ -262,13 +262,13 @@
         </div>
         
         <!-- Desktop Navigation -->
-        <ul class="hidden md:flex space-x-6 items-center">
+        <ul class="hidden md:flex space-x-4 items-center">
             <li><a href="#home" class="hover:text-red-600">Home</a></li>
             <li><a href="#services" class="hover:text-red-600">Services</a></li>
-            <li><a href="#portfolio" class="hover:text-red-600">Portfolio</a></li>
+            <li><a href="#demo-reel" class="hover:text-red-600">Demo Reel</a></li>
             <li><a href="blog.html" class="hover:text-red-600">Blog</a></li>
-            <li><a href="#contact" class="hover:text-red-600">Contact</a></li>
             <!-- Primary CTAs as Buttons -->
+            <li><a href="#booking" class="bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg hover:bg-yellow-400 transition-all font-bold shadow-md border-2 border-yellow-600">📅 Book Call</a></li>
             <li><a href="voice-type-analyzer.html" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-all font-semibold shadow-md">🎙️ Voice Test</a></li>
             <li><a href="audio-cleanup.html" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all font-semibold shadow-md">Audio Cleanup</a></li>
         </ul>
@@ -286,11 +286,13 @@
         <ul class="flex flex-col space-y-0">
             <li><a href="#home" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Home</a></li>
             <li><a href="#services" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Services</a></li>
-            <li><a href="#portfolio" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Portfolio</a></li>
+            <li><a href="#demo-reel" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Demo Reel</a></li>
             <li><a href="blog.html" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Blog</a></li>
-            <li><a href="#contact" class="block px-4 py-3 hover:bg-gray-100 hover:text-red-600 border-b border-gray-100">Contact</a></li>
             <!-- Primary CTAs -->
-            <li class="p-3 bg-gray-50">
+            <li class="p-3 bg-yellow-50">
+                <a href="#booking" class="block text-center bg-yellow-500 text-gray-900 px-4 py-3 rounded-lg hover:bg-yellow-400 transition-all font-bold shadow-md border-2 border-yellow-600">📅 Book Free Call</a>
+            </li>
+            <li class="p-3 bg-purple-50">
                 <a href="voice-type-analyzer.html" class="block text-center bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition-all font-semibold shadow-md">🎙️ Free Voice Test</a>
             </li>
             <li class="p-3 bg-gray-50">
@@ -354,6 +356,56 @@
                 <p>
                     Clear, professional narration for documentaries, explainer videos, and corporate content.
                 </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Demo Reel Section -->
+<section id="demo-reel" class="py-20 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12 animate-fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 font-ubuntu">
+                    🎬 See Me in Action
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-300 mb-2">
+                    Voice Acting is Meant to Be <span class="text-yellow-400 font-semibold">HEARD</span>
+                </p>
+                <p class="text-lg text-gray-400">
+                    Watch my professional demo reel featuring authentic Nigerian voiceover work
+                </p>
+            </div>
+
+            <!-- YouTube Video Embed -->
+            <div class="relative rounded-2xl overflow-hidden shadow-2xl hover:shadow-yellow-500/20 transition-all duration-300" style="padding-bottom: 56.25%; height: 0;">
+                <iframe
+                    class="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube.com/embed/BVPaa0dDgag?rel=0&modestbranding=1"
+                    title="Olakunle Abimbola - Professional Voice Actor Demo Reel"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- CTA Below Video -->
+            <div class="text-center mt-10">
+                <p class="text-lg text-gray-300 mb-6">
+                    Like what you hear? Let's discuss your project
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#booking"
+                       class="inline-flex items-center justify-center px-8 py-4 bg-yellow-500 text-gray-900 font-bold text-lg rounded-full hover:bg-yellow-400 transition-all shadow-lg hover:shadow-yellow-500/50 hover:scale-105">
+                        <i class="fas fa-calendar-check mr-2"></i>
+                        Book Free Consultation
+                    </a>
+                    <a href="#contact"
+                       class="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white text-white font-bold text-lg rounded-full hover:bg-white hover:text-gray-900 transition-all">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Get in Touch
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -644,6 +696,48 @@
     </div>
 </section>
 
+<!-- Calendly Booking Section -->
+<section id="booking" class="py-20 bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center mb-12 animate-fade-in">
+            <div class="inline-block bg-yellow-400 text-purple-900 px-4 py-2 rounded-full font-bold text-sm mb-4">
+                ⚡ 21-Minute Response Guarantee
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 font-ubuntu">
+                Book Your Free Consultation
+            </h2>
+            <p class="text-xl md:text-2xl text-purple-200 mb-4">
+                Let's discuss your project and how I can bring your vision to life
+            </p>
+            <p class="text-lg text-purple-300">
+                30-minute call • No obligation • Project scoping & quote
+            </p>
+        </div>
+
+        <!-- Calendly Embed -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <!-- Calendly inline widget begin -->
+                <div class="calendly-inline-widget"
+                     data-url="https://calendly.com/okabimbola?hide_gdpr_banner=1&primary_color=7c3aed"
+                     style="min-width:320px;height:700px;">
+                </div>
+                <!-- Calendly inline widget end -->
+            </div>
+
+            <!-- Alternative: Direct Message Option -->
+            <div class="mt-8 text-center">
+                <p class="text-purple-200 mb-4">Prefer to message directly?</p>
+                <a href="#contact"
+                   class="inline-flex items-center justify-center px-8 py-4 bg-white text-purple-900 font-bold text-lg rounded-full hover:bg-purple-100 transition-all shadow-lg">
+                    <i class="fas fa-envelope mr-2"></i>
+                    Send a Message Instead
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Include reCAPTCHA v3 script -->
 <script src="https://www.google.com/recaptcha/api.js?render=6LeYIS4rAAAAAE-xHuUFZlwAl8Bhs65CtMQhHNZK"></script>
 
@@ -927,5 +1021,11 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
+
+<!-- Calendly badge widget begin -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<!-- Calendly badge widget end -->
+
 </body>
 </html>
