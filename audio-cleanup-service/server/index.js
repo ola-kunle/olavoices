@@ -382,9 +382,12 @@ app.get('/api/admin/orders', async (req, res) => {
       orders.map(async (order) => {
         const files = await getOrderFiles(req, order.id);
         const rawFiles = files.filter(f => f.file_type === 'raw');
+        const processedFiles = files.filter(f => f.file_type === 'processed');
         return {
           ...order,
-          file_count: rawFiles.length
+          file_count: rawFiles.length,
+          raw_file_count: rawFiles.length,
+          processed_file_count: processedFiles.length
         };
       })
     );
