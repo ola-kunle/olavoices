@@ -349,6 +349,18 @@
         const playersContainer = document.getElementById('audioPlayers');
         playersContainer.innerHTML = '';
 
+        // Check if no processed files are available
+        if (files.length === 0) {
+          playersContainer.innerHTML = `
+            <div style="text-align: center; padding: 40px; background: #fef3c7; border-radius: 12px; margin: 20px 0;">
+              <h3 style="color: #92400e; margin-bottom: 12px;">⏳ Processing Your Audio</h3>
+              <p style="color: #78350f;">Your files are being cleaned and processed. You'll receive an email when they're ready to preview.</p>
+              <p style="color: #78350f; margin-top: 12px;"><strong>Typical processing time: 24-48 hours</strong></p>
+            </div>
+          `;
+          return;
+        }
+
         files.forEach((file, index) => {
           const playerDiv = document.createElement('div');
           playerDiv.className = 'audio-player';

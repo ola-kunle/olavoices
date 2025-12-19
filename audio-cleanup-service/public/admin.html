@@ -373,7 +373,10 @@
                 <td>${order.customer_name}<br><small>${order.customer_email}</small></td>
                 <td>
                   <strong>${order.raw_file_count || 0}</strong> raw
-                  ${order.processed_file_count ? `<br><strong style="color: #10b981;">${order.processed_file_count}</strong> processed` : ''}
+                  ${order.processed_file_count ?
+                    `<br><strong style="color: #10b981;">${order.processed_file_count}</strong> processed` :
+                    order.raw_file_count > 0 ? '<br><span style="color: #dc2626; font-weight: 600;">⚠️ needs processing</span>' : ''
+                  }
                 </td>
                 <td>${new Date(order.CREATEDTIME || order.order_date).toLocaleDateString()}</td>
                 <td>€${order.total_price}</td>
