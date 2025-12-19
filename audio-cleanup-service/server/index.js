@@ -674,6 +674,18 @@ app.get('/api/orders/:orderId/preview', async (req, res) => {
     const allFiles = await getOrderFiles(req, orderId);
     const processedFiles = allFiles.filter(f => f.file_type === 'processed');
 
+    console.log(`📋 Preview request for order ${orderId}`);
+    console.log(`   Total files: ${allFiles.length}`);
+    console.log(`   Processed files: ${processedFiles.length}`);
+    processedFiles.forEach((file, index) => {
+      console.log(`   File ${index}:`, {
+        filename: file.filename,
+        original_filename: file.original_filename,
+        storage_url: file.storage_url,
+        preview_url: file.preview_url
+      });
+    });
+
     // Convert Tebi storage URLs to HTTP presigned URLs
     const filesWithUrls = await Promise.all(processedFiles.map(async (file) => {
       let httpStorageUrl = null;
@@ -697,12 +709,22 @@ app.get('/api/orders/:orderId/preview', async (req, res) => {
         }
       }
 
-      return {
+      const result = {
         ...file,
         storage_url: httpStorageUrl,
         preview_url: httpPreviewUrl || httpStorageUrl // Fallback to storage_url if no preview
       };
+
+      console.log(`   Converted file ${file.original_filename}:`, {
+        storage_url_converted: !!httpStorageUrl,
+        preview_url_converted: !!httpPreviewUrl,
+        final_preview_url: result.preview_url ? 'SET' : 'NULL'
+      });
+
+      return result;
     }));
+
+    console.log(`✅ Returning ${filesWithUrls.length} files with URLs`);
 
     res.json({
       success: true,

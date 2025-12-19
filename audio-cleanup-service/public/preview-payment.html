@@ -322,6 +322,22 @@
 
         const { order, files } = data;
 
+        // DEBUG: Log API response
+        console.log('=== PREVIEW API RESPONSE DEBUG ===');
+        console.log('Full API response:', data);
+        console.log('Order:', order);
+        console.log('Files array:', files);
+        console.log('Files count:', files.length);
+        files.forEach((file, index) => {
+          console.log(`File ${index}:`, {
+            original_filename: file.original_filename,
+            preview_url: file.preview_url,
+            storage_url: file.storage_url,
+            file_type: file.file_type
+          });
+        });
+        console.log('=================================');
+
         // Update order info
         document.getElementById('orderId').textContent = order.id.slice(0, 16) + '...';
         document.getElementById('customerName').textContent = order.customer_name;
@@ -369,6 +385,24 @@
             if (this.duration > PREVIEW_DURATION) {
               console.log(`Audio limited to ${PREVIEW_DURATION}s preview (full: ${this.duration.toFixed(1)}s)`);
             }
+          });
+
+          // DEBUG: Log audio loading events
+          audio.addEventListener('error', function(e) {
+            console.error('Audio loading error:', {
+              src: this.src,
+              error: this.error,
+              networkState: this.networkState,
+              readyState: this.readyState
+            });
+          });
+
+          audio.addEventListener('loadstart', function() {
+            console.log('Audio loadstart:', this.src);
+          });
+
+          audio.addEventListener('canplay', function() {
+            console.log('Audio can play:', this.src);
           });
         });
 
