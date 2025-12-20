@@ -7,13 +7,26 @@
     <link>https://olavoices.com/blog.html</link>
     <description>Professional voice-over insights, tips, and stories from an authentic Nigerian voice actor. Learn about cultural nuance, studio setup, industry trends, and hiring voice talent.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 20 Dec 2025 06:23:31 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 20 Dec 2025 09:17:18 GMT</lastBuildDate>
     <atom:link href="https://olavoices.com/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://olavoices.com/assets/logo/favicon.png</url>
       <title>OlaVoices</title>
       <link>https://olavoices.com</link>
     </image>
+
+    <item>
+      <title><![CDATA[Setting Up a Home Studio as a Nigerian Voice Actor]]></title>
+      <link>https://olavoices.com/setting-up-a-home-studio-as-a-nigerian-voice-actor.html</link>
+      <guid isPermaLink="true">https://olavoices.com/setting-up-a-home-studio-as-a-nigerian-voice-actor.html</guid>
+      <description><![CDATA[Discover how to create a professional home studio as a voice actor and explore OlaVoices services for authentic African voices, contact us today]]></description>
+      <category><![CDATA[Cultural Insights]]></category>
+      <pubDate>Sat, 20 Dec 2025 00:00:00 GMT</pubDate>
+      <enclosure url="https://olavoices.com/assets/images/blog/setting-up-a-home-studio-as-a-nigerian-voice-actor.webp" type="image/webp" />
+      <media:content url="https://olavoices.com/assets/images/blog/setting-up-a-home-studio-as-a-nigerian-voice-actor.webp" medium="image" type="image/webp">
+        <media:title>Nigerian voice actor in a professional recording studio with a microphone</media:title>
+      </media:content>
+    </item>
 
     <item>
       <title><![CDATA[African Accent Voice Over for Audiobooks: Expert Guide]]></title>
@@ -259,19 +272,6 @@
       <enclosure url="https://olavoices.com/assets/images/adrinka-background.jpg" type="image/webp" />
       <media:content url="https://olavoices.com/assets/images/adrinka-background.jpg" medium="image" type="image/webp">
         <media:title>African Adinkra Symbols - Cultural Heritage and Global Communication Through Voice</media:title>
-      </media:content>
-    </item>
-
-    <item>
-      <title><![CDATA[The Complete Guide to E-Learning Voiceover: Engaging Global Audiences]]></title>
-      <link>https://olavoices.com/elearning-voiceover-guide.html</link>
-      <guid isPermaLink="true">https://olavoices.com/elearning-voiceover-guide.html</guid>
-      <description><![CDATA[Discover how to choose the perfect e-learning voiceover that engages diverse global audiences. Expert insights on cultural nuance, pacing, and authentic delivery.]]></description>
-      <category><![CDATA[Industry Guide]]></category>
-      <pubDate>Mon, 15 Sep 2025 00:00:00 GMT</pubDate>
-      <enclosure url="https://olavoices.com/assets/images/the-new-york-public-library-Y3sunBJSRqA-unsplash.jpg" type="image/webp" />
-      <media:content url="https://olavoices.com/assets/images/the-new-york-public-library-Y3sunBJSRqA-unsplash.jpg" medium="image" type="image/webp">
-        <media:title>E-Learning Students - Global Online Education with Nigerian Voice Actor Narration</media:title>
       </media:content>
     </item>
   </channel>
