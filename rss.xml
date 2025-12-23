@@ -7,13 +7,26 @@
     <link>https://olavoices.com/blog.html</link>
     <description>Professional voice-over insights, tips, and stories from an authentic Nigerian voice actor. Learn about cultural nuance, studio setup, industry trends, and hiring voice talent.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Dec 2025 06:27:08 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 23 Dec 2025 09:22:32 GMT</lastBuildDate>
     <atom:link href="https://olavoices.com/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://olavoices.com/assets/logo/favicon.png</url>
       <title>OlaVoices</title>
       <link>https://olavoices.com</link>
     </image>
+
+    <item>
+      <title><![CDATA[Authentic West African Voice Over Rates]]></title>
+      <link>https://olavoices.com/authentic-west-african-voice-over-rates.html</link>
+      <guid isPermaLink="true">https://olavoices.com/authentic-west-african-voice-over-rates.html</guid>
+      <description><![CDATA[Get professional Nigerian voice over services with fast turnaround and affordable rates, contact us today for a free quote!]]></description>
+      <category><![CDATA[Industry Trends]]></category>
+      <pubDate>Tue, 23 Dec 2025 00:00:00 GMT</pubDate>
+      <enclosure url="https://olavoices.com/assets/images/blog/authentic-west-african-voice-over-rates.webp" type="image/webp" />
+      <media:content url="https://olavoices.com/assets/images/blog/authentic-west-african-voice-over-rates.webp" medium="image" type="image/webp">
+        <media:title>Professional Nigerian voice actor recording in a studio with a high-quality microphone</media:title>
+      </media:content>
+    </item>
 
     <item>
       <title><![CDATA[Setting Up a Home Studio as a Nigerian Voice Actor]]></title>
@@ -259,19 +272,6 @@
       <enclosure url="https://olavoices.com/assets/images/my_voice_results.jpg" type="image/webp" />
       <media:content url="https://olavoices.com/assets/images/my_voice_results.jpg" medium="image" type="image/webp">
         <media:title>Nigerian Voice Actor Studio Setup - Professional Voiceover Recording Environment</media:title>
-      </media:content>
-    </item>
-
-    <item>
-      <title><![CDATA[Beyond the Accent: Why Cultural Nuance in Voiceover Connects Globally]]></title>
-      <link>https://olavoices.com/beyond-the-accent.html</link>
-      <guid isPermaLink="true">https://olavoices.com/beyond-the-accent.html</guid>
-      <description><![CDATA[Learn why true cultural nuance, far beyond just pronunciation, is essential for brands to connect authentically and build trust with diverse audiences worldwide.]]></description>
-      <category><![CDATA[Cultural Insights]]></category>
-      <pubDate>Sun, 22 Jun 2025 00:00:00 GMT</pubDate>
-      <enclosure url="https://olavoices.com/assets/images/adrinka-background.jpg" type="image/webp" />
-      <media:content url="https://olavoices.com/assets/images/adrinka-background.jpg" medium="image" type="image/webp">
-        <media:title>African Adinkra Symbols - Cultural Heritage and Global Communication Through Voice</media:title>
       </media:content>
     </item>
   </channel>
