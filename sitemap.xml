@@ -36,7 +36,7 @@
   <!-- Blog Index (Content Hub) -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2025-12-29</lastmod>
+    <lastmod>2025-12-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -1300,6 +1300,14 @@
   <url>
     <loc>https://olavoices.com/bakugo-s-final-fight-leaves-voice-actor-drained</loc>
     <lastmod>2025-12-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/revolutionary-ai-tech-redefines-audiobook-creation</loc>
+    <lastmod>2025-12-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
