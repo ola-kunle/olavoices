@@ -36,7 +36,7 @@
   <!-- Blog Index (Content Hub) -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2026-01-01</lastmod>
+    <lastmod>2026-01-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -1324,6 +1324,30 @@
   <url>
     <loc>https://olavoices.com/love-behind-the-mic-voice-actors-tie-the-knot</loc>
     <lastmod>2026-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/deus-ex-actor-slams-game-owners-as-psychopaths</loc>
+    <lastmod>2026-01-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/nyc-s-trans-subway-announcer-makes-history-at-inauguration</loc>
+    <lastmod>2026-01-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/deus-ex-voice-actor-sparks-controversy</loc>
+    <lastmod>2026-01-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
