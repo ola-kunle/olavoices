@@ -36,7 +36,7 @@
   <!-- Blog Index (Content Hub) -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2026-01-03</lastmod>
+    <lastmod>2026-01-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -1364,6 +1364,22 @@
   <url>
     <loc>https://olavoices.com/deus-ex-voice-actor-slams-game-developers-as-psychopaths</loc>
     <lastmod>2026-01-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/deus-ex-voice-actor-unleashes-scathing-critique</loc>
+    <lastmod>2026-01-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/ai-breaks-barriers-for-visually-impaired-cinema-lovers</loc>
+    <lastmod>2026-01-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
