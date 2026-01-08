@@ -36,7 +36,7 @@
   <!-- Blog Index (Content Hub) -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2026-01-07</lastmod>
+    <lastmod>2026-01-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -1500,6 +1500,14 @@
   <url>
     <loc>https://olavoices.com/revolutionizing-storytelling-wikipedia-meets-ai-powered-vide</loc>
     <lastmod>2026-01-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/unlock-endless-stories-for-less</loc>
+    <lastmod>2026-01-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
