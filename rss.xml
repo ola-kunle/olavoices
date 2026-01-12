@@ -7,13 +7,26 @@
     <link>https://olavoices.com/blog.html</link>
     <description>Professional voice-over insights, tips, and stories from an authentic Nigerian voice actor. Learn about cultural nuance, studio setup, industry trends, and hiring voice talent.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 12 Jan 2026 06:28:57 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 12 Jan 2026 09:29:20 GMT</lastBuildDate>
     <atom:link href="https://olavoices.com/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://olavoices.com/assets/logo/favicon.png</url>
       <title>OlaVoices</title>
       <link>https://olavoices.com</link>
     </image>
+
+    <item>
+      <title><![CDATA[West African English Voice Over Cost: A Guide]]></title>
+      <link>https://olavoices.com/west-african-english-voice-over-cost-a-guide.html</link>
+      <guid isPermaLink="true">https://olavoices.com/west-african-english-voice-over-cost-a-guide.html</guid>
+      <description><![CDATA[Get the best West African English voice over services at affordable rates. Contact us today for a free quote and fast turnaround]]></description>
+      <category><![CDATA[Cultural Insights]]></category>
+      <pubDate>Mon, 12 Jan 2026 00:00:00 GMT</pubDate>
+      <enclosure url="https://olavoices.com/assets/images/blog/west-african-english-voice-over-cost-a-guide.webp" type="image/webp" />
+      <media:content url="https://olavoices.com/assets/images/blog/west-african-english-voice-over-cost-a-guide.webp" medium="image" type="image/webp">
+        <media:title>Nigerian voice actor in a professional recording studio with a microphone</media:title>
+      </media:content>
+    </item>
 
     <item>
       <title><![CDATA[Authentic West African Voice Over Rates]]></title>
@@ -259,19 +272,6 @@
       <enclosure url="https://olavoices.com/assets/images/blog/build-your-pro-vo-studio-a-nigerian-actor-s-guide.webp" type="image/webp" />
       <media:content url="https://olavoices.com/assets/images/blog/build-your-pro-vo-studio-a-nigerian-actor-s-guide.webp" medium="image" type="image/webp">
         <media:title>A professional Nigerian male voice actor in his home studio, speaking into a large condenser microphone, wearing headphones, with acoustic foam panels visible on the wall behind him. The image conveys professionalism and high-quality remote recording.</media:title>
-      </media:content>
-    </item>
-
-    <item>
-      <title><![CDATA[My Voice, My Story: The Journey Behind OlaVoices]]></title>
-      <link>https://olavoices.com/my-voice-my-story.html</link>
-      <guid isPermaLink="true">https://olavoices.com/my-voice-my-story.html</guid>
-      <description><![CDATA[Discover the unique cultural heritage that shapes my voice – from the vibrant rhythms of West Africa to international clarity and precision. This is the personal journey that led to OlaVoices.]]></description>
-      <category><![CDATA[Personal Story]]></category>
-      <pubDate>Fri, 02 May 2025 00:00:00 GMT</pubDate>
-      <enclosure url="https://olavoices.com/assets/images/my_voice_results.jpg" type="image/webp" />
-      <media:content url="https://olavoices.com/assets/images/my_voice_results.jpg" medium="image" type="image/webp">
-        <media:title>Nigerian Voice Actor Studio Setup - Professional Voiceover Recording Environment</media:title>
       </media:content>
     </item>
   </channel>
