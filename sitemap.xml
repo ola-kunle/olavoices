@@ -36,7 +36,7 @@
   <!-- Blog Index (Content Hub) -->
   <url>
     <loc>https://olavoices.com/blog</loc>
-    <lastmod>2026-01-13</lastmod>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -1724,6 +1724,22 @@
   <url>
     <loc>https://olavoices.com/revolutionary-ai-voice-tool-redefines-audio-landscape</loc>
     <lastmod>2026-01-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/arden-cho-and-ahn-hyo-seop-bring-kpop-demon-hunters-to-life</loc>
+    <lastmod>2026-01-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://olavoices.com/ron-perlman-s-40-fallout-deal-reveals-voice-over-industry-se</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
