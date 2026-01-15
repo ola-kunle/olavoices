@@ -7,13 +7,26 @@
     <link>https://olavoices.com/blog.html</link>
     <description>Professional voice-over insights, tips, and stories from an authentic Nigerian voice actor. Learn about cultural nuance, studio setup, industry trends, and hiring voice talent.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 Jan 2026 06:27:37 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 15 Jan 2026 09:25:29 GMT</lastBuildDate>
     <atom:link href="https://olavoices.com/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://olavoices.com/assets/logo/favicon.png</url>
       <title>OlaVoices</title>
       <link>https://olavoices.com</link>
     </image>
+
+    <item>
+      <title><![CDATA[West African English Voice Over Cost Guide]]></title>
+      <link>https://olavoices.com/west-african-english-voice-over-cost-guide.html</link>
+      <guid isPermaLink="true">https://olavoices.com/west-african-english-voice-over-cost-guide.html</guid>
+      <description><![CDATA[Discover the cost of West African English voice over services. Get a FREE quote for your project today and learn about our broadcast-quality recordings.]]></description>
+      <category><![CDATA[Industry Guide]]></category>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 GMT</pubDate>
+      <enclosure url="https://olavoices.com/assets/images/blog/west-african-english-voice-over-cost-guide.webp" type="image/webp" />
+      <media:content url="https://olavoices.com/assets/images/blog/west-african-english-voice-over-cost-guide.webp" medium="image" type="image/webp">
+        <media:title>Nigerian voice actor in a professional recording studio with a microphone</media:title>
+      </media:content>
+    </item>
 
     <item>
       <title><![CDATA[West African English Voice Over Cost: A Guide]]></title>
@@ -259,19 +272,6 @@
       <enclosure url="https://olavoices.com/assets/images/blog/your-authentic-voice-why-cultural-nuance-is-key-in-global-voiceover.webp" type="image/webp" />
       <media:content url="https://olavoices.com/assets/images/blog/your-authentic-voice-why-cultural-nuance-is-key-in-global-voiceover.webp" medium="image" type="image/webp">
         <media:title>A professional Nigerian voice actor in a recording studio, wearing headphones and speaking into a microphone, with a warm, engaging expression, symbolizing cultural authenticity in voiceover.</media:title>
-      </media:content>
-    </item>
-
-    <item>
-      <title><![CDATA[Build Your Pro VO Studio: A Nigerian Actor's Guide]]></title>
-      <link>https://olavoices.com/build-your-pro-vo-studio-a-nigerian-actor-s-guide.html</link>
-      <guid isPermaLink="true">https://olavoices.com/build-your-pro-vo-studio-a-nigerian-actor-s-guide.html</guid>
-      <description><![CDATA[Discover how to set up a professional home voice over studio with insights from an experienced Nigerian voice actor. Learn about essential gear, acoustic treatment, and power solutions for global quality audio.]]></description>
-      <category><![CDATA[Industry Trends]]></category>
-      <pubDate>Mon, 10 Nov 2025 00:00:00 GMT</pubDate>
-      <enclosure url="https://olavoices.com/assets/images/blog/build-your-pro-vo-studio-a-nigerian-actor-s-guide.webp" type="image/webp" />
-      <media:content url="https://olavoices.com/assets/images/blog/build-your-pro-vo-studio-a-nigerian-actor-s-guide.webp" medium="image" type="image/webp">
-        <media:title>A professional Nigerian male voice actor in his home studio, speaking into a large condenser microphone, wearing headphones, with acoustic foam panels visible on the wall behind him. The image conveys professionalism and high-quality remote recording.</media:title>
       </media:content>
     </item>
   </channel>
